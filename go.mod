@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/cosmos/cosmos-sdk v0.46.0
 	github.com/cosmos/ibc-go/v5 v5.0.0-beta1
-	github.com/ignite/cli v0.23.1-0.20220801134230-8d30121393da
+	github.com/ignite/cli v0.23.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
