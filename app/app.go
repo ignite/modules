@@ -102,6 +102,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/ignite/cli/docs"
+
 	"github.com/ignite/modules/cmd"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
