@@ -17,7 +17,6 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v5/modules/core/types"
 	"github.com/stretchr/testify/require"
-	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
@@ -34,7 +33,6 @@ func Codec() codec.Codec {
 	banktypes.RegisterInterfaces(interfaceRegistry)
 	ibctypes.RegisterInterfaces(interfaceRegistry)
 	claim.RegisterInterfaces(interfaceRegistry)
-	fundraising.RegisterInterfaces(interfaceRegistry)
 
 	return codec.NewProtoCodec(interfaceRegistry)
 }

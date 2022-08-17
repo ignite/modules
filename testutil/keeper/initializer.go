@@ -23,8 +23,6 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
-	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
-	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	tmdb "github.com/tendermint/tm-db"
 
 	"github.com/ignite/modules/testutil/sample"
@@ -38,7 +36,6 @@ var moduleAccountPerms = map[string][]string{
 	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-	fundraisingtypes.ModuleName:    nil,
 	claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 }
 
@@ -212,32 +209,6 @@ func (i initializer) Distribution(
 		bankKeeper,
 		stakingKeeper,
 		authtypes.FeeCollectorName,
-	)
-}
-
-func (i initializer) Fundraising(
-	paramKeeper paramskeeper.Keeper,
-	authKeeper authkeeper.AccountKeeper,
-	bankKeeper bankkeeper.Keeper,
-	disKeeper distrkeeper.Keeper,
-) fundraisingkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(fundraisingtypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(fundraisingtypes.MemStoreKey)
-
-	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
-	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
-
-	paramKeeper.Subspace(fundraisingtypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(fundraisingtypes.ModuleName)
-
-	return fundraisingkeeper.NewKeeper(
-		i.Codec,
-		storeKey,
-		memStoreKey,
-		subspace,
-		authKeeper,
-		bankKeeper,
-		disKeeper,
 	)
 }
 

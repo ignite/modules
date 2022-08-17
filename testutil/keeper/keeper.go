@@ -15,8 +15,6 @@ import (
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	"github.com/stretchr/testify/require"
-	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
-	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
@@ -34,13 +32,12 @@ var (
 
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
-	T                 testing.TB
-	AccountKeeper     authkeeper.AccountKeeper
-	BankKeeper        bankkeeper.Keeper
-	IBCKeeper         *ibckeeper.Keeper
-	StakingKeeper     stakingkeeper.Keeper
-	FundraisingKeeper fundraisingkeeper.Keeper
-	ClaimKeeper       *claimkeeper.Keeper
+	T             testing.TB
+	AccountKeeper authkeeper.AccountKeeper
+	BankKeeper    bankkeeper.Keeper
+	IBCKeeper     *ibckeeper.Keeper
+	StakingKeeper stakingkeeper.Keeper
+	ClaimKeeper   *claimkeeper.Keeper
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -61,7 +58,6 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
 	upgradeKeeper := initializer.Upgrade()
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
-	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
@@ -77,22 +73,18 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	// Initialize params
 	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
-	fundraisingParams := fundraisingtypes.DefaultParams()
-	fundraisingParams.AuctionCreationFee = sdk.NewCoins()
-	fundraisingKeeper.SetParams(ctx, fundraisingParams)
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
 	return ctx, TestKeepers{
-			T:                 t,
-			AccountKeeper:     authKeeper,
-			BankKeeper:        bankKeeper,
-			IBCKeeper:         ibcKeeper,
-			StakingKeeper:     stakingKeeper,
-			FundraisingKeeper: fundraisingKeeper,
-			ClaimKeeper:       claimKeeper,
+			T:             t,
+			AccountKeeper: authKeeper,
+			BankKeeper:    bankKeeper,
+			IBCKeeper:     ibcKeeper,
+			StakingKeeper: stakingKeeper,
+			ClaimKeeper:   claimKeeper,
 		}, TestMsgServers{
 			T:        t,
 			ClaimSrv: claimSrv,

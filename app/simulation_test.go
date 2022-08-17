@@ -1,6 +1,9 @@
 package app_test
 
 import (
+	"os"
+	"testing"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -8,11 +11,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/ignite/modules/app"
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"os"
-	"testing"
+
+	"github.com/ignite/modules/app"
 
 	"github.com/ignite/modules/cmd"
 )
