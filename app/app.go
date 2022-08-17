@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+
 	"io"
 	"net/http"
 	"os"
@@ -95,6 +96,9 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	"github.com/spf13/cast"
+	"github.com/tendermint/fundraising/x/fundraising"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -104,7 +108,9 @@ import (
 	"github.com/ignite/cli/docs"
 
 	"github.com/ignite/modules/cmd"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
+	"github.com/ignite/modules/x/claim"
+	claimkeeper "github.com/ignite/modules/x/claim/keeper"
+	claimtypes "github.com/ignite/modules/x/claim/types" // this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 const (
@@ -160,6 +166,8 @@ var (
 		transfer.AppModuleBasic{},
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		claim.AppModuleBasic{},
+		fundraising.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -173,6 +181,8 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		fundraisingtypes.ModuleName:    nil,
+		claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -210,30 +220,32 @@ type App struct {
 	memKeys map[string]*storetypes.MemoryStoreKey
 
 	// keepers
-	AccountKeeper    authkeeper.AccountKeeper
-	AuthzKeeper      authzkeeper.Keeper
-	BankKeeper       bankkeeper.Keeper
-	CapabilityKeeper *capabilitykeeper.Keeper
-	StakingKeeper    stakingkeeper.Keeper
-	SlashingKeeper   slashingkeeper.Keeper
-	MintKeeper       mintkeeper.Keeper
-	DistrKeeper      distrkeeper.Keeper
-	GovKeeper        govkeeper.Keeper
-	CrisisKeeper     crisiskeeper.Keeper
-	UpgradeKeeper    upgradekeeper.Keeper
-	ParamsKeeper     paramskeeper.Keeper
-	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	EvidenceKeeper   evidencekeeper.Keeper
-	TransferKeeper   ibctransferkeeper.Keeper
-	ICAHostKeeper    icahostkeeper.Keeper
-	FeeGrantKeeper   feegrantkeeper.Keeper
-	GroupKeeper      groupkeeper.Keeper
+	AccountKeeper     authkeeper.AccountKeeper
+	AuthzKeeper       authzkeeper.Keeper
+	BankKeeper        bankkeeper.Keeper
+	CapabilityKeeper  *capabilitykeeper.Keeper
+	StakingKeeper     stakingkeeper.Keeper
+	SlashingKeeper    slashingkeeper.Keeper
+	MintKeeper        mintkeeper.Keeper
+	DistrKeeper       distrkeeper.Keeper
+	GovKeeper         govkeeper.Keeper
+	CrisisKeeper      crisiskeeper.Keeper
+	UpgradeKeeper     upgradekeeper.Keeper
+	ParamsKeeper      paramskeeper.Keeper
+	IBCKeeper         *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	EvidenceKeeper    evidencekeeper.Keeper
+	TransferKeeper    ibctransferkeeper.Keeper
+	ICAHostKeeper     icahostkeeper.Keeper
+	FeeGrantKeeper    feegrantkeeper.Keeper
+	GroupKeeper       groupkeeper.Keeper
+	FundraisingKeeper fundraisingkeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
+	ClaimKeeper claimkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -271,6 +283,8 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey, govtypes.StoreKey,
 		paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey, evidencetypes.StoreKey,
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
+		claimtypes.StoreKey, fundraisingtypes.StoreKey,
+
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -479,6 +493,25 @@ func New(
 		govConfig,
 	)
 
+	app.FundraisingKeeper = fundraisingkeeper.NewKeeper(
+		appCodec,
+		keys[fundraisingtypes.StoreKey],
+		keys[fundraisingtypes.MemStoreKey],
+		app.GetSubspace(fundraisingtypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+	)
+
+	app.ClaimKeeper = *claimkeeper.NewKeeper(
+		appCodec,
+		keys[claimtypes.StoreKey],
+		keys[claimtypes.MemStoreKey],
+		app.GetSubspace(claimtypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+	)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -521,6 +554,8 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icaModule,
+		fundraising.NewAppModule(appCodec, app.FundraisingKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
+		claim.NewAppModule(appCodec, app.ClaimKeeper, app.AccountKeeper, app.BankKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -536,6 +571,7 @@ func New(
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
+		claimtypes.ModuleName,
 		stakingtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -550,10 +586,13 @@ func New(
 		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		fundraisingtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
 	app.mm.SetOrderEndBlockers(
+		fundraisingtypes.ModuleName,
+		claimtypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -587,6 +626,7 @@ func New(
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
+		claimtypes.ModuleName,
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
@@ -603,6 +643,7 @@ func New(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		fundraisingtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -632,6 +673,8 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
+		fundraising.NewAppModule(appCodec, app.FundraisingKeeper, app.AccountKeeper, app.BankKeeper, app.DistrKeeper),
+		claim.NewAppModule(appCodec, app.ClaimKeeper, app.AccountKeeper, app.BankKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -831,6 +874,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
+	paramsKeeper.Subspace(claimtypes.ModuleName)
+	paramsKeeper.Subspace(fundraisingtypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
