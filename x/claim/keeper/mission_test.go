@@ -7,8 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
+	errorsignite "github.com/ignite/modules/errors"
 	tc "github.com/ignite/modules/testutil/constructor"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
@@ -168,7 +167,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			},
 			missionID: 1,
 			address:   addr[2],
-			err:       spnerrors.ErrCritical,
+			err:       errorsignite.ErrCritical,
 		},
 		{
 			name: "should fail with critical if claimer address is not bech32",
@@ -186,7 +185,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			},
 			missionID: 1,
 			address:   "invalid",
-			err:       spnerrors.ErrCritical,
+			err:       errorsignite.ErrCritical,
 		},
 		{
 			name: "should allow distributing full airdrop to one account, one mission",

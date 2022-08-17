@@ -10,7 +10,7 @@ import (
 // DefaultGenesis returns the default claim genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		AirdropSupply: sdk.NewCoin("uspn", sdk.ZeroInt()),
+		AirdropSupply: sdk.NewCoin("utest", sdk.ZeroInt()),
 		ClaimRecords:  []ClaimRecord{},
 		Missions:      []Mission{},
 		InitialClaim:  InitialClaim{},
