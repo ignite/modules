@@ -1,5 +1,5 @@
 syntax = "proto3";
-package tendermint.spn.claim;
+package ignite.modules.claim;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
@@ -9,7 +9,7 @@ import "claim/mission.proto";
 import "claim/initial_claim.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "github.com/tendermint/spn/x/claim/types";
+option go_package = "github.com/ignite/modules/x/claim/types";
 
 // GenesisState defines the claim module's genesis state.
 message GenesisState {

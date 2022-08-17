@@ -1,10 +1,10 @@
 syntax = "proto3";
-package tendermint.spn.claim;
+package ignite.modules.claim;
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/tendermint/spn/x/claim/types";
+option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Params defines the parameters for the module.
 message Params {

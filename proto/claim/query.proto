@@ -1,6 +1,5 @@
 syntax = "proto3";
-
-package tendermint.spn.claim;
+package ignite.modules.claim;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "cosmos/base/v1beta1/coin.proto";
@@ -14,7 +13,7 @@ import "claim/mission.proto";
 import "claim/initial_claim.proto";
 // this line is used by starport scaffolding # 1
 
-option go_package = "github.com/tendermint/spn/x/claim/types";
+option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Query defines the gRPC querier service.
 service Query {

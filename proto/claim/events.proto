@@ -1,7 +1,7 @@
 syntax = "proto3";
-package tendermint.spn.claim;
+package ignite.modules.claim;
 
-option go_package = "github.com/tendermint/spn/x/claim/types";
+option go_package = "github.com/ignite/modules/x/claim/types";
 
 message EventMissionCompleted {
   uint64 missionID = 1;
