@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/claim/types"
+	testkeeper "github.com/ignite/modules/testutil/keeper"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestParamsQuery(t *testing.T) {

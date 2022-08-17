@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
 
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func CmdClaimInitial() *cobra.Command {

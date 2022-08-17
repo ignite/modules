@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (k Keeper) ClaimRecordAll(c context.Context, req *types.QueryAllClaimRecordRequest) (*types.QueryAllClaimRecordResponse, error) {

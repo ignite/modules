@@ -5,7 +5,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
-	"github.com/tendermint/spn/x/claim/types"
+
+	"github.com/ignite/modules/x/claim/types"
 )
 
 // SetAirdropSupply set airdropSupply in the store

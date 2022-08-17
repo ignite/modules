@@ -10,7 +10,7 @@ import (
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

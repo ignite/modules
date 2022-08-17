@@ -6,10 +6,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/testutil/nullify"
-	"github.com/tendermint/spn/x/claim/keeper"
-	"github.com/tendermint/spn/x/claim/types"
+	testkeeper "github.com/ignite/modules/testutil/keeper"
+	"github.com/ignite/modules/testutil/nullify"
+	"github.com/ignite/modules/x/claim/keeper"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func createTestInitialClaim(keeper *keeper.Keeper, ctx sdk.Context) types.InitialClaim {

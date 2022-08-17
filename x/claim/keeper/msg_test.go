@@ -6,9 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/claim/keeper"
-	"github.com/tendermint/spn/x/claim/types"
+	testkeeper "github.com/ignite/modules/testutil/keeper"
+	"github.com/ignite/modules/x/claim/keeper"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {

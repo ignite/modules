@@ -8,8 +8,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	claimsimulation "github.com/tendermint/spn/x/claim/simulation"
-	"github.com/tendermint/spn/x/claim/types"
+	claimsimulation "github.com/ignite/modules/x/claim/simulation"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 const (

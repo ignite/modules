@@ -15,9 +15,9 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tendermint/spn/x/claim/client/cli"
-	"github.com/tendermint/spn/x/claim/keeper"
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/client/cli"
+	"github.com/ignite/modules/x/claim/keeper"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 var (

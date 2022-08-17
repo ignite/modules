@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 type msgServer struct {

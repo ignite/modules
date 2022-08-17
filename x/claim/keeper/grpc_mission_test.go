@@ -10,9 +10,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/testutil/nullify"
-	"github.com/tendermint/spn/x/claim/types"
+	testkeeper "github.com/ignite/modules/testutil/keeper"
+	"github.com/ignite/modules/testutil/nullify"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestMissionQuerySingle(t *testing.T) {

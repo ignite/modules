@@ -10,9 +10,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/simulation"
-	"github.com/tendermint/spn/x/claim/keeper"
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/testutil/simulation"
+	"github.com/ignite/modules/x/claim/keeper"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func SimulateMsgClaimInitial(

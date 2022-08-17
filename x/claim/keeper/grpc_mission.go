@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (k Keeper) MissionAll(c context.Context, req *types.QueryAllMissionRequest) (*types.QueryAllMissionResponse, error) {

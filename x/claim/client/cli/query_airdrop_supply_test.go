@@ -10,9 +10,9 @@ import (
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/nullify"
-	"github.com/tendermint/spn/x/claim/client/cli"
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/testutil/nullify"
+	"github.com/ignite/modules/x/claim/client/cli"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (suite *QueryTestSuite) TestShowAirdropSupply() {

@@ -6,10 +6,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/claim/types"
+	tc "github.com/ignite/modules/testutil/constructor"
+	testkeeper "github.com/ignite/modules/testutil/keeper"
+	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func Test_msgServer_ClaimInitial(t *testing.T) {

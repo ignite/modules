@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-	"github.com/tendermint/spn/testutil/sample"
-	claim "github.com/tendermint/spn/x/claim/types"
+	tc "github.com/ignite/modules/testutil/constructor"
+	"github.com/ignite/modules/testutil/sample"
+	claim "github.com/ignite/modules/x/claim/types"
 )
 
 func TestMission_Validate(t *testing.T) {

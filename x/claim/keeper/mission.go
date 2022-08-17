@@ -8,7 +8,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
-	"github.com/tendermint/spn/x/claim/types"
+
+	"github.com/ignite/modules/x/claim/types"
 )
 
 // GetMissionIDBytes returns the byte representation of the ID

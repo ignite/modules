@@ -3,12 +3,12 @@ package types_test
 import (
 	"testing"
 
-	"github.com/tendermint/spn/x/claim/types"
+	"github.com/ignite/modules/x/claim/types"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/spn/testutil/sample"
+	"github.com/ignite/modules/testutil/sample"
 )
 
 func TestMsgClaimInitial_ValidateBasic(t *testing.T) {
