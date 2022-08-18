@@ -106,7 +106,8 @@ import (
 	"github.com/ignite/modules/cmd"
 	"github.com/ignite/modules/x/claim"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
-	claimtypes "github.com/ignite/modules/x/claim/types" // this line is used by starport scaffolding # stargate/app/moduleImport
+	claimtypes "github.com/ignite/modules/x/claim/types"
+	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 const (
