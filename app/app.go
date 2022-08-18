@@ -113,7 +113,7 @@ import (
 const (
 	AccountAddressPrefix = "cosmos"
 	Name                 = "testapp"
-	DefaultChainID       = "testapp-1"
+	DefaultChainID       = "testapp-0"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -325,7 +325,7 @@ func New(
 		app.GetSubspace(authtypes.ModuleName),
 		authtypes.ProtoBaseAccount,
 		maccPerms,
-		sdk.Bech32PrefixAccAddr,
+		AccountAddressPrefix,
 	)
 
 	app.AuthzKeeper = authzkeeper.NewKeeper(

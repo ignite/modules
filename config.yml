@@ -1,8 +1,13 @@
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    mnemonic: "slide moment original seven milk crawl help text kick fluid boring awkward doll wonder sure fragile plate grid hard next casual expire okay body"
+    coins: ["20000000token", "200000000stake"]
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    mnemonic: "trap possible liquid elite embody host segment fantasy swim cable digital eager tiny broom burden diary earn hen grow engine pigeon fringe claim program"
+    coins: ["10000000token", "100000000stake"]
+  - name: carol
+    mnemonic: "great immense still pill defense fetch pencil slow purchase symptom speed arm shoot fence have divorce cigar rapid hen vehicle pear evolve correct nerve"
+    coins: ["10000000token", "100000000stake"]
 validator:
   name: alice
   staked: "100000000stake"
@@ -11,3 +16,30 @@ faucet:
   coins: ["5token", "100000stake"]
 build:
   binary: "testappd"
+genesis:
+  chain_id: testapp-0
+  app_state:
+    claim:
+      airdropSupply:
+        amount: "1000"
+        denom: "drop"
+      claimRecords:
+        - address: "cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9" # alice
+          claimable: "400"
+        - address: "cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er" # bob
+          claimable: "500"
+        - address: "cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w" # carol
+          claimable: "100"
+      missions:
+        - missionID: "0"
+          description: "initial claim"
+          weight: "0.2"
+        - missionID: "1"
+          description: "staking"
+          weight: "0.5"
+        - missionID: "2"
+          description: "voting"
+          weight: "0.3"
+      initialClaim:
+        enabled: true
+        missionID: "0"
