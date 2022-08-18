@@ -41,7 +41,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	if found {
 		genesis.AirdropSupply = airdropSupply
 	} else {
-		// set to 0uspn otherwise
+		// set to zero coin otherwise
 		genesis.AirdropSupply = types.DefaultGenesis().AirdropSupply
 	}
 	// Get all initialClaim
