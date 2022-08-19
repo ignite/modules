@@ -14,7 +14,7 @@ A clear and concise description of what the bug is.
 Steps to reproduce the behavior:
 1.
 
-**Please provide output of commands**
+**Please provide output of commands while in the repo base directory**
 - `git rev-parse --verify HEAD`
 - `ignite version`
 - `go version`
