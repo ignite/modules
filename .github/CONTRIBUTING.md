@@ -2,7 +2,7 @@
 
 If you're willing to create a new PR on Starport Network, make sure that you read and comply with this document.
 
-Start a new [Discussion](https://github.com/tendermint/spn/discussions/new) if you want to propose changes to this document.
+Start a new [Discussion](https://github.com/ignite/modules/discussions/new) if you want to propose changes to this document.
 
 Thank you for your contribution!
 
