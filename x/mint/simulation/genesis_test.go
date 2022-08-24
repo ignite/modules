@@ -2,6 +2,7 @@ package simulation_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"testing"
 
@@ -45,178 +46,206 @@ func TestRandomizedGenState(t *testing.T) {
 		dec2 = sdk.MustNewDecFromStr("0.200000000000000000")
 		dec3 = sdk.MustNewDecFromStr("0.070000000000000000")
 		dec4 = sdk.MustNewDecFromStr("0.170000000000000000")
-		dec6 = sdk.MustNewDecFromStr("0.060000000000000000")
-		dec7 = sdk.MustNewDecFromStr("0.070000000000000000")
+		dec5 = sdk.MustNewDecFromStr("0.70000000000000000")
+		dec6 = sdk.MustNewDecFromStr("0.130000000000000000")
 	)
 
 	weightedAddresses := []types.WeightedAddress{
 		{
-			Address: "cosmos1jtzgjtywnea9egav6cxnjj9hp6m6xavccvhptt",
-			Weight:  sdk.MustNewDecFromStr("0.007579683278078640"),
+			Address: "cosmos15mf334fgwp4fze4udr6l2wgwuxk24yps7we7dq",
+			Weight:  sdk.MustNewDecFromStr("0.017458224291856355"),
 		},
 		{
-			Address: "cosmos1mkn7jj5ncvek4axtydnma37nsvweshkren4hsf",
-			Weight:  sdk.MustNewDecFromStr("0.019381361604886090"),
-		},
-		{
-			Address: "cosmos19a3q9ggrldtz4x562ku5dhs8ymw94sjjlapn37",
-			Weight:  sdk.MustNewDecFromStr("0.008444926999667921"),
-		},
-		{
-			Address: "cosmos1vzhn3wun33c3x82jvfkhjn0h9a337hjpqa4h00",
-			Weight:  sdk.MustNewDecFromStr("0.014739408511639647"),
-		},
-		{
-			Address: "cosmos19mut32skaqlfw30h0g9v6eafrvxwffu6xuccl4",
-			Weight:  sdk.MustNewDecFromStr("0.019907312473387958"),
-		},
-		{
-			Address: "cosmos1gq6efy5wtny5ga2j2pkdjuphn00eks7ullnkzd",
-			Weight:  sdk.MustNewDecFromStr("0.014719612329779282"),
-		},
-		{
-			Address: "cosmos1e52yky7qxek43w3wmcwnfev3qggwexg9d0894s",
-			Weight:  sdk.MustNewDecFromStr("0.006553769588010266"),
-		},
-		{
-			Address: "cosmos1fdz2l502a6s25ess2n0f799kc6qp48m20mc0hw",
-			Weight:  sdk.MustNewDecFromStr("0.010760510739067874"),
-		},
-		{
-			Address: "cosmos1q6vqfavjmy78u2ymp4lcv67ht0709ygtcqpt5h",
-			Weight:  sdk.MustNewDecFromStr("0.013805657006441215"),
-		},
-		{
-			Address: "cosmos1ca6dwkygsg97u7uckdu409pztfmtrfa6dx4tsu",
+			Address: "cosmos1repxmyy9mx4xq4fajgjxaahaw0yjlmh5uk64m6",
 			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
 		},
 		{
-			Address: "cosmos138esrz5a32jhz9xnekhyz578zwg8dhjsv5djwh",
-			Weight:  sdk.MustNewDecFromStr("0.006332758317578577"),
+			Address: "cosmos1n6wnkglm8m3sxr2f7g9rmv0u6ekjc7e4t5ta2f",
+			Weight:  sdk.MustNewDecFromStr("0.006141422857328581"),
 		},
 		{
-			Address: "cosmos1u8lz5wywvz0eg4405n4xczukklaz3upc9hxsna",
-			Weight:  sdk.MustNewDecFromStr("0.016769438463264262"),
+			Address: "cosmos17q32k8jlkac2yapq7mxf5lak0huh06p0g6sqmy",
+			Weight:  sdk.MustNewDecFromStr("0.007683902997839140"),
 		},
 		{
-			Address: "cosmos1sguazn8q2ree4qhjwp3qgkfte36g36vtfztmq8",
-			Weight:  sdk.MustNewDecFromStr("0.016486912293645013"),
+			Address: "cosmos1ls6shhp8swr5ards3fp2lst5ftysse25dqmk2x",
+			Weight:  sdk.MustNewDecFromStr("0.006856440371419632"),
 		},
 		{
-			Address: "cosmos1jd8at3lh5sy4yvp2v5nmm36zqk9yh4r3wx4qvc",
-			Weight:  sdk.MustNewDecFromStr("0.011221333052202303"),
-		},
-		{
-			Address: "cosmos1syp379pdar2s3pfsjajnefjlq00czu309s5z2m",
-			Weight:  sdk.MustNewDecFromStr("0.012547375725019854"),
-		},
-		{
-			Address: "cosmos1e9vepggfm55sn8tu89uuxezfyg4ksp247vgcpw",
-			Weight:  sdk.MustNewDecFromStr("0.005133490373095672"),
-		},
-		{
-			Address: "cosmos1hd4v0atfwsyzjp7mss5chve0v0t4ukykh294cu",
-			Weight:  sdk.MustNewDecFromStr("0.016310930079144450"),
-		},
-		{
-			Address: "cosmos1mc8ngmxdr57hwaztw3fdwl807jcvr9s7wafl9h",
-			Weight:  sdk.MustNewDecFromStr("0.005157396468835283"),
-		},
-		{
-			Address: "cosmos147jfpxlrg3t3ju4fftceaaln5rqx2qqws7fujc",
-			Weight:  sdk.MustNewDecFromStr("0.015186634308558717"),
-		},
-		{
-			Address: "cosmos1l0y4wvqdr8smgr5y7hqt68ucgs6wtelvaxrsfa",
-			Weight:  sdk.MustNewDecFromStr("0.015320081367030857"),
-		},
-		{
-			Address: "cosmos1y5r6sh5pzdtkl7dh47gla3ahc29gz6um3pd409",
-			Weight:  sdk.MustNewDecFromStr("0.008073123323036443"),
-		},
-		{
-			Address: "cosmos1xx5lqm5e443rt8f5xqmkp6nkdjte3v3udgwhh6",
+			Address: "cosmos1xq7lhaqxvkkljqp73xt5h3uqwe0f3gj2pwc0xv",
 			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
 		},
 		{
-			Address: "cosmos18cmclgv68src3r37r85czymf8ukswxvg397ts9",
-			Weight:  sdk.MustNewDecFromStr("0.013407917009802894"),
+			Address: "cosmos14g2upxq6hu49lt544a0jrs6j376r334h9w6tus",
+			Weight:  sdk.MustNewDecFromStr("0.016662840271533599"),
 		},
 		{
-			Address: "cosmos1shpwvemq89zc5v8fxl3hpycucpys0f4xn26g6s",
-			Weight:  sdk.MustNewDecFromStr("0.019716827416745468"),
+			Address: "cosmos1kcu2rlxffgpycjn0e2fzs9de3xvdw8gf5n8em0",
+			Weight:  sdk.MustNewDecFromStr("0.016406308110665711"),
 		},
 		{
-			Address: "cosmos1943hl84hqstxmw6la5t24zdl5swyga5zufsk7u",
-			Weight:  sdk.MustNewDecFromStr("0.019430003500044880"),
+			Address: "cosmos14lh203x67r7a7vd9as2vqk7uc08uumlpkvuu5g",
+			Weight:  sdk.MustNewDecFromStr("0.008878619785299237"),
 		},
 		{
-			Address: "cosmos14k4mpq5aqp3yrh2e7trpqppu6epzpudd0lvm8h",
-			Weight:  sdk.MustNewDecFromStr("0.006513945114240174"),
+			Address: "cosmos1dec5rwvvcygyx6eg0hjv35vxfr58hawx7xvekw",
+			Weight:  sdk.MustNewDecFromStr("0.016267509677487911"),
 		},
 		{
-			Address: "cosmos1l57qnrftjt3gryahhp6aaftngvdm3hxhc2d3zn",
-			Weight:  sdk.MustNewDecFromStr("0.007391845925113882"),
+			Address: "cosmos1tlxztuxxs8rxmxv97247vsn5cafkv9sgplhmag",
+			Weight:  sdk.MustNewDecFromStr("0.017180571755071666"),
 		},
 		{
-			Address: "cosmos1m55gmlka3s5pcpalhh67lvxd544gnq9hcy9cmq",
-			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
+			Address: "cosmos17ktwhac3c75k7vr62lsvmtx8u9cs6t8g0t8ts6",
+			Weight:  sdk.MustNewDecFromStr("0.011536944938043694"),
 		},
 		{
-			Address: "cosmos1xq3d3wt9q4td4r8smz55dhve8e5yfdaqvu5wp9",
-			Weight:  sdk.MustNewDecFromStr("0.005905927546855497"),
+			Address: "cosmos1mtjrpensxply0kstkgfdjwnjakvvwdnhrg2at0",
+			Weight:  sdk.MustNewDecFromStr("0.010610596013385205"),
 		},
 		{
-			Address: "cosmos1hpvpldg2g0vcytjxfvs6pz95ztvctyue0rscf7",
-			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
-		},
-		{
-			Address: "cosmos1vxxq87euk5jc4nd5wdj6ytf2txaqnuw5r5fwav",
-			Weight:  sdk.MustNewDecFromStr("0.015577734590737776"),
-		},
-		{
-			Address: "cosmos1803q2f46gr0wwzp0hu9sfeh6ranuhfrd7wtazm",
-			Weight:  sdk.MustNewDecFromStr("0.016337747402005633"),
-		},
-		{
-			Address: "cosmos1faggm2cfh5mzjjzcf9c5l2v47appddtp7ft80c",
-			Weight:  sdk.MustNewDecFromStr("0.017649303914072022"),
-		},
-		{
-			Address: "cosmos1y23cgd4x9mg7rwpsyaze05kcclzy288kp9lvjx",
+			Address: "cosmos1uqv7xkqey6sv8c3ta8aqn08pd97qg5dyqrf6a4",
 			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
 		},
 		{
-			Address: "cosmos1389c6yvaw93zs3xfdgk8f7zcza25laq0h7hyym",
-			Weight:  sdk.MustNewDecFromStr("0.017412338589465314"),
+			Address: "cosmos1hc08vrfk2fyhe2wkdep4uswcqtepy73rxpe5me",
+			Weight:  sdk.MustNewDecFromStr("0.010676596986934073"),
 		},
 		{
-			Address: "cosmos1lpjthgnf5g0gq2k3pp3l9g6s40zva7t7q4y70r",
-			Weight:  sdk.MustNewDecFromStr("0.018301886260426990"),
+			Address: "cosmos1rl5exulw99m0mx43c09m0k4ydmzdurxu8c4mpm",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
 		},
 		{
-			Address: "cosmos139fkuuseq8j538m80p87nrxzvp3upc34pfhwu3",
-			Weight:  sdk.MustNewDecFromStr("0.013784608707994140"),
+			Address: "cosmos12yeysqnpx43uddpuve72xs4w9ghnhkf2mggrhz",
+			Weight:  sdk.MustNewDecFromStr("0.005312909508254276"),
 		},
 		{
-			Address: "cosmos1wzxy3xcy24jsvxkyjtpy4zsvjf9pw25rcjecps",
-			Weight:  sdk.MustNewDecFromStr("0.007006063945540094"),
+			Address: "cosmos1r557dv93c3qtzl4ws5ne9rgk6pp3wqchycem0q",
+			Weight:  sdk.MustNewDecFromStr("0.010491849933835756"),
 		},
 		{
-			Address: "cosmos1egm90aq80hys9tvy7m8yr24c9tvxzrrkz0fzt2",
+			Address: "cosmos1uhp7u3jflawdn64ehe0g0gvlnrtz9uvzzc9uvk",
+			Weight:  sdk.MustNewDecFromStr("0.006390850270813198"),
+		},
+		{
+			Address: "cosmos13uh4804tdnrffhvxajlce7ru9wn84lgl94cs6v",
+			Weight:  sdk.MustNewDecFromStr("0.019172715206289138"),
+		},
+		{
+			Address: "cosmos1nulylqzrde5utkjrz0twh6e2kp2csat2f8n9je",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
+		},
+		{
+			Address: "cosmos1906mhe8x2xge0gm4neczdv7wvs0fzxnfh05j7r",
+			Weight:  sdk.MustNewDecFromStr("0.015322247994609446"),
+		},
+		{
+			Address: "cosmos1vxnfc3v6fx6vwxn0gees08n02cuaf8jrjq7hxv",
+			Weight:  sdk.MustNewDecFromStr("0.014120472015057072"),
+		},
+		{
+			Address: "cosmos1j2uxc248vlfw32ws0auyrjatgkh58c6zepkjku",
 			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
 		},
 		{
-			Address: "cosmos1v32ux4smhrvmf6dpfs3u3wmuvwn5aqegrmvj9h",
+			Address: "cosmos1fqd5p03lv502gy24r5fxyexpq6zyccgc56yagm",
+			Weight:  sdk.MustNewDecFromStr("0.006481158671130950"),
+		},
+		{
+			Address: "cosmos1wl62xxnkeftjksvmx73wj2fa3vpreg5fyczurn",
+			Weight:  sdk.MustNewDecFromStr("0.011313084918839887"),
+		},
+		{
+			Address: "cosmos1pmuazlfeqjpv0fdktkuh20epw276zvg58advj8",
+			Weight:  sdk.MustNewDecFromStr("0.014478223295274740"),
+		},
+		{
+			Address: "cosmos1nnzlwke77snwzdq54ryaau9gzw47a7sg8mrng4",
 			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
 		},
 		{
-			Address: "cosmos1kkp5tjyx3m3sk64pr95stnv08a53384yjmc3da",
-			Weight:  sdk.MustNewDecFromStr("0.012540257524846348"),
+			Address: "cosmos1xzyprgtm3hjrqnr75qclqk7ypqunmfl7k26dza",
+			Weight:  sdk.MustNewDecFromStr("0.011906575459237459"),
 		},
 		{
-			Address: "cosmos1x4yx5q09shge3p60rtyulgrv6cgl57pyss66d0",
-			Weight:  sdk.MustNewDecFromStr("0.484591876249738564"),
+			Address: "cosmos1hyt7g5533ypamrkhm29jqdzu9w3mws0dgpwzzd",
+			Weight:  sdk.MustNewDecFromStr("0.013018175136719084"),
+		},
+		{
+			Address: "cosmos1ct3n6rn6qvps6j2f5pfhsyszjw9r3z6ps89x4m",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
+		},
+		{
+			Address: "cosmos1rvp5k0g7lk5sgul6prt3hs6z55ddd6k2jxqxtp",
+			Weight:  sdk.MustNewDecFromStr("0.012310359216781740"),
+		},
+		{
+			Address: "cosmos1aye9n83a4eulzntgq25zkyq4faljg225x5hm7y",
+			Weight:  sdk.MustNewDecFromStr("0.013831594424707402"),
+		},
+		{
+			Address: "cosmos1q9puau53l07ys8en7k5ejjlu49plr607jqku2m",
+			Weight:  sdk.MustNewDecFromStr("0.019075909099606813"),
+		},
+		{
+			Address: "cosmos186js4cmqzqeesltj9sjspsj6xthehg5zuk8ryq",
+			Weight:  sdk.MustNewDecFromStr("0.010506634053162084"),
+		},
+		{
+			Address: "cosmos1h3ytxxhq5kerq080uv985jmrmpwmhjlq4cjgk5",
+			Weight:  sdk.MustNewDecFromStr("0.011408884176143559"),
+		},
+		{
+			Address: "cosmos1fdufk5dtcnf5r5ktfk9l997c7tlhcfln620t6f",
+			Weight:  sdk.MustNewDecFromStr("0.014516652780079007"),
+		},
+		{
+			Address: "cosmos1mh4yza5rszduv6jtpkhucggp2gqwm2k42h8nz8",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
+		},
+		{
+			Address: "cosmos1c7xwgn6x4pp0zj2c33m6j87jl9t02wkn3yt7s7",
+			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
+		},
+		{
+			Address: "cosmos1h2qndghy9tvl7qz9y5z3433kvhuxcwt5sk43j7",
+			Weight:  sdk.MustNewDecFromStr("0.011152746629363641"),
+		},
+		{
+			Address: "cosmos19amx0kcpnrdx4g9pttcm2v04m76atlxztcq8sd",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
+		},
+		{
+			Address: "cosmos1g9rzaedphtthffy9nrh0ukjdehau4p0aq72k5k",
+			Weight:  sdk.MustNewDecFromStr("0.015477169807850692"),
+		},
+		{
+			Address: "cosmos1gf73lfe9tzn27xpzz6xksku0c08rvk3gekka5h",
+			Weight:  sdk.MustNewDecFromStr("0.007218936958952564"),
+		},
+		{
+			Address: "cosmos10l5my6s0z3j74jz5fn9a6hfldv0jt2aawdug5n",
+			Weight:  sdk.MustNewDecFromStr("0.013692731693070881"),
+		},
+		{
+			Address: "cosmos1zj8sm2fsazhcn2jg2h24084f2l3eeu20d396dg",
+			Weight:  sdk.MustNewDecFromStr("0.014945145118083484"),
+		},
+		{
+			Address: "cosmos1w0ln5gz9tldh5dun9qx8ed3ww82zfsp4vemh79",
+			Weight:  sdk.MustNewDecFromStr("0.006580834237555860"),
+		},
+		{
+			Address: "cosmos1s2kdm985deuj52yw9mvmrsafhe95qxaghr5ng2",
+			Weight:  sdk.MustNewDecFromStr("0.020000000000000000"),
+		},
+		{
+			Address: "cosmos1ryaxl3wjyqf793yx0upz0c5se8p3uzj98cev93",
+			Weight:  sdk.MustNewDecFromStr("0.005000000000000000"),
+		},
+		{
+			Address: "cosmos1tyjkd7g3r5txnxugexzusn69f6tc6m8cj6qlj2",
+			Weight:  sdk.MustNewDecFromStr("0.374914161337716463"),
 		},
 	}
 
@@ -226,13 +255,16 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, dec3, mintGenesis.Params.InflationMin)
 	require.Equal(t, "stake", mintGenesis.Params.MintDenom)
 	require.Equal(t, dec4, mintGenesis.Params.DistributionProportions.Staking)
-	require.Equal(t, dec6, mintGenesis.Params.DistributionProportions.FundedAddresses)
-	require.Equal(t, dec7, mintGenesis.Params.DistributionProportions.CommunityPool)
+	require.Equal(t, dec5, mintGenesis.Params.DistributionProportions.FundedAddresses)
+	require.Equal(t, dec6, mintGenesis.Params.DistributionProportions.CommunityPool)
 	require.Equal(t, "0stake", mintGenesis.Minter.BlockProvision(mintGenesis.Params).String())
 	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.NextAnnualProvisions(mintGenesis.Params, sdk.OneInt()).String())
 	require.Equal(t, "0.169999926644441493", mintGenesis.Minter.NextInflationRate(mintGenesis.Params, sdk.OneDec()).String())
 	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.Inflation.String())
 	require.Equal(t, "0.000000000000000000", mintGenesis.Minter.AnnualProvisions.String())
+	for _, addr := range mintGenesis.Params.FundedAddresses {
+		fmt.Println(addr)
+	}
 	require.Equal(t, weightedAddresses, mintGenesis.Params.FundedAddresses)
 }
 
