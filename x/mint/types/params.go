@@ -13,14 +13,14 @@ import (
 
 // Parameter store keys
 var (
-	KeyMintDenom                 = []byte("MintDenom")
-	KeyInflationRateChange       = []byte("InflationRateChange")
-	KeyInflationMax              = []byte("InflationMax")
-	KeyInflationMin              = []byte("InflationMin")
-	KeyGoalBonded                = []byte("GoalBonded")
-	KeyBlocksPerYear             = []byte("BlocksPerYear")
-	KeyDistributionProportions   = []byte("DistributionProportions")
-	KeyDevelopmentFundRecipients = []byte("DevelopmentFundRecipients")
+	KeyMintDenom               = []byte("MintDenom")
+	KeyInflationRateChange     = []byte("InflationRateChange")
+	KeyInflationMax            = []byte("InflationMax")
+	KeyInflationMin            = []byte("InflationMin")
+	KeyGoalBonded              = []byte("GoalBonded")
+	KeyBlocksPerYear           = []byte("BlocksPerYear")
+	KeyDistributionProportions = []byte("DistributionProportions")
+	KeyFundedAddresses         = []byte("FundedAddresses")
 )
 
 // ParamTable for minting module.
@@ -36,17 +36,17 @@ func NewParams(
 	goalBonded sdk.Dec,
 	blocksPerYear uint64,
 	proportions DistributionProportions,
-	devAddrs []WeightedAddress,
+	fundedAddrs []WeightedAddress,
 ) Params {
 	return Params{
-		MintDenom:                 mintDenom,
-		InflationRateChange:       inflationRateChange,
-		InflationMax:              inflationMax,
-		InflationMin:              inflationMin,
-		GoalBonded:                goalBonded,
-		BlocksPerYear:             blocksPerYear,
-		DistributionProportions:   proportions,
-		DevelopmentFundRecipients: devAddrs,
+		MintDenom:               mintDenom,
+		InflationRateChange:     inflationRateChange,
+		InflationMax:            inflationMax,
+		InflationMin:            inflationMin,
+		GoalBonded:              goalBonded,
+		BlocksPerYear:           blocksPerYear,
+		DistributionProportions: proportions,
+		FundedAddresses:         fundedAddrs,
 	}
 }
 
@@ -61,11 +61,10 @@ func DefaultParams() Params {
 		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 seconds block times
 		DistributionProportions: DistributionProportions{
 			Staking:         sdk.NewDecWithPrec(3, 1), // 0.3
-			Incentives:      sdk.NewDecWithPrec(4, 1), // 0.4
-			DevelopmentFund: sdk.NewDecWithPrec(2, 1), // 0.2
-			CommunityPool:   sdk.NewDecWithPrec(1, 1), // 0.1
+			FundedAddresses: sdk.NewDecWithPrec(4, 1), // 0.4
+			CommunityPool:   sdk.NewDecWithPrec(3, 1), // 0.3
 		},
-		DevelopmentFundRecipients: []WeightedAddress{},
+		FundedAddresses: []WeightedAddress{},
 	}
 }
 
@@ -98,7 +97,7 @@ func (p Params) Validate() error {
 	if err := validateDistributionProportions(p.DistributionProportions); err != nil {
 		return err
 	}
-	return validateWeightedAddresses(p.DevelopmentFundRecipients)
+	return validateWeightedAddresses(p.FundedAddresses)
 }
 
 // String implements the Stringer interface.
@@ -117,7 +116,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyGoalBonded, &p.GoalBonded, validateGoalBonded),
 		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
 		paramtypes.NewParamSetPair(KeyDistributionProportions, &p.DistributionProportions, validateDistributionProportions),
-		paramtypes.NewParamSetPair(KeyDevelopmentFundRecipients, &p.DevelopmentFundRecipients, validateWeightedAddresses),
+		paramtypes.NewParamSetPair(KeyFundedAddresses, &p.FundedAddresses, validateWeightedAddresses),
 	}
 }
 
@@ -224,19 +223,15 @@ func validateDistributionProportions(i interface{}) error {
 		return errors.New("staking distribution ratio should not be negative")
 	}
 
-	if v.Incentives.IsNegative() {
-		return errors.New("pool incentives distribution ratio should not be negative")
-	}
-
-	if v.DevelopmentFund.IsNegative() {
-		return errors.New("development fund distribution ratio should not be negative")
+	if v.FundedAddresses.IsNegative() {
+		return errors.New("funded addresses distribution ratio should not be negative")
 	}
 
 	if v.CommunityPool.IsNegative() {
 		return errors.New("community pool distribution ratio should not be negative")
 	}
 
-	totalProportions := v.Staking.Add(v.Incentives).Add(v.DevelopmentFund).Add(v.CommunityPool)
+	totalProportions := v.Staking.Add(v.FundedAddresses).Add(v.CommunityPool)
 
 	if !totalProportions.Equal(sdk.NewDec(1)) {
 		return errors.New("total distributions ratio should be 1")

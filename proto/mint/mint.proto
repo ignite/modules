@@ -39,23 +39,16 @@ message DistributionProportions {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
-  // incentives defines the proportion of the minted minted_denom that is
-  // to be allocated as incentives.
-  string incentives = 2 [
-    (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar)  = "cosmos.Dec"
-  ];
-  // development_fund defines the proportion of the minted minted_denom that is
-  // to be allocated for development funding.
-  string development_fund = 3 [
+  // funded_addresses defines the proportion of the minted minted_denom that is
+  // to the set of funded addresses.
+  string funded_addresses = 2 [
     (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   // community_pool defines the proportion of the minted minted_denom that is
   // to be allocated to the community pool.
-  string community_pool = 4 [
+  string community_pool = 3 [
     (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
@@ -97,6 +90,6 @@ message Params {
   // distribution_proportions defines the proportion of the minted denom
   DistributionProportions distribution_proportions = 7 [(gogoproto.nullable) = false];
 
-  // address to receive developer rewards
-  repeated WeightedAddress development_fund_recipients = 8 [(gogoproto.nullable) = false];
+  // list of funded addresses
+  repeated WeightedAddress funded_addresses = 8 [(gogoproto.nullable) = false];
 }

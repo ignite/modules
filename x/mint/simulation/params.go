@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	keyInflationRateChange       = "InflationRateChange"
-	keyInflationMax              = "InflationMax"
-	keyInflationMin              = "InflationMin"
-	keyGoalBonded                = "GoalBonded"
-	keyDistributionProportions   = "DistributionProportions"
-	keyDevelopmentFundRecipients = "DevelopmentFundRecipients"
+	keyInflationRateChange     = "InflationRateChange"
+	keyInflationMax            = "InflationMax"
+	keyInflationMin            = "InflationMin"
+	keyGoalBonded              = "GoalBonded"
+	keyDistributionProportions = "DistributionProportions"
+	keyFundedAddresses         = "FundedAddresses"
 )
 
 // ParamChanges defines the parameters that can be modified by param change proposals
@@ -50,17 +50,16 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 			func(r *rand.Rand) string {
 				proportions := GenDistributionProportions(r)
 				return fmt.Sprintf(
-					`{"staking":"%s","incentives":"%s","development_fund":"%s","community_pool":"%s"}`,
+					`{"staking":"%s","funded_addresses":"%s","community_pool":"%s"}`,
 					proportions.Staking.String(),
-					proportions.Incentives.String(),
-					proportions.DevelopmentFund.String(),
+					proportions.FundedAddresses.String(),
 					proportions.CommunityPool.String(),
 				)
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyDevelopmentFundRecipients,
+		simulation.NewSimParamChange(types.ModuleName, keyFundedAddresses,
 			func(r *rand.Rand) string {
-				weightedAddrs := GenDevelopmentFundRecipients(r)
+				weightedAddrs := GenFundedAddresses(r)
 				weightedAddrsStr := make([]string, 0)
 				for _, wa := range weightedAddrs {
 					s := fmt.Sprintf(

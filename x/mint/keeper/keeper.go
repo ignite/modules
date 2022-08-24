@@ -133,35 +133,26 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 		return err
 	}
 
-	// allocate pool allocation ratio to incentives module account
-	incentivesCoins := sdk.NewCoins()
-	// TODO: uncomment once incentives module is in place
-	// incentivesCoins := sdk.NewCoins(k.GetProportions(ctx, mintedCoin, proportions.Incentives))
-	// err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, incentivestypes.ModuleName, incentivesCoins)
-	// if err != nil {
-	//	return err
-	// }
-
-	devFundCoin := k.GetProportions(ctx, mintedCoin, proportions.DevelopmentFund)
-	devFundCoins := sdk.NewCoins(devFundCoin)
-	if len(params.DevelopmentFundRecipients) == 0 {
+	fundedAddrsCoin := k.GetProportions(ctx, mintedCoin, proportions.FundedAddresses)
+	fundedAddrsCoins := sdk.NewCoins(fundedAddrsCoin)
+	if len(params.FundedAddresses) == 0 {
 		// fund community pool when rewards address is empty
 		if err = k.distrKeeper.FundCommunityPool(
 			ctx,
-			devFundCoins,
+			fundedAddrsCoins,
 			k.accountKeeper.GetModuleAddress(types.ModuleName),
 		); err != nil {
 			return err
 		}
 	} else {
 		// allocate developer rewards to developer addresses by weight
-		for _, w := range params.DevelopmentFundRecipients {
-			devFundPortionCoins := sdk.NewCoins(k.GetProportions(ctx, devFundCoin, w.Weight))
+		for _, w := range params.FundedAddresses {
+			fundedAddrCoins := sdk.NewCoins(k.GetProportions(ctx, fundedAddrsCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
 				return errorsignite.Critical(err.Error())
 			}
-			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, devAddr, devFundPortionCoins)
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, devAddr, fundedAddrCoins)
 			if err != nil {
 				return err
 			}
@@ -169,7 +160,7 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 	}
 
 	// subtract from original provision to ensure no coins left over after the allocations
-	communityPoolCoins := sdk.NewCoins(mintedCoin).Sub(stakingRewardsCoins...).Sub(incentivesCoins...).Sub(devFundCoins...)
+	communityPoolCoins := sdk.NewCoins(mintedCoin).Sub(stakingRewardsCoins...).Sub(fundedAddrsCoins...)
 	err = k.distrKeeper.FundCommunityPool(ctx, communityPoolCoins, k.accountKeeper.GetModuleAddress(types.ModuleName))
 	if err != nil {
 		return err

@@ -17,13 +17,13 @@ import (
 
 // Simulation parameter constants
 const (
-	Inflation                 = "inflation"
-	InflationRateChange       = "inflation_rate_change"
-	InflationMax              = "inflation_max"
-	InflationMin              = "inflation_min"
-	GoalBonded                = "goal_bonded"
-	DistributionProportions   = "distribution_proportions"
-	DevelopmentFundRecipients = "development_fund_recipients"
+	Inflation               = "inflation"
+	InflationRateChange     = "inflation_rate_change"
+	InflationMax            = "inflation_max"
+	InflationMin            = "inflation_min"
+	GoalBonded              = "goal_bonded"
+	DistributionProportions = "distribution_proportions"
+	FundedAddresses         = "funded_addresses"
 )
 
 // GenInflation randomized Inflation
@@ -55,20 +55,17 @@ func GenGoalBonded(r *rand.Rand) sdk.Dec {
 func GenDistributionProportions(r *rand.Rand) types.DistributionProportions {
 	staking := r.Int63n(99)
 	left := int64(100) - staking
-	incentives := r.Int63n(left)
-	left -= incentives
-	devs := r.Int63n(left)
-	communityPool := left - devs
+	funded := r.Int63n(left)
+	communityPool := left - funded
 
 	return types.DistributionProportions{
 		Staking:         sdk.NewDecWithPrec(staking, 2),
-		Incentives:      sdk.NewDecWithPrec(incentives, 2),
-		DevelopmentFund: sdk.NewDecWithPrec(devs, 2),
+		FundedAddresses: sdk.NewDecWithPrec(funded, 2),
 		CommunityPool:   sdk.NewDecWithPrec(communityPool, 2),
 	}
 }
 
-func GenDevelopmentFundRecipients(r *rand.Rand) []types.WeightedAddress {
+func GenFundedAddresses(r *rand.Rand) []types.WeightedAddress {
 	var (
 		addrs         = make([]types.WeightedAddress, 0)
 		numAddrs      = r.Intn(51)
@@ -82,6 +79,7 @@ func GenDevelopmentFundRecipients(r *rand.Rand) []types.WeightedAddress {
 		if i == numAddrs-1 {
 			// use residual weight if last address
 			weight = remainWeight
+
 		} else {
 			remainWeight = remainWeight.Sub(weight)
 		}
@@ -136,8 +134,8 @@ func RandomizedGenState(simState *module.SimulationState) {
 
 	var developmentFundRecipients []types.WeightedAddress
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, DevelopmentFundRecipients, &developmentFundRecipients, simState.Rand,
-		func(r *rand.Rand) { developmentFundRecipients = GenDevelopmentFundRecipients(r) },
+		simState.Cdc, FundedAddresses, &developmentFundRecipients, simState.Rand,
+		func(r *rand.Rand) { developmentFundRecipients = GenFundedAddresses(r) },
 	)
 
 	mintDenom := sdk.DefaultBondDenom
