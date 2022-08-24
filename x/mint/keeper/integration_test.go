@@ -8,13 +8,13 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	spnapp "github.com/tendermint/spn/app"
-	"github.com/tendermint/spn/testutil"
-	"github.com/tendermint/spn/x/mint/types"
+	testapp "github.com/ignite/modules/app"
+	"github.com/ignite/modules/testutil"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 // returns context and an app with updated mint keeper
-func createTestApp(isCheckTx bool) (*spnapp.App, sdk.Context) {
+func createTestApp(isCheckTx bool) (*testapp.App, sdk.Context) {
 	app := setup(isCheckTx)
 
 	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
@@ -24,7 +24,7 @@ func createTestApp(isCheckTx bool) (*spnapp.App, sdk.Context) {
 	return app, ctx
 }
 
-func setup(isCheckTx bool) *spnapp.App {
+func setup(isCheckTx bool) *testapp.App {
 	app, genesisState := testutil.GenApp(!isCheckTx, 5)
 	if !isCheckTx {
 		// init chain must be called to stop deliverState from being nil

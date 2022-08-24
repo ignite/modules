@@ -12,8 +12,8 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/spn/x/mint/simulation"
-	"github.com/tendermint/spn/x/mint/types"
+	"github.com/ignite/modules/x/mint/simulation"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.

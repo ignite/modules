@@ -17,10 +17,10 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tendermint/spn/x/mint/client/cli"
-	"github.com/tendermint/spn/x/mint/keeper"
-	"github.com/tendermint/spn/x/mint/simulation"
-	"github.com/tendermint/spn/x/mint/types"
+	"github.com/ignite/modules/x/mint/client/cli"
+	"github.com/ignite/modules/x/mint/keeper"
+	"github.com/ignite/modules/x/mint/simulation"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 var (

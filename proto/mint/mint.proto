@@ -1,7 +1,7 @@
 syntax = "proto3";
-package tendermint.spn.mint;
+package ignite.modules.mint;
 
-option go_package = "github.com/tendermint/spn/x/mint/types";
+option go_package = "github.com/ignite/modules/x/mint/types";
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";

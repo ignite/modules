@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/spn/x/mint/simulation"
-	"github.com/tendermint/spn/x/mint/types"
+	"github.com/ignite/modules/x/mint/simulation"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {

@@ -11,8 +11,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/mint/types"
+	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 // Simulation parameter constants

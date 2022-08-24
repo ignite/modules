@@ -28,6 +28,7 @@ import (
 	"github.com/ignite/modules/testutil/sample"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 	claimtypes "github.com/ignite/modules/x/claim/types"
+	minttypes "github.com/ignite/modules/x/mint/types"
 )
 
 var moduleAccountPerms = map[string][]string{
@@ -36,6 +37,7 @@ var moduleAccountPerms = map[string][]string{
 	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+	minttypes.ModuleName:           {authtypes.Minter},
 	claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 }
 

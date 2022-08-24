@@ -7,9 +7,8 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
-	"github.com/tendermint/spn/x/mint/types"
+	errorsignite "github.com/ignite/modules/errors"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 // Keeper of the mint store
@@ -160,7 +159,7 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 			devFundPortionCoins := sdk.NewCoins(k.GetProportions(ctx, devFundCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
-				return spnerrors.Critical(err.Error())
+				return errorsignite.Critical(err.Error())
 			}
 			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, devAddr, devFundPortionCoins)
 			if err != nil {

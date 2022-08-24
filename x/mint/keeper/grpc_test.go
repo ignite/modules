@@ -9,14 +9,14 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	spnapp "github.com/tendermint/spn/app"
-	"github.com/tendermint/spn/x/mint/types"
+	testapp "github.com/ignite/modules/app"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 type MintTestSuite struct {
 	suite.Suite
 
-	app         *spnapp.App
+	app         *testapp.App
 	ctx         sdk.Context
 	queryClient types.QueryClient
 }
