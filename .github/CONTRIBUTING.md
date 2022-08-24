@@ -19,7 +19,7 @@ Avoid long names in your PR titles. Make sure your title has fewer than 60 chara
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) guidelines and keywords to find the best title.
 
-Use parentheses to identify the package or feature that you worked on. For example:  `feat(services/chain)`, `fix(scaffolding)`.
+Use parentheses to identify the package or feature that you worked on. For example:  `feat(claim)`, `fix(app)`.
 
 ### Review your own code
 
