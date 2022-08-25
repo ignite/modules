@@ -21,7 +21,7 @@ genesis:
   app_state:
     mint:
       params:
-        mint_denom: "uspn"
+        mint_denom: "stake"
         distribution_proportions:
           staking: "0.300000000000000000"
           funded_addresses: "0.400000000000000000"
