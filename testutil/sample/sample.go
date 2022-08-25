@@ -163,12 +163,6 @@ func CoinsWithRangeAmount(r *rand.Rand, denom1, denom2, denom3 string, min, max 
 	return sdk.NewCoins(CoinWithRangeAmount(r, denom1, min, max), CoinWithRangeAmount(r, denom2, min, max), CoinWithRangeAmount(r, denom3, min, max))
 }
 
-// TotalSupply returns a sample coins structure where each denom's total supply is within the default
-// allowed supply range
-//func TotalSupply(r *rand.Rand) sdk.Coins {
-//	return CoinsWithRange(r, campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
-//}
-
 // Duration returns a sample time.Duration between a second and 21 days
 func Duration(r *rand.Rand) time.Duration {
 	return time.Duration(r.Int63n(int64(time.Hour*24*21-time.Second))) + time.Second
