@@ -3,8 +3,8 @@ module github.com/ignite/modules
 go 1.18
 
 require (
-	github.com/cosmos/cosmos-sdk v0.46.0
-	github.com/cosmos/ibc-go/v5 v5.0.0-beta1
+	github.com/cosmos/cosmos-sdk v0.46.1
+	github.com/cosmos/ibc-go/v5 v5.0.0-rc0
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/gorilla/mux v1.8.0
@@ -15,7 +15,7 @@ require (
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
-	github.com/tendermint/tendermint v0.34.20
+	github.com/tendermint/tendermint v0.34.21
 	github.com/tendermint/tm-db v0.6.7
 	google.golang.org/genproto v0.0.0-20220805133916-01dd62135a58
 	google.golang.org/grpc v1.48.0
@@ -51,9 +51,10 @@ require (
 	github.com/cosmos/cosmos-proto v1.0.0-alpha7 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
-	github.com/cosmos/iavl v0.19.0 // indirect
+	github.com/cosmos/iavl v0.19.1 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.11.1 // indirect
 	github.com/cosmos/ledger-go v0.9.2 // indirect
+	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
@@ -98,7 +99,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
-	github.com/klauspost/compress v1.15.1 // indirect
+	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
@@ -138,10 +139,11 @@ require (
 	go.etcd.io/bbolt v1.3.6 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
-	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
+	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
+	golang.org/x/net v0.0.0-20220726230323-06994584191e // indirect
 	golang.org/x/oauth2 v0.0.0-20220722155238-128564f6959c // indirect
-	golang.org/x/sys v0.0.0-20220702020025-31831981b65f // indirect
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
+	golang.org/x/sys v0.0.0-20220727055044-e65921a090b8 // indirect
+	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
 	google.golang.org/api v0.84.0 // indirect
