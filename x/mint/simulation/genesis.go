@@ -79,7 +79,6 @@ func GenFundedAddresses(r *rand.Rand) []types.WeightedAddress {
 		if i == numAddrs-1 {
 			// use residual weight if last address
 			weight = remainWeight
-
 		} else {
 			remainWeight = remainWeight.Sub(weight)
 		}
