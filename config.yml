@@ -19,6 +19,20 @@ build:
 genesis:
   chain_id: testapp-0
   app_state:
+    mint:
+      params:
+        mint_denom: "stake"
+        distribution_proportions:
+          staking: "0.300000000000000000"
+          funded_addresses: "0.400000000000000000"
+          community_pool: "0.300000000000000000"
+        funded_addresses:
+          - address: "cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9" # alice
+            weight: "0.400000000000000000"
+          - address: "cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er" # bob
+            weight: "0.300000000000000000"
+          - address: "cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w" # carol
+            weight: "0.300000000000000000"
     claim:
       airdropSupply:
         amount: "1000"
