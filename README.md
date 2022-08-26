@@ -26,7 +26,7 @@
     <img alt="Lint Status" src="https://github.com/ignite/modules/workflows/Lint/badge.svg" />
 </div>
 
-**Ignite Modules** contains Cosmos SDK modules developed by Ignite for common uses of cosmos blockchains.
+**Ignite Modules** contains Cosmos SDK modules developed by Ignite for common uses of Cosmos blockchains.
 Modules are aimed to be generic and can be imported into any project depending on their blockchain functionalities.
 
 ### ⚠️ Disclaimer
@@ -50,7 +50,7 @@ In order to launch a test app instance and interact with the modules, install [I
 ignite chain serve
 ```
 
-You can interact with the modules with the native chain CLI: `testappd`
+You can interact with the modules with the native chain CLI `testappd`:
 
 ```
 testappd q mint params
