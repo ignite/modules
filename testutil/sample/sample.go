@@ -133,19 +133,19 @@ func Delegation(t testing.TB, r *rand.Rand, addr string) stakingtypes.Delegation
 
 // Coin returns a sample coin structure
 func Coin(r *rand.Rand) sdk.Coin {
-	return sdk.NewCoin(AlphaString(r, 5), sdk.NewInt(r.Int63n(10000)+1))
+	return sdk.NewCoin(AlphaString(r, 5), sdkmath.NewInt(r.Int63n(10000)+1))
 }
 
 // CoinWithRange returns a sample coin structure where the amount is a random number between provided min and max values
 // with a random denom
 func CoinWithRange(r *rand.Rand, min, max int64) sdk.Coin {
-	return sdk.NewCoin(AlphaString(r, 5), sdk.NewInt(r.Int63n(max-min)+min))
+	return sdk.NewCoin(AlphaString(r, 5), sdkmath.NewInt(r.Int63n(max-min)+min))
 }
 
 // CoinWithRangeAmount returns a sample coin structure where the amount is a random number between provided min and max values
 // with a given denom
 func CoinWithRangeAmount(r *rand.Rand, denom string, min, max int64) sdk.Coin {
-	return sdk.NewCoin(denom, sdk.NewInt(r.Int63n(max-min)+min))
+	return sdk.NewCoin(denom, sdkmath.NewInt(r.Int63n(max-min)+min))
 }
 
 // Coins returns a sample coins structure
