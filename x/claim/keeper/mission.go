@@ -3,9 +3,9 @@ package keeper
 import (
 	"encoding/binary"
 
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	criterrors "github.com/ignite/modules/errors"
 	"github.com/ignite/modules/x/claim/types"
