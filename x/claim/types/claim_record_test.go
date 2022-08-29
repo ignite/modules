@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -105,7 +106,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 		desc        string
 		claimRecord claim.ClaimRecord
 		mission     claim.Mission
-		expected    sdk.Int
+		expected    sdkmath.Int
 	}{
 		{
 			desc: "should allow get claimable from mission with full weight",

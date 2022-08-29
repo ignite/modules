@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -173,7 +174,7 @@ func DurationFromRange(r *rand.Rand, min, max time.Duration) time.Duration {
 	return time.Duration(r.Int63n(int64(max-min))) + min
 }
 
-// Int returns a sample sdk.Int
-func Int(r *rand.Rand) sdk.Int {
-	return sdk.NewInt(r.Int63())
+// Int returns a sample sdkmath.Int
+func Int(r *rand.Rand) sdkmath.Int {
+	return sdkmath.NewInt(r.Int63())
 }

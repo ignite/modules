@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -16,7 +17,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	fiftyPercent, err := sdk.NewDecFromStr("0.5")
 	require.NoError(t, err)
 
-	claimAmts := []sdk.Int{
+	claimAmts := []sdkmath.Int{
 		sample.Int(r),
 		sample.Int(r),
 	}
