@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -32,7 +33,7 @@ func TestRandomizedGenState(t *testing.T) {
 		Rand:         r,
 		NumBonded:    3,
 		Accounts:     simtypes.RandomAccounts(r, 3),
-		InitialStake: sdk.NewInt(1000),
+		InitialStake: sdkmath.NewInt(1000),
 		GenState:     make(map[string]json.RawMessage),
 	}
 
@@ -258,7 +259,7 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, dec5, mintGenesis.Params.DistributionProportions.FundedAddresses)
 	require.Equal(t, dec6, mintGenesis.Params.DistributionProportions.CommunityPool)
 	require.Equal(t, "0stake", mintGenesis.Minter.BlockProvision(mintGenesis.Params).String())
-	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.NextAnnualProvisions(mintGenesis.Params, sdk.OneInt()).String())
+	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.NextAnnualProvisions(mintGenesis.Params, sdkmath.OneInt()).String())
 	require.Equal(t, "0.169999926644441493", mintGenesis.Minter.NextInflationRate(mintGenesis.Params, sdk.OneDec()).String())
 	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.Inflation.String())
 	require.Equal(t, "0.000000000000000000", mintGenesis.Minter.AnnualProvisions.String())
