@@ -2,9 +2,9 @@
 package networksuite
 
 import (
-	sdkmath "cosmossdk.io/math"
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
