@@ -44,26 +44,19 @@ func (nts *NetworkTestSuite) SetupSuite() {
 
 func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {
 	claimState.AirdropSupply = sample.Coin(r)
-	remainingClaimable := claimState.AirdropSupply.Amount
-
-	// add claim records
+	totalSupply := sdkmath.ZeroInt()
 	for i := 0; i < 5; i++ {
-		var claimable sdkmath.Int
-		// use remaining for last loop iteration
-		if i == 4 {
-			claimable = remainingClaimable
-		} else {
-			claimable = sample.IntN(r, remainingClaimable.Int64())
-			remainingClaimable = remainingClaimable.Sub(claimable)
-		}
-
+		// fill claim records
+		accSupply := sdkmath.NewIntFromUint64(r.Uint64() % 1000)
 		claimRecord := claim.ClaimRecord{
+			Claimable: accSupply,
 			Address:   sample.Address(r),
-			Claimable: claimable,
 		}
+		totalSupply = totalSupply.Add(accSupply)
 		nullify.Fill(&claimRecord)
 		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
 	}
+	claimState.AirdropSupply.Amount = totalSupply
 
 	// add missions
 	for i := 0; i < 5; i++ {
