@@ -52,7 +52,7 @@ func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin)
 
 	// set the module balance with the airdrop supply
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(airdropSupply)); err != nil {
-		return criterrors.Criticalf("can't mint airdrop suply into module balance %s", err.Error())
+		return criterrors.Criticalf("can't mint airdrop supply into module balance %s", err.Error())
 	}
 
 	k.SetAirdropSupply(ctx, airdropSupply)

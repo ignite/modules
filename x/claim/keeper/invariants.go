@@ -70,7 +70,10 @@ func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 
 		// verify airdropSupply == sum of claimRecords
 		if !airdropSupply.Amount.Equal(claimSum) {
-			return "airdrop supply amount not equal to sum of claimable amounts", true
+			return fmt.Sprintf("airdrop supply amount %v not equal to sum of claimable amounts %v",
+				airdropSupply.Amount,
+				claimSum,
+			), true
 		}
 
 		return "", false
