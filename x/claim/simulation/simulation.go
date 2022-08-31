@@ -38,6 +38,20 @@ func SimulateMsgClaimInitial(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
 		}
 
+		// verify that there is claimable amount
+		m, _ := k.GetMission(ctx, 0)
+		airdropSupply, _ := k.GetAirdropSupply(ctx)
+		claimableAmount := cr.ClaimableFromMission(m)
+		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
+		// calculate claimable after decay factor
+		decayInfo := k.DecayInformation(ctx)
+		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
+
+		// check final claimable non-zero
+		if claimable.Empty() {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), types.ErrNoClaimable.Error()), nil, nil
+		}
+
 		// initialize basic message
 		msg = &types.MsgClaimInitial{
 			Claimer: simAccount.Address.String(),
