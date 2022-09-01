@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/testutil/sample"
