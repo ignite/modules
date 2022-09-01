@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	criterrors "github.com/ignite/modules/errors"
+	errors "github.com/ignite/modules/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -105,16 +105,16 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	// decrease airdrop supply
 	airdropSupply.Amount = airdropSupply.Amount.Sub(claimable.AmountOf(airdropSupply.Denom))
 	if airdropSupply.Amount.IsNegative() {
-		return criterrors.Critical("airdrop supply is lower than total claimable")
+		return errors.Critical("airdrop supply is lower than total claimable")
 	}
 
 	// send claimable to the user
 	claimer, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return criterrors.Criticalf("invalid claimer address %s", err.Error())
+		return errors.Criticalf("invalid claimer address %s", err.Error())
 	}
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, claimer, claimable); err != nil {
-		return criterrors.Criticalf("can't send claimable coins %s", err.Error())
+		return errors.Criticalf("can't send claimable coins %s", err.Error())
 	}
 
 	// update store
