@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/ignite/modules/errors"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
 )
@@ -20,7 +21,7 @@ func TestMsgClaimInitial_ValidateBasic(t *testing.T) {
 			msg: types.MsgClaimInitial{
 				Claimer: "invalid_address",
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: errors.ErrInvalidAddress,
 		}, {
 			name: "should validate valid claimer address",
 			msg: types.MsgClaimInitial{

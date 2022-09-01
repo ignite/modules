@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/ignite/modules/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -47,7 +48,7 @@ func (k Keeper) Mission(c context.Context, req *types.QueryGetMissionRequest) (*
 	ctx := sdk.UnwrapSDKContext(c)
 	mission, found := k.GetMission(ctx, req.MissionID)
 	if !found {
-		return nil, sdkerrortypes.ErrKeyNotFound
+		return nil, errors.ErrKeyNotFound
 	}
 
 	return &types.QueryGetMissionResponse{Mission: mission}, nil
