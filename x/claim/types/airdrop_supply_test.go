@@ -24,7 +24,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 		valid         bool
 	}{
 		{
-			desc:          "valid airdrop supply",
+			desc:          "should validate valid airdrop supply",
 			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
 			missionMap: map[uint64]types.Mission{
 				0: {
