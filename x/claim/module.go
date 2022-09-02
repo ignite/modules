@@ -21,8 +21,9 @@ import (
 )
 
 var (
-	_ module.AppModule      = AppModule{}
-	_ module.AppModuleBasic = AppModuleBasic{}
+	_ module.AppModule           = AppModule{}
+	_ module.AppModuleBasic      = AppModuleBasic{}
+	_ module.AppModuleSimulation = AppModule{}
 )
 
 // ----------------------------------------------------------------------------
@@ -99,6 +100,7 @@ type AppModule struct {
 
 	keeper        keeper.Keeper
 	accountKeeper types.AccountKeeper
+	distrKeeper   types.DistrKeeper
 	bankKeeper    types.BankKeeper
 }
 
@@ -106,12 +108,14 @@ func NewAppModule(
 	cdc codec.Codec,
 	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
+	distrkeepr types.DistrKeeper,
 	bankKeeper types.BankKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
 		accountKeeper:  accountKeeper,
+		distrKeeper:    distrkeepr,
 		bankKeeper:     bankKeeper,
 	}
 }
@@ -170,6 +174,31 @@ func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
 
 // EndBlock executes all ABCI EndBlock logic respective to the claim module. It
 // returns no validator updates.
-func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+
+	airdropSupply, found := am.keeper.GetAirdropSupply(ctx)
+	if !found || !airdropSupply.IsPositive() {
+		return []abci.ValidatorUpdate{}
+	}
+
+	decayInfo := am.keeper.DecayInformation(ctx)
+	if decayInfo.Enabled && ctx.BlockTime().After(decayInfo.DecayEnd) {
+		err := am.distrKeeper.FundCommunityPool(
+			ctx,
+			sdk.NewCoins(airdropSupply),
+			am.accountKeeper.GetModuleAddress(types.ModuleName))
+		if err != nil {
+			ctx.Logger().Error(
+				fmt.Sprintf("error sending remaining airdrop supply to community pool: %s",
+					err.Error()),
+			)
+		}
+	}
+
+	// TODO
+	// handle other options:
+	//	burn supply
+	// 	send to address
+
 	return []abci.ValidatorUpdate{}
 }
