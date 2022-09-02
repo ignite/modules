@@ -2,7 +2,6 @@ package types
 
 import (
 	"errors"
-	"fmt"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -59,40 +58,9 @@ func (gs GenesisState) Validate() error {
 		}
 	}
 
-	// check claim records
-	claimSum := sdkmath.ZeroInt()
-	claimRecordMap := make(map[string]struct{})
-	for _, claimRecord := range gs.ClaimRecords {
-		err := claimRecord.Validate()
-		if err != nil {
-			return err
-		}
-
-		// check claim record completed missions
-		claimable := claimRecord.Claimable
-		for _, completedMission := range claimRecord.CompletedMissions {
-			mission, ok := missionMap[completedMission]
-			if !ok {
-				return fmt.Errorf("address %s completed a non existing mission %d",
-					claimRecord.Address,
-					completedMission,
-				)
-			}
-
-			// reduce claimable with already claimed funds
-			claimable = claimable.Sub(claimRecord.ClaimableFromMission(mission))
-		}
-
-		claimSum = claimSum.Add(claimable)
-		if _, ok := claimRecordMap[claimRecord.Address]; ok {
-			return errors.New("duplicated address for claim record")
-		}
-		claimRecordMap[claimRecord.Address] = struct{}{}
-	}
-
-	// verify airdropSupply == sum of claimRecords
-	if !gs.AirdropSupply.Amount.Equal(claimSum) {
-		return errors.New("airdrop supply amount not equal to sum of claimable amounts")
+	err = CheckAirdropSupply(gs.AirdropSupply, missionMap, gs.ClaimRecords)
+	if err != nil {
+		return err
 	}
 
 	// this line is used by starport scaffolding # genesis/types/validate

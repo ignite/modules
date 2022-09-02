@@ -1,9 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
-	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/x/claim/types"
@@ -30,51 +27,18 @@ func AllInvariants(k Keeper) sdk.Invariant {
 // amounts in claim records
 func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-
-		// check missions
-		missionMap := make(map[uint64]types.Mission)
 		missions := k.GetAllMission(ctx)
+		claimRecords := k.GetAllClaimRecord(ctx)
+		airdropSupply, _ := k.GetAirdropSupply(ctx)
 
+		missionMap := make(map[uint64]types.Mission)
 		for _, mission := range missions {
 			missionMap[mission.MissionID] = mission
 		}
 
-		// check claim records
-		claimSum := sdkmath.ZeroInt()
-		claimRecordMap := make(map[string]struct{})
-		claimRecords := k.GetAllClaimRecord(ctx)
-
-		for _, claimRecord := range claimRecords {
-			// check claim record completed missions
-			claimable := claimRecord.Claimable
-			for _, completedMission := range claimRecord.CompletedMissions {
-				mission, ok := missionMap[completedMission]
-				if !ok {
-					return fmt.Sprintf("address %s completed a non existing mission %d",
-						claimRecord.Address,
-						completedMission,
-					), true
-				}
-
-				// reduce claimable with already claimed funds
-				claimable = claimable.Sub(claimRecord.ClaimableFromMission(mission))
-			}
-
-			claimSum = claimSum.Add(claimable)
-			if _, ok := claimRecordMap[claimRecord.Address]; ok {
-				return "duplicated address for claim record", true
-			}
-			claimRecordMap[claimRecord.Address] = struct{}{}
-		}
-
-		airdropSupply, _ := k.GetAirdropSupply(ctx)
-
-		// verify airdropSupply == sum of claimRecords
-		if !airdropSupply.Amount.Equal(claimSum) {
-			return fmt.Sprintf("airdrop supply amount %v not equal to sum of claimable amounts %v",
-				airdropSupply.Amount,
-				claimSum,
-			), true
+		err := types.CheckAirdropSupply(airdropSupply, missionMap, claimRecords)
+		if err != nil {
+			return err.Error(), true
 		}
 
 		return "", false
