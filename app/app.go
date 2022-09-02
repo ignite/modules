@@ -807,6 +807,10 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 
 	// Register grpc-gateway routes for all modules.
 	ModuleBasics.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
+  
+	// register app's OpenAPI routes.
+	// NOTE: commented because the docs are not generated.
+	// apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
