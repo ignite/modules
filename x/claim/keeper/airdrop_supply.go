@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	criterrors "github.com/ignite/modules/errors"
+	"github.com/ignite/modules/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -46,13 +46,13 @@ func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin)
 	// if the module has an existing balance, we burn the entire balance
 	if moduleBalance.IsPositive() {
 		if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(moduleBalance)); err != nil {
-			return criterrors.Criticalf("can't burn module balance %s", err.Error())
+			return errors.Criticalf("can't burn module balance %s", err.Error())
 		}
 	}
 
 	// set the module balance with the airdrop supply
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(airdropSupply)); err != nil {
-		return criterrors.Criticalf("can't mint airdrop supply into module balance %s", err.Error())
+		return errors.Criticalf("can't mint airdrop suply into module balance %s", err.Error())
 	}
 
 	k.SetAirdropSupply(ctx, airdropSupply)
