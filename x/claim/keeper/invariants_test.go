@@ -7,9 +7,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite/modules/x/claim/keeper"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
 )
 

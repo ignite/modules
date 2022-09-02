@@ -4,12 +4,10 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/testutil/sample"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/ignite/modules/x/claim/types"
 )
 
