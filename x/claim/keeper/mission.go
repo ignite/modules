@@ -3,7 +3,6 @@ package keeper
 import (
 	"encoding/binary"
 
-	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -63,24 +62,24 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
+		return errors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
 	}
 
 	// retrieve mission
 	mission, found := k.GetMission(ctx, missionID)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
+		return errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
 	}
 
 	// retrieve claim record of the user
 	claimRecord, found := k.GetClaimRecord(ctx, address)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
+		return errors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
 	}
 
 	// check if the mission is already complted for the claim record
 	if claimRecord.IsMissionCompleted(missionID) {
-		return sdkerrors.Wrapf(
+		return errors.Wrapf(
 			types.ErrMissionCompleted,
 			"mission %d completed for address %s",
 			missionID,

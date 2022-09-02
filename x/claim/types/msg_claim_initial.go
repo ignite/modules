@@ -1,7 +1,6 @@
 package types
 
 import (
-	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/errors"
@@ -41,7 +40,7 @@ func (msg *MsgClaimInitial) GetSignBytes() []byte {
 func (msg *MsgClaimInitial) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Claimer)
 	if err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid claimer address (%s)", err)
+		return errors.Wrapf(errors.ErrInvalidAddress, "invalid claimer address (%s)", err)
 	}
 	return nil
 }
