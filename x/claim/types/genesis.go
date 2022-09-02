@@ -58,6 +58,14 @@ func (gs GenesisState) Validate() error {
 		}
 	}
 
+	for _, claimRecord := range gs.ClaimRecords {
+		err = claimRecord.Validate()
+		if err != nil {
+			return err
+		}
+
+	}
+
 	err = CheckAirdropSupply(gs.AirdropSupply, missionMap, gs.ClaimRecords)
 	if err != nil {
 		return err

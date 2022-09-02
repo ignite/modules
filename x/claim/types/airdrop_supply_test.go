@@ -100,24 +100,6 @@ func TestCheckAirdropSupply(t *testing.T) {
 				},
 			},
 			valid: false,
-		}, {
-			desc:          "should be invalid with invalid claim record",
-			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
-			missionMap: map[uint64]types.Mission{
-				0: {
-					MissionID:   0,
-					Description: "",
-					Weight:      sdk.ZeroDec(),
-				},
-			},
-			claimRecords: []types.ClaimRecord{
-				{
-					Address:           "invalid",
-					Claimable:         sdkmath.NewInt(10),
-					CompletedMissions: []uint64{0},
-				},
-			},
-			valid: false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

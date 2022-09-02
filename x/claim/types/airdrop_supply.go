@@ -12,12 +12,7 @@ func CheckAirdropSupply(airdropSupply sdk.Coin, missionMap map[uint64]Mission, c
 	claimSum := sdkmath.ZeroInt()
 	claimRecordMap := make(map[string]struct{})
 
-	// check claim records
 	for _, claimRecord := range claimRecords {
-		err := claimRecord.Validate()
-		if err != nil {
-			return err
-		}
 
 		// check claim record completed missions
 		claimable := claimRecord.Claimable
