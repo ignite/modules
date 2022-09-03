@@ -178,3 +178,8 @@ func DurationFromRange(r *rand.Rand, min, max time.Duration) time.Duration {
 func Int(r *rand.Rand) sdkmath.Int {
 	return sdkmath.NewInt(r.Int63())
 }
+
+// IntN returns a sample sdkmath.Int in open range [0, n)
+func IntN(r *rand.Rand, n int64) sdkmath.Int {
+	return sdkmath.NewInt(r.Int63n(n))
+}
