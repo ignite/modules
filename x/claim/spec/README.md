@@ -22,7 +22,7 @@ Initial claim, staking, and voting missions are natively supported. The develope
 1. **[State](01_state.md)**
 2. **[Messages](02_messages.md)**
 3. **[Methods](03_methods.md)**
-4. **[End-Blocker](04_end_blockers.md)**
+4. **[End-Blocker](04_end_blocker.md)**
 5. **[Parameters](05_params.md)**
 6. **[Events](06_events.md)**
 7. **[Client](07_client.md)**
