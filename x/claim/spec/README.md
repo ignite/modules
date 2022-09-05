@@ -7,14 +7,22 @@ parent:
 
 # `claim`
 
+## Abstract
+
+This document specifies the `claim` module developed by Ignite.
+
+This module can be used by blockchains that wish to offer airdrops to eligible addresses upon the completion of specific actions.
+
+Eligible addresses with airdrop allocations are listed in the genesis state of the module.
+
+Initial claim, staking, and voting missions are natively supported. The developer can add custom missions related to their blockchain functionality. The `CompleteMission` method exposed by the module keeper can be used for blockchain specific missions.
+
 ## Contents
 
-1. **[Concept](01_concepts.md)**
-2. **[State](02_state.md)**
-3. **[Messages](03_messages.md)**
-4. **[Methods](04_methods.md)**
-5. **[End-Blocker](05_end_blockers.md)**
-6. **[Parameters](06_params.md)**
-7. **[Events](07_events.md)**
-8. **[Client](08_client.md)**
-
+1. **[State](01_state.md)**
+2. **[Messages](02_messages.md)**
+3. **[Methods](03_methods.md)**
+4. **[End-Blocker](04_end_blockers.md)**
+5. **[Parameters](05_params.md)**
+6. **[Events](06_events.md)**
+7. **[Client](07_client.md)**
