@@ -20,7 +20,7 @@ func TestNextInflation(t *testing.T) {
 	tests := []struct {
 		bondedRatio, setInflation, expChange sdk.Dec
 	}{
-		// with 0% bonded atom supply the inflation should increase by InflationRateChange
+		// with 0% bonded coins supply the inflation should increase by InflationRateChange
 		{sdk.ZeroDec(), sdk.NewDecWithPrec(7, 2), params.InflationRateChange.Quo(blocksPerYr)},
 
 		// 100% bonded, starting at 20% inflation and being reduced
