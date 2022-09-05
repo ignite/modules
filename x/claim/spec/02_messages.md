@@ -23,5 +23,5 @@ message MsgClaimInitial {
 
 - Initial claim is not enabled
 - The claimer is not eligible
-- The initial claim mission is not defined
+- The initial claim mission doesn't exist
 - The initial claim mission has already been completed
