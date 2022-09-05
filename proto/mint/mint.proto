@@ -79,7 +79,7 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
-  // goal of percent bonded atoms
+  // goal of percent bonded coins
   string goal_bonded = 5 [
     (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
