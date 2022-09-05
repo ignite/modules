@@ -9,7 +9,7 @@ Under these conditions, the remaining airdrop supply is transferred to the commu
 
 ### Pseudo-code
 
-```
+```go
 airdropSupply = load(AirdropSupply)
 decayInfo = load(Params).DecayInformation
 

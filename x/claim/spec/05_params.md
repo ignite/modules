@@ -6,7 +6,7 @@ order: 5
 
 The parameters of the module contain information about decaying for airdrop.
 
-```
+```protobuf
 message Params {
   DecayInformation decayInformation = 1 [(gogoproto.nullable) = false];
 }
@@ -16,7 +16,7 @@ message Params {
 
 This parameter determines if the airdrop starts to decay at a specific time.
 
-```
+```protobuf
 message DecayInformation {
   bool enabled = 1;
   google.protobuf.Timestamp decayStart = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];

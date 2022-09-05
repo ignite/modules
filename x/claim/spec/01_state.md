@@ -34,7 +34,7 @@ Params:         [] -> Params
 
 The structure determines if the initial claim is enabled for the chain, and what the mission is completed when sending `MsgClaimInitial`.
 
-```
+```protobuf
 message InitialClaim {
   bool   enabled   = 1;
   uint64 missionID = 2;
@@ -45,7 +45,7 @@ message InitialClaim {
 
 `ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and the already completed missions.
 
-```
+```protobuf
 message ClaimRecord {
   string address   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string claimable = 2 [
@@ -61,7 +61,7 @@ message ClaimRecord {
 
 `Mission` represents a mission to be completed to claim a percentage of the airdrop.
 
-```
+```protobuf
 message Mission {
   uint64 missionID   = 1;
   string description = 2;

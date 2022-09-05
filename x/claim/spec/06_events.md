@@ -8,7 +8,7 @@ order: 6
 
 This event is emitted when a mission `missionID` is completed for a specific eligible address `claimer`.
 
-```
+```protobuf
 message EventMissionCompleted {
   uint64 missionID = 1;
   string claimer   = 2;

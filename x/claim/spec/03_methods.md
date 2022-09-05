@@ -9,7 +9,7 @@ order: 3
 Complete a claim mission for an eligible address.
 This method can be used by an external module importing `claim` in order to define customized mission for the chain.
 
-```
+```go
 CompleteMission(
     ctx sdk.Context,
     missionID uint64,

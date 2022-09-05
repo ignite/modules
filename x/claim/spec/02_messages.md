@@ -8,7 +8,7 @@ order: 2
 
 Claim the initial claim amount for airdrop defined in `InitialClaim`
 
-```
+```protobuf
 message MsgClaimInitial {
   string claimer = 1;
 }
