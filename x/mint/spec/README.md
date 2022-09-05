@@ -22,7 +22,7 @@ In the future, the module will suport defining custom purpose for minted coins.
 ## Contents
 
 1. **[State](01_state.md)**
-2. **[End-Blocker](02_begin_block.md)**
+2. **[Begin-Block](02_begin_block.md)**
 3. **[Parameters](03_params.md)**
 4. **[Events](04_events.md)**
 5. **[Client](05_client.md)**
