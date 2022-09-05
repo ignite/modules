@@ -4,7 +4,7 @@ order: 3
 
 # Methods
 
-### CompleteMission
+### `CompleteMission`
 
 Complete a claim mission for an eligible address.
 This method can be used by an external module importing `claim` in order to define customized mission for the chain.

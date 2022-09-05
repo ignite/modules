@@ -4,7 +4,7 @@ order: 2
 
 # Messages
 
-### MsgClaimInitial
+### `MsgClaimInitial`
 
 Claim the initial claim amount for airdrop defined in `InitialClaim`
 

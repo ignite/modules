@@ -28,7 +28,7 @@ Missions:       [id] -> Mission
 Params:         [] -> Params
 ```
 
-### InitialClaim
+### `InitialClaim`
 
 `InitialClaim` determines the rules for the initial claim, a portion of the airdrop that can be directly claimed without completing a specific task, the mission is completed by sending a `MsgClaimInitial` message.
 
@@ -41,7 +41,7 @@ message InitialClaim {
 }
 ```
 
-### ClaimRecord
+### `ClaimRecord`
 
 `ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and the already completed missions.
 
@@ -57,7 +57,7 @@ message ClaimRecord {
 }
 ```
 
-### Mission
+### `Mission`
 
 `Mission` represents a mission to be completed to claim a percentage of the airdrop.
 
@@ -73,6 +73,6 @@ message Mission {
 }
 ```
 
-### Params
+### `Params`
 
 Described in **[Parameters](05_params.md)**
