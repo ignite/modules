@@ -195,6 +195,9 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 					err.Error()),
 			)
 		}
+
+		airdropSupply.Amount = sdk.ZeroInt()
+		am.keeper.SetAirdropSupply(ctx, airdropSupply)
 	}
 
 	// TODO
