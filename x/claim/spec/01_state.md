@@ -43,7 +43,7 @@ message InitialClaim {
 
 ### `ClaimRecord`
 
-`ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and the already completed missions.
+`ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and which missions have already been completed.
 
 ```protobuf
 message ClaimRecord {
