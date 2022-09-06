@@ -30,7 +30,7 @@ Params:         [] -> Params
 
 ### `InitialClaim`
 
-`InitialClaim` determines the rules for the initial claim, a portion of the airdrop that can be directly claimed without completing a specific task, the mission is completed by sending a `MsgClaimInitial` message.
+`InitialClaim` determines the rules for the initial claim, a portion of the airdrop that can be directly claimed without completing a specific task. The mission is completed by sending a `MsgClaimInitial` message.
 
 The structure determines if the initial claim is enabled for the chain, and what the mission is completed when sending `MsgClaimInitial`.
 
