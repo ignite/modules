@@ -11,9 +11,7 @@ service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
-message MsgClaimInitial {
-  string claimer = 1;
-}
+message MsgClaimInitial { string claimer = 1; }
 
 message MsgClaimInitialResponse {}
 
