@@ -24,4 +24,4 @@ Mint(mintedCoins)
 DistributeMintedCoins(mintedCoin)
 ```
 
-The inflation rate calculation follows the same logic as the [Cosmos-SDK `mint` module](https://github.com/cosmos/cosmos-sdk/tree/main/x/mint#inflation-rate-calculation)
+The inflation rate calculation follows the same logic as the [Cosmos SDK `mint` module](https://github.com/cosmos/cosmos-sdk/tree/main/x/mint#inflation-rate-calculation)
