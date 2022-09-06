@@ -58,7 +58,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
 	upgradeKeeper := initializer.Upgrade()
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
