@@ -4,7 +4,7 @@ order: 5
 
 # Parameters
 
-The parameters of the module contain information about decaying for airdrop.
+The parameters of the module contain information about time-based decay for the airdrop supply.
 
 ```protobuf
 message Params {
