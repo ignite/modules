@@ -25,6 +25,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// EventMint is emitted when new coins are minted by the minter
 type EventMint struct {
 	BondedRatio      github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=bondedRatio,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"bondedRatio"`
 	Inflation        github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=inflation,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"inflation"`
