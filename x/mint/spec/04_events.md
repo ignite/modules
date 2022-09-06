@@ -6,7 +6,7 @@ order: 4
 
 ### `EventMint`
 
-This event is emitted new coins are minted by the minter. The event contains the amount of coins minted with the parameters of the minter at the current block.
+This event is emitted when new coins are minted. The event contains the amount of coins minted with the parameters of the minter at the current block.
 
 ```protobuf
 message EventMint {
