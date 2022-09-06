@@ -14,6 +14,8 @@ validator:
 faucet:
   name: bob
   coins: ["5token", "100000stake"]
+init:
+  home: $HOME/.testapp
 build:
   binary: "testappd"
 genesis:
