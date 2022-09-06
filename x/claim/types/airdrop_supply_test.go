@@ -112,7 +112,6 @@ func TestCheckAirdropSupply(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 			}
-
 		})
 	}
 }
