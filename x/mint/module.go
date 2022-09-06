@@ -144,7 +144,12 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock returns the begin blocker for the mint module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
-	BeginBlocker(ctx, am.keeper)
+	if err := BeginBlocker(ctx, am.keeper); err != nil {
+		ctx.Logger().Error(
+			fmt.Sprintf("error minting new coins: %s",
+				err.Error()),
+		)
+	}
 }
 
 // EndBlock returns the end blocker for the mint module. It returns no validator
