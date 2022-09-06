@@ -59,7 +59,7 @@ message ClaimRecord {
 
 ### `Mission`
 
-`Mission` represents a mission to be completed to claim a percentage of the airdrop.
+`Mission` represents a mission to be completed to claim a percentage of the airdrop supply.
 
 ```protobuf
 message Mission {
