@@ -1,3 +1,5 @@
+// Package errors aliases both the `cosmos-sdk/types/errors.go` and `cosmossdk.io/errors` packages
+// to give access to cosmos-sdk error definitions and functions with a single import path.
 package errors
 
 import (
