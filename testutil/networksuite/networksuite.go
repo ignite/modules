@@ -4,6 +4,7 @@ package networksuite
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
@@ -43,16 +44,19 @@ func (nts *NetworkTestSuite) SetupSuite() {
 
 func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {
 	claimState.AirdropSupply = sample.Coin(r)
-
-	// add claim records
+	totalSupply := sdkmath.ZeroInt()
 	for i := 0; i < 5; i++ {
+		// fill claim records
+		accSupply := sdkmath.NewIntFromUint64(r.Uint64() % 1000)
 		claimRecord := claim.ClaimRecord{
+			Claimable: accSupply,
 			Address:   sample.Address(r),
-			Claimable: sample.Int(r),
 		}
+		totalSupply = totalSupply.Add(accSupply)
 		nullify.Fill(&claimRecord)
 		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
 	}
+	claimState.AirdropSupply.Amount = totalSupply
 
 	// add missions
 	for i := 0; i < 5; i++ {
