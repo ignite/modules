@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -35,6 +37,7 @@ type TestKeepers struct {
 	T             testing.TB
 	AccountKeeper authkeeper.AccountKeeper
 	BankKeeper    bankkeeper.Keeper
+	DistrKeeper   distrkeeper.Keeper
 	IBCKeeper     *ibckeeper.Keeper
 	StakingKeeper stakingkeeper.Keeper
 	ClaimKeeper   *claimkeeper.Keeper
@@ -82,6 +85,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			T:             t,
 			AccountKeeper: authKeeper,
 			BankKeeper:    bankKeeper,
+			DistrKeeper:   distrKeeper,
 			IBCKeeper:     ibcKeeper,
 			StakingKeeper: stakingKeeper,
 			ClaimKeeper:   claimKeeper,

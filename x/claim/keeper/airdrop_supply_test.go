@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -80,6 +81,74 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 				airdropSupply.Denom,
 			)
 			require.True(t, moduleBalance.IsEqual(tt.airdropSupply))
+		})
+	}
+}
+
+func TestEndAirdrop(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	tests := []struct {
+		name                     string
+		airdropSupply            sdk.Coin
+		decayInfo                claim.DecayInformation
+		expectedSupply           sdk.Coin
+		expectedCommunityPoolAmt sdk.Coin
+		wantDistribute           bool
+	}{
+		{
+			name:           "should do nothing if airdrop supply is zero",
+			airdropSupply:  sdk.NewCoin("test", sdkmath.ZeroInt()),
+			decayInfo:      claim.NewEnabledDecay(ctx.BlockTime(), ctx.BlockTime()),
+			expectedSupply: sdk.NewCoin("test", sdkmath.ZeroInt()),
+			wantDistribute: false,
+		},
+		{
+			name:           "should do nothing if decay is disabled",
+			airdropSupply:  sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			decayInfo:      claim.NewDisabledDecay(),
+			expectedSupply: sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			wantDistribute: false,
+		},
+		{
+			name:           "should do nothing if decayEnd is after current time",
+			airdropSupply:  sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			decayInfo:      claim.NewEnabledDecay(ctx.BlockTime(), ctx.BlockTime().Add(time.Hour)),
+			expectedSupply: sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			wantDistribute: false,
+		},
+		{
+			name:                     "should distributed airdrop supply with valid case",
+			airdropSupply:            sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			decayInfo:                claim.NewEnabledDecay(time.Unix(10000, 0o0), time.Unix(10000, 10)),
+			expectedSupply:           sdk.NewCoin("test", sdkmath.ZeroInt()),
+			expectedCommunityPoolAmt: sdk.NewCoin("test", sdkmath.NewInt(1000)),
+			wantDistribute:           true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.airdropSupply)
+			require.NoError(t, err)
+
+			params := tk.ClaimKeeper.GetParams(ctx)
+			params.DecayInformation = tt.decayInfo
+			tk.ClaimKeeper.SetParams(ctx, params)
+
+			err = tk.ClaimKeeper.EndAirdrop(ctx)
+			require.NoError(t, err)
+			if tt.wantDistribute {
+				feePool := tk.DistrKeeper.GetFeePool(ctx)
+				for _, decCoin := range feePool.CommunityPool {
+					coin := sdk.NewCoin(decCoin.Denom, decCoin.Amount.TruncateInt())
+					require.Equal(t, tt.expectedCommunityPoolAmt, coin)
+				}
+			}
+
+			airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+			require.True(t, found)
+			require.Equal(t, tt.expectedSupply, airdropSupply)
 		})
 	}
 }
