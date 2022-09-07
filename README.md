@@ -22,8 +22,8 @@
   <a href="https://github.com/ignite/modules">
     <img alt="Lines Of Code" src="https://tokei.rs/b1/github/ignite/modules" />
   </a>
-    <img alt="Test Status" src="https://github.com/ignite/modules/workflows/Test/badge.svg" />
-    <img alt="Lint Status" src="https://github.com/ignite/modules/workflows/Lint/badge.svg" />
+    <img alt="Test Status" src="https://github.com/ignite/modules/workflows/test.yml/badge.svg" />
+    <img alt="Lint Status" src="https://github.com/ignite/modules/workflows/lint.yml/badge.svg" />
 </div>
 
 **Ignite Modules** contains Cosmos SDK modules developed by Ignite for common uses of Cosmos blockchains.
