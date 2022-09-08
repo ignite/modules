@@ -118,7 +118,7 @@ func TestEndAirdrop(t *testing.T) {
 			wantDistribute: false,
 		},
 		{
-			name:                     "should distributed airdrop supply with valid case",
+			name:                     "should distribute airdrop supply with valid case",
 			airdropSupply:            sdk.NewCoin("test", sdkmath.NewInt(1000)),
 			decayInfo:                claim.NewEnabledDecay(time.Unix(10000, 0o0), time.Unix(10000, 10)),
 			expectedSupply:           sdk.NewCoin("test", sdkmath.ZeroInt()),
