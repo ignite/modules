@@ -58,3 +58,29 @@ func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin)
 	k.SetAirdropSupply(ctx, airdropSupply)
 	return nil
 }
+
+func (k Keeper) EndAirdrop(ctx sdk.Context) error {
+	airdropSupply, found := k.GetAirdropSupply(ctx)
+	if !found || !airdropSupply.IsPositive() {
+		return nil
+	}
+
+	decayInfo := k.DecayInformation(ctx)
+	if decayInfo.Enabled && ctx.BlockTime().After(decayInfo.DecayEnd) {
+		err := k.distrKeeper.FundCommunityPool(
+			ctx,
+			sdk.NewCoins(airdropSupply),
+			k.accountKeeper.GetModuleAddress(types.ModuleName))
+		if err != nil {
+			return err
+		}
+
+		airdropSupply.Amount = sdk.ZeroInt()
+		k.SetAirdropSupply(ctx, airdropSupply)
+	}
+
+	// TODO
+	// handle other options:
+	// https://github.com/ignite/modules/issues/53
+	return nil
+}

@@ -480,6 +480,7 @@ func New(
 		keys[claimtypes.MemStoreKey],
 		app.GetSubspace(claimtypes.ModuleName),
 		app.AccountKeeper,
+		app.DistrKeeper,
 		app.BankKeeper,
 	)
 
