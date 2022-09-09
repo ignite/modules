@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 

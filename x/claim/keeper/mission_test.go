@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	errorsignite "github.com/ignite/modules/errors"
+	errorsignite "github.com/ignite/modules/pkg/errors"
 	tc "github.com/ignite/modules/testutil/constructor"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"

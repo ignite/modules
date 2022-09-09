@@ -8,7 +8,7 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	errorsignite "github.com/ignite/modules/errors"
+	errorsignite "github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/mint/types"
 )
 

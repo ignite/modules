@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
 )

@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
