@@ -3,7 +3,7 @@ package types
 // DONTCOVER
 
 import (
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 )
 
 // x/claim module sentinel errors

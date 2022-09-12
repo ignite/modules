@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 )
 
 func TestCritical(t *testing.T) {

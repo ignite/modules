@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 )
 
 const TypeMsgClaimInitial = "claim_initial"

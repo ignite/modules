@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/ignite/modules/errors"
+	"github.com/ignite/modules/pkg/errors"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/x/claim/types"
