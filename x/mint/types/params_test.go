@@ -2,9 +2,11 @@ package types
 
 import (
 	"errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/ignite/modules/testutil/sample"
+	"math/rand"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -166,9 +168,40 @@ func TestValidateDistributionProportions(t *testing.T) {
 			err:              errors.New("invalid parameter type: string"),
 		},
 		{
-			name:             "should prevent validate distribution proportions with negative staking",
-			distrProportions: "string",
-			err:              errors.New("invalid parameter type: string"),
+			name: "should prevent validate distribution proportions with negative staking ratio",
+			distrProportions: DistributionProportions{
+				Staking:         sdk.NewDecWithPrec(-3, 1), // -0.3
+				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+			},
+			err: errors.New("staking distribution ratio should not be negative"),
+		},
+		{
+			name: "should prevent validate distribution proportions with negative funded addresses ratio",
+			distrProportions: DistributionProportions{
+				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
+				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+			},
+			err: errors.New("funded addresses distribution ratio should not be negative"),
+		},
+		{
+			name: "should prevent validate distribution proportions with negative community pool ratio",
+			distrProportions: DistributionProportions{
+				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdk.NewDecWithPrec(-3, 1), // -0.3
+			},
+			err: errors.New("community pool distribution ratio should not be negative"),
+		},
+		{
+			name: "should prevent validate distribution proportions total ratio not equal to 1",
+			distrProportions: DistributionProportions{
+				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdk.NewDecWithPrec(31, 2), // 0.31
+			},
+			err: errors.New("total distributions ratio should be 1"),
 		},
 		{
 			name:             "should validate valid distribution proportions",
@@ -189,6 +222,9 @@ func TestValidateDistributionProportions(t *testing.T) {
 }
 
 func TestValidateWeightedAddresses(t *testing.T) {
+	s := rand.NewSource(1)
+	r := rand.New(s)
+
 	tests := []struct {
 		name              string
 		weightedAddresses interface{}
@@ -200,8 +236,65 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			err:               errors.New("invalid parameter type: string"),
 		},
 		{
-			name:              "should validate valid weighted addresses",
+			name: "should prevent validate weighed addresses with invalid SDK address",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: "invalid",
+					Weight:  sdk.OneDec(),
+				},
+			},
+			err: errors.New("invalid address at index 0"),
+		},
+		{
+			name: "should prevent validate weighed addresses with negative value",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDec(-1),
+				},
+			},
+			err: errors.New("non-positive weight at index 0"),
+		},
+		{
+			name: "should prevent validate weighed addresses with weight greater than 1",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDec(2),
+				},
+			},
+			err: errors.New("more than 1 weight at index 0"),
+		},
+		{
+			name: "should prevent validate weighed addresses with sum greater than 1",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(6, 1),
+				},
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(5, 1),
+				},
+			},
+			err: errors.New("invalid weight sum: 1.100000000000000000"),
+		},
+		{
+			name:              "should validate valid empty weighted addresses",
 			weightedAddresses: DefaultFundedAddresses,
+		},
+		{
+			name: "should validate valid  weighted addresses",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(5, 1),
+				},
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(5, 1),
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
