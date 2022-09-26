@@ -2,8 +2,10 @@ package types
 
 import (
 	"errors"
-	"github.com/stretchr/testify/require"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestParamsValidate(t *testing.T) {
@@ -53,6 +55,16 @@ func TestValidateMintDenom(t *testing.T) {
 			err:   errors.New("invalid parameter type: int"),
 		},
 		{
+			name:  "should prevent validate empty mint denom",
+			denom: "",
+			err:   errors.New("mint denom cannot be blank"),
+		},
+		{
+			name:  "should prevent validate mint denom with invalid value",
+			denom: "invalid&",
+			err:   errors.New("invalid denom: invalid&"),
+		},
+		{
 			name:  "should validate valid mint denom",
 			denom: DefaultMintDenom,
 		},
@@ -80,6 +92,15 @@ func TestValidateDec(t *testing.T) {
 			name:  "should prevent validate dec with invalid interface",
 			value: "string",
 			err:   errors.New("invalid parameter type: string"),
+		},
+		{
+			name:  "should prevent validate dec with negative value",
+			value: sdk.NewDec(-1),
+			err:   errors.New("cannot be negative: -1.000000000000000000"),
+		}, {
+			name:  "should prevent validate dec too large a value",
+			value: sdk.NewDec(2),
+			err:   errors.New("dec too large: 2.000000000000000000"),
 		},
 		{
 			name:  "should validate valid dec",
@@ -111,6 +132,11 @@ func TestValidateBlocksPerYear(t *testing.T) {
 			err:   errors.New("invalid parameter type: string"),
 		},
 		{
+			name:  "should prevent validate blocks per year with zero value",
+			value: uint64(0),
+			err:   errors.New("blocks per year must be positive: 0"),
+		},
+		{
 			name:  "should validate valid blocks per year",
 			value: DefaultBlocksPerYear,
 		},
@@ -136,6 +162,11 @@ func TestValidateDistributionProportions(t *testing.T) {
 	}{
 		{
 			name:             "should prevent validate distribution proportions with invalid interface",
+			distrProportions: "string",
+			err:              errors.New("invalid parameter type: string"),
+		},
+		{
+			name:             "should prevent validate distribution proportions with negative staking",
 			distrProportions: "string",
 			err:              errors.New("invalid parameter type: string"),
 		},
