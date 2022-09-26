@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"errors"
 	"math/rand"
 	"testing"
 
@@ -10,6 +11,39 @@ import (
 
 	"github.com/ignite/modules/x/mint/types"
 )
+
+func TestValidateMinter(t *testing.T) {
+	invalid := types.DefaultInitialMinter()
+	invalid.Inflation = sdk.NewDec(-1)
+
+	tests := []struct {
+		name   string
+		minter types.Minter
+		err    error
+	}{
+		{
+			name:   "should prevent validate for minter with negative inflation",
+			minter: invalid,
+			err:    errors.New("mint parameter Inflation should be positive, is -1.000000000000000000"),
+		},
+		{
+			name:   "should validate valid minter",
+			minter: types.DefaultInitialMinter(),
+			err:    nil,
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := types.ValidateMinter(tc.minter)
+			if tc.err != nil {
+				require.Error(t, err, tc.err)
+				require.Equal(t, err, tc.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
 
 func TestNextInflation(t *testing.T) {
 	minter := types.DefaultInitialMinter()
