@@ -99,15 +99,10 @@ func (k Keeper) BondedRatio(ctx sdk.Context) sdk.Dec {
 	return k.stakingKeeper.BondedRatio(ctx)
 }
 
-// MintCoins implements an alias call to the underlying supply keeper's
-// MintCoins to be used in BeginBlocker.
-func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
-	if newCoins.Empty() {
-		// skip as no coins need to be minted
-		return nil
-	}
-
-	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
+// MintCoin implements an alias call to the underlying supply keeper's
+// MintCoin to be used in BeginBlocker.
+func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
+	return k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
 }
 
 // AddCollectedFees implements an alias call to the underlying supply keeper's
@@ -123,7 +118,7 @@ func (k Keeper) GetProportions(ctx sdk.Context, mintedCoin sdk.Coin, ratio sdk.D
 
 // DistributeMintedCoins implements distribution of minted coins from mint
 // DistributeMintedCoins to be used in BeginBlocker.
-func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) error {
+func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error {
 	params := k.GetParams(ctx)
 	proportions := params.DistributionProportions
 

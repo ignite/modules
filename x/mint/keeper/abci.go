@@ -1,10 +1,12 @@
 package keeper
 
 import (
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/ignite/modules/x/mint/types"
-	"time"
 )
 
 // BeginBlocker mints new coins for the previous block.
@@ -24,17 +26,15 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) error {
 
 	// mint coins, update supply
 	mintedCoin := minter.BlockProvision(params)
-	mintedCoins := sdk.NewCoins(mintedCoin)
-
-	err := k.MintCoins(ctx, mintedCoins)
+	err := k.MintCoin(ctx, mintedCoin)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// distribute minted coins according to the defined proportions
-	err = k.DistributeMintedCoins(ctx, mintedCoin)
+	err = k.DistributeMintedCoin(ctx, mintedCoin)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	if mintedCoin.Amount.IsInt64() {
