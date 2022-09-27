@@ -1,17 +1,14 @@
-package mint
+package keeper
 
 import (
-	"time"
-
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	"github.com/ignite/modules/x/mint/keeper"
 	"github.com/ignite/modules/x/mint/types"
+	"time"
 )
 
 // BeginBlocker mints new coins for the previous block.
-func BeginBlocker(ctx sdk.Context, k keeper.Keeper) error {
+func (k Keeper) BeginBlocker(ctx sdk.Context) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	// fetch stored minter & params
