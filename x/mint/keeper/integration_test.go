@@ -4,25 +4,10 @@ import (
 	"encoding/json"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"
-	"github.com/ignite/modules/x/mint/types"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
-
-// returns context and an app with updated mint keeper
-func createTestApp(isCheckTx bool) (*testapp.App, sdk.Context) {
-	app := setup(isCheckTx)
-
-	ctx := app.BaseApp.NewContext(isCheckTx, tmproto.Header{})
-	app.MintKeeper.SetParams(ctx, types.DefaultParams())
-	app.MintKeeper.SetMinter(ctx, types.DefaultInitialMinter())
-
-	return app, ctx
-}
 
 func setup(isCheckTx bool) *testapp.App {
 	app, genesisState := testutil.GenApp(!isCheckTx, 5)
