@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
+	abci "github.com/tendermint/tendermint/abci/types"
+
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"
-	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 func setup(isCheckTx bool) *testapp.App {
