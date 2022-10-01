@@ -57,7 +57,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
-// get the minter
+// GetMinter gets the minter
 func (k Keeper) GetMinter(ctx sdk.Context) (minter types.Minter) {
 	store := ctx.KVStore(k.storeKey)
 	b := store.Get(types.MinterKey)
@@ -69,7 +69,7 @@ func (k Keeper) GetMinter(ctx sdk.Context) (minter types.Minter) {
 	return
 }
 
-// set the minter
+// SetMinter sets the minter
 func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
 	store := ctx.KVStore(k.storeKey)
 	b := k.cdc.MustMarshal(&minter)
@@ -99,42 +99,31 @@ func (k Keeper) BondedRatio(ctx sdk.Context) sdk.Dec {
 	return k.stakingKeeper.BondedRatio(ctx)
 }
 
-// MintCoins implements an alias call to the underlying supply keeper's
-// MintCoins to be used in BeginBlocker.
-func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
-	if newCoins.Empty() {
-		// skip as no coins need to be minted
-		return nil
-	}
-
-	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
+// MintCoin implements an alias call to the underlying supply keeper's
+// MintCoin to be used in BeginBlocker.
+func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
+	return k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
 }
 
-// AddCollectedFees implements an alias call to the underlying supply keeper's
-// AddCollectedFees to be used in BeginBlocker.
-func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
-	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
-}
-
-// GetProportions gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
-func (k Keeper) GetProportions(ctx sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
+// GetProportion gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
+func (k Keeper) GetProportion(ctx sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
 	return sdk.NewCoin(mintedCoin.Denom, sdk.NewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
 }
 
-// DistributeMintedCoins implements distribution of minted coins from mint
-// DistributeMintedCoins to be used in BeginBlocker.
-func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) error {
+// DistributeMintedCoin implements distribution of minted coins from mint
+// to be used in BeginBlocker.
+func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error {
 	params := k.GetParams(ctx)
 	proportions := params.DistributionProportions
 
 	// allocate staking rewards into fee collector account to be moved to on next begin blocker by staking module
-	stakingRewardsCoins := sdk.NewCoins(k.GetProportions(ctx, mintedCoin, proportions.Staking))
+	stakingRewardsCoins := sdk.NewCoins(k.GetProportion(ctx, mintedCoin, proportions.Staking))
 	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, stakingRewardsCoins)
 	if err != nil {
 		return err
 	}
 
-	fundedAddrsCoin := k.GetProportions(ctx, mintedCoin, proportions.FundedAddresses)
+	fundedAddrsCoin := k.GetProportion(ctx, mintedCoin, proportions.FundedAddresses)
 	fundedAddrsCoins := sdk.NewCoins(fundedAddrsCoin)
 	if len(params.FundedAddresses) == 0 {
 		// fund community pool when rewards address is empty
@@ -148,7 +137,7 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 	} else {
 		// allocate developer rewards to developer addresses by weight
 		for _, w := range params.FundedAddresses {
-			fundedAddrCoins := sdk.NewCoins(k.GetProportions(ctx, fundedAddrsCoin, w.Weight))
+			fundedAddrCoins := sdk.NewCoins(k.GetProportion(ctx, fundedAddrsCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
 				return errorsignite.Critical(err.Error())

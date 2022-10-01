@@ -12,6 +12,11 @@ govet:
 	@echo Running go vet...
 	@go vet ./...
 
+## govulncheck: Run govulncheck
+govulncheck:
+	@echo Running govulncheck...
+	@go run golang.org/x/vuln/cmd/govulncheck ./...
+
 FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go' -not -name '*.pb.gw.go'
 
 ## format: Run gofumpt and goimports.
@@ -35,7 +40,7 @@ help: Makefile
 	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
 	@echo
 
-.PHONY: lint format govet help
+.PHONY: lint format govet govulncheck help
 
 ## test-unit: Run the unit tests.
 test-unit:
@@ -60,7 +65,7 @@ bench:
 	@VERSION=$(VERSION) go test -mod=readonly -v -timeout 30m -bench=. $(PACKAGES)
 
 ## test: Run unit and integration tests.
-test: govet test-unit
+test: govet govulncheck test-unit
 
 .PHONY: test test-unit test-race test-cover bench
 
