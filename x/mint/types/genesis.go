@@ -2,20 +2,20 @@ package types
 
 // NewGenesisState creates a new GenesisState object
 
-// DefaultGenesisState creates a default GenesisState object
-func DefaultGenesisState() *GenesisState {
+// DefaultGenesis creates a default GenesisState object
+func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		Minter: DefaultInitialMinter(),
 		Params: DefaultParams(),
 	}
 }
 
-// ValidateGenesis validates the provided genesis state to ensure the
+// Validate validates the provided genesis state to ensure the
 // expected invariants holds.
-func ValidateGenesis(data GenesisState) error {
-	if err := data.Params.Validate(); err != nil {
+func (gs GenesisState) Validate() error {
+	if err := gs.Params.Validate(); err != nil {
 		return err
 	}
 
-	return ValidateMinter(data.Minter)
+	return ValidateMinter(gs.Minter)
 }

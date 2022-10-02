@@ -1,4 +1,4 @@
-package mint
+package keeper
 
 import (
 	"time"
@@ -6,12 +6,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/ignite/modules/x/mint/keeper"
 	"github.com/ignite/modules/x/mint/types"
 )
 
 // BeginBlocker mints new coins for the previous block.
-func BeginBlocker(ctx sdk.Context, k keeper.Keeper) error {
+func (k Keeper) BeginBlocker(ctx sdk.Context) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	// fetch stored minter & params
@@ -27,17 +26,15 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) error {
 
 	// mint coins, update supply
 	mintedCoin := minter.BlockProvision(params)
-	mintedCoins := sdk.NewCoins(mintedCoin)
-
-	err := k.MintCoins(ctx, mintedCoins)
+	err := k.MintCoin(ctx, mintedCoin)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// distribute minted coins according to the defined proportions
-	err = k.DistributeMintedCoins(ctx, mintedCoin)
+	err = k.DistributeMintedCoin(ctx, mintedCoin)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	if mintedCoin.Amount.IsInt64() {
