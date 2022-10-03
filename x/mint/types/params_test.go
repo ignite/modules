@@ -88,6 +88,11 @@ func TestValidateDec(t *testing.T) {
 		isValid bool
 	}{
 		{
+			name:    "should validate valid dec",
+			value:   DefaultInflationRateChange,
+			isValid: true,
+		},
+		{
 			name:    "should prevent validate dec with invalid interface",
 			value:   "string",
 			isValid: false,
@@ -100,10 +105,6 @@ func TestValidateDec(t *testing.T) {
 			name:    "should prevent validate dec too large a value",
 			value:   sdk.NewDec(2),
 			isValid: false,
-		},
-		{
-			name:  "should validate valid dec",
-			value: DefaultInflationRateChange,
 		},
 	}
 	for _, tc := range tests {
@@ -125,6 +126,11 @@ func TestValidateBlocksPerYear(t *testing.T) {
 		isValid bool
 	}{
 		{
+			name:    "should validate valid blocks per year",
+			value:   DefaultBlocksPerYear,
+			isValid: true,
+		},
+		{
 			name:    "should prevent validate blocks per year with invalid interface",
 			value:   "string",
 			isValid: false,
@@ -133,10 +139,6 @@ func TestValidateBlocksPerYear(t *testing.T) {
 			name:    "should prevent validate blocks per year with zero value",
 			value:   uint64(0),
 			isValid: false,
-		},
-		{
-			name:  "should validate valid blocks per year",
-			value: DefaultBlocksPerYear,
 		},
 	}
 	for _, tc := range tests {
@@ -157,6 +159,11 @@ func TestValidateDistributionProportions(t *testing.T) {
 		distrProportions interface{}
 		isValid          bool
 	}{
+		{
+			name:             "should validate valid distribution proportions",
+			distrProportions: DefaultDistributionProportions,
+			isValid:          true,
+		},
 		{
 			name:             "should prevent validate distribution proportions with invalid interface",
 			distrProportions: "string",
@@ -198,11 +205,6 @@ func TestValidateDistributionProportions(t *testing.T) {
 			},
 			isValid: false,
 		},
-		{
-			name:             "should validate valid distribution proportions",
-			distrProportions: DefaultDistributionProportions,
-			isValid:          true,
-		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -225,6 +227,25 @@ func TestValidateWeightedAddresses(t *testing.T) {
 		weightedAddresses interface{}
 		isValid           bool
 	}{
+		{
+			name: "should validate valid  weighted addresses",
+			weightedAddresses: []WeightedAddress{
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(5, 1),
+				},
+				{
+					Address: sample.Address(r),
+					Weight:  sdk.NewDecWithPrec(5, 1),
+				},
+			},
+			isValid: true,
+		},
+		{
+			name:              "should validate valid empty weighted addresses",
+			weightedAddresses: DefaultFundedAddresses,
+			isValid:           true,
+		},
 		{
 			name:              "should prevent validate weighed addresses with invalid interface",
 			weightedAddresses: "string",
@@ -273,24 +294,6 @@ func TestValidateWeightedAddresses(t *testing.T) {
 				},
 			},
 			isValid: false,
-		},
-		{
-			name:              "should validate valid empty weighted addresses",
-			weightedAddresses: DefaultFundedAddresses,
-		},
-		{
-			name: "should validate valid  weighted addresses",
-			weightedAddresses: []WeightedAddress{
-				{
-					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(5, 1),
-				},
-				{
-					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(5, 1),
-				},
-			},
-			isValid: true,
 		},
 	}
 	for _, tc := range tests {
