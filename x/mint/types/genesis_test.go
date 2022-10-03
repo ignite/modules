@@ -16,13 +16,13 @@ func TestValidateGenesis(t *testing.T) {
 	}{
 		{
 			name:    "should validate valid genesis",
-			genesis: types.DefaultGenesisState(),
+			genesis: types.DefaultGenesis(),
 			err:     nil,
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			err := types.ValidateGenesis(*tc.genesis)
+			err := tc.genesis.Validate()
 			if tc.err != nil {
 				require.Error(t, err, tc.err)
 				require.Equal(t, err, tc.err)

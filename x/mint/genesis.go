@@ -16,7 +16,7 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, ak types.AccountKeeper, 
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
 func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
-	genesis := types.DefaultGenesisState()
+	genesis := types.DefaultGenesis()
 
 	genesis.Minter = keeper.GetMinter(ctx)
 	genesis.Params = keeper.GetParams(ctx)
