@@ -5,17 +5,13 @@ import (
 	"testing"
 	"time"
 
-	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibcclienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
-	ibcconnectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
-	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -38,7 +34,6 @@ type TestKeepers struct {
 	AccountKeeper authkeeper.AccountKeeper
 	BankKeeper    bankkeeper.Keeper
 	DistrKeeper   distrkeeper.Keeper
-	IBCKeeper     *ibckeeper.Keeper
 	StakingKeeper stakingkeeper.Keeper
 	ClaimKeeper   *claimkeeper.Keeper
 }
@@ -54,13 +49,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
-	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	upgradeKeeper := initializer.Upgrade()
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
@@ -77,7 +69,6 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
-	setIBCDefaultParams(ctx, ibcKeeper)
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
@@ -86,18 +77,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			AccountKeeper: authKeeper,
 			BankKeeper:    bankKeeper,
 			DistrKeeper:   distrKeeper,
-			IBCKeeper:     ibcKeeper,
 			StakingKeeper: stakingKeeper,
 			ClaimKeeper:   claimKeeper,
 		}, TestMsgServers{
 			T:        t,
 			ClaimSrv: claimSrv,
 		}
-}
-
-// setIBCDefaultParams set default params for IBC client and connection keepers
-func setIBCDefaultParams(ctx sdk.Context, ibcKeeper *ibckeeper.Keeper) {
-	ibcKeeper.ClientKeeper.SetParams(ctx, ibcclienttypes.DefaultParams())
-	ibcKeeper.ConnectionKeeper.SetParams(ctx, ibcconnectiontypes.DefaultParams())
-	ibcKeeper.ClientKeeper.SetNextClientSequence(ctx, 0)
 }
