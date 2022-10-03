@@ -11,8 +11,10 @@ import (
 
 func TestParamsValidate(t *testing.T) {
 	invalidInflationMin := DefaultParams()
-	// set inflation min to larger than inflation max
 	invalidInflationMin.InflationMin = invalidInflationMin.InflationMax.Add(invalidInflationMin.InflationMax)
+
+	invalidInflationMax := DefaultParams()
+	invalidInflationMax.InflationMin = invalidInflationMax.InflationMax.Sub(invalidInflationMax.InflationMax)
 
 	tests := []struct {
 		name    string
@@ -27,6 +29,11 @@ func TestParamsValidate(t *testing.T) {
 		{
 			name:    "should prevent validate params with invalidInflationMin",
 			params:  invalidInflationMin,
+			isValid: false,
+		},
+		{
+			name:    "should prevent validate params with invalidInflationMax",
+			params:  invalidInflationMax,
 			isValid: false,
 		},
 	}
