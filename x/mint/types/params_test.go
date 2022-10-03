@@ -16,27 +16,26 @@ func TestParamsValidate(t *testing.T) {
 	invalid.InflationMin = invalid.InflationMax.Add(invalid.InflationMax)
 
 	tests := []struct {
-		name   string
-		params Params
-		err    error
+		name    string
+		params  Params
+		isValid bool
 	}{
 		{
-			name:   "should prevent validate params with inflation min larger than inflation max",
-			params: invalid,
-			err: errors.New("max inflation (0.200000000000000000) must be greater than or equal " +
-				"to min inflation (0.400000000000000000)"),
+			name:    "should validate valid params",
+			params:  DefaultParams(),
+			isValid: true,
 		},
 		{
-			name:   "should validate valid params",
-			params: DefaultParams(),
+			name:    "should prevent validate params with inflation min larger than inflation max",
+			params:  invalid,
+			isValid: false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.params.Validate()
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := tc.params.Validate()
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
