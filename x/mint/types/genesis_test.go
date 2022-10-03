@@ -9,23 +9,31 @@ import (
 )
 
 func TestValidateGenesis(t *testing.T) {
+	invalid := types.DefaultGenesis()
+	// set inflation min to larger than inflation max
+	invalid.Params.InflationMin = invalid.Params.InflationMax.Add(invalid.Params.InflationMax)
+
 	tests := []struct {
 		name    string
 		genesis *types.GenesisState
-		err     error
+		isValid bool
 	}{
 		{
 			name:    "should validate valid genesis",
 			genesis: types.DefaultGenesis(),
-			err:     nil,
+			isValid: true,
+		},
+		{
+			name:    "should prevent invalid params",
+			genesis: invalid,
+			isValid: false,
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			err := tc.genesis.Validate()
-			if tc.err != nil {
-				require.Error(t, err, tc.err)
-				require.Equal(t, err, tc.err)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
