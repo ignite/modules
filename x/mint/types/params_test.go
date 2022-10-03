@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	"github.com/ignite/modules/testutil/sample"
 	"math/rand"
 	"testing"
@@ -11,9 +10,9 @@ import (
 )
 
 func TestParamsValidate(t *testing.T) {
-	invalid := DefaultParams()
+	invalidInflationMin := DefaultParams()
 	// set inflation min to larger than inflation max
-	invalid.InflationMin = invalid.InflationMax.Add(invalid.InflationMax)
+	invalidInflationMin.InflationMin = invalidInflationMin.InflationMax.Add(invalidInflationMin.InflationMax)
 
 	tests := []struct {
 		name    string
@@ -26,8 +25,8 @@ func TestParamsValidate(t *testing.T) {
 			isValid: true,
 		},
 		{
-			name:    "should prevent validate params with inflation min larger than inflation max",
-			params:  invalid,
+			name:    "should prevent validate params with invalidInflationMin",
+			params:  invalidInflationMin,
 			isValid: false,
 		},
 	}
@@ -45,36 +44,36 @@ func TestParamsValidate(t *testing.T) {
 
 func TestValidateMintDenom(t *testing.T) {
 	tests := []struct {
-		name  string
-		denom interface{}
-		err   error
+		name    string
+		denom   interface{}
+		isValid bool
 	}{
 		{
-			name:  "should prevent validate mint denom with invalid interface",
-			denom: 10,
-			err:   errors.New("invalid parameter type: int"),
+			name:    "should validate valid mint denom",
+			denom:   DefaultMintDenom,
+			isValid: true,
 		},
 		{
-			name:  "should prevent validate empty mint denom",
-			denom: "",
-			err:   errors.New("mint denom cannot be blank"),
+			name:    "should prevent validate mint denom with invalid interface",
+			denom:   10,
+			isValid: false,
 		},
 		{
-			name:  "should prevent validate mint denom with invalid value",
-			denom: "invalid&",
-			err:   errors.New("invalid denom: invalid&"),
+			name:    "should prevent validate empty mint denom",
+			denom:   "",
+			isValid: false,
 		},
 		{
-			name:  "should validate valid mint denom",
-			denom: DefaultMintDenom,
+			name:    "should prevent validate mint denom with invalid value",
+			denom:   "invalid&",
+			isValid: false,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateMintDenom(tt.denom)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validateMintDenom(tc.denom)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
@@ -84,35 +83,34 @@ func TestValidateMintDenom(t *testing.T) {
 
 func TestValidateDec(t *testing.T) {
 	tests := []struct {
-		name  string
-		value interface{}
-		err   error
+		name    string
+		value   interface{}
+		isValid bool
 	}{
 		{
-			name:  "should prevent validate dec with invalid interface",
-			value: "string",
-			err:   errors.New("invalid parameter type: string"),
+			name:    "should prevent validate dec with invalid interface",
+			value:   "string",
+			isValid: false,
 		},
 		{
-			name:  "should prevent validate dec with negative value",
-			value: sdk.NewDec(-1),
-			err:   errors.New("cannot be negative: -1.000000000000000000"),
+			name:    "should prevent validate dec with negative value",
+			value:   sdk.NewDec(-1),
+			isValid: false,
 		}, {
-			name:  "should prevent validate dec too large a value",
-			value: sdk.NewDec(2),
-			err:   errors.New("dec too large: 2.000000000000000000"),
+			name:    "should prevent validate dec too large a value",
+			value:   sdk.NewDec(2),
+			isValid: false,
 		},
 		{
 			name:  "should validate valid dec",
 			value: DefaultInflationRateChange,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateDec(tt.value)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validateDec(tc.value)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
@@ -122,31 +120,30 @@ func TestValidateDec(t *testing.T) {
 
 func TestValidateBlocksPerYear(t *testing.T) {
 	tests := []struct {
-		name  string
-		value interface{}
-		err   error
+		name    string
+		value   interface{}
+		isValid bool
 	}{
 		{
-			name:  "should prevent validate blocks per year with invalid interface",
-			value: "string",
-			err:   errors.New("invalid parameter type: string"),
+			name:    "should prevent validate blocks per year with invalid interface",
+			value:   "string",
+			isValid: false,
 		},
 		{
-			name:  "should prevent validate blocks per year with zero value",
-			value: uint64(0),
-			err:   errors.New("blocks per year must be positive: 0"),
+			name:    "should prevent validate blocks per year with zero value",
+			value:   uint64(0),
+			isValid: false,
 		},
 		{
 			name:  "should validate valid blocks per year",
 			value: DefaultBlocksPerYear,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateBlocksPerYear(tt.value)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validateBlocksPerYear(tc.value)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
@@ -158,12 +155,12 @@ func TestValidateDistributionProportions(t *testing.T) {
 	tests := []struct {
 		name             string
 		distrProportions interface{}
-		err              error
+		isValid          bool
 	}{
 		{
 			name:             "should prevent validate distribution proportions with invalid interface",
 			distrProportions: "string",
-			err:              errors.New("invalid parameter type: string"),
+			isValid:          false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative staking ratio",
@@ -172,7 +169,7 @@ func TestValidateDistributionProportions(t *testing.T) {
 				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
 				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
 			},
-			err: errors.New("staking distribution ratio should not be negative"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative funded addresses ratio",
@@ -181,7 +178,7 @@ func TestValidateDistributionProportions(t *testing.T) {
 				FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
 				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
 			},
-			err: errors.New("funded addresses distribution ratio should not be negative"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative community pool ratio",
@@ -190,7 +187,7 @@ func TestValidateDistributionProportions(t *testing.T) {
 				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
 				CommunityPool:   sdk.NewDecWithPrec(-3, 1), // -0.3
 			},
-			err: errors.New("community pool distribution ratio should not be negative"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions total ratio not equal to 1",
@@ -199,19 +196,19 @@ func TestValidateDistributionProportions(t *testing.T) {
 				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
 				CommunityPool:   sdk.NewDecWithPrec(31, 2), // 0.31
 			},
-			err: errors.New("total distributions ratio should be 1"),
+			isValid: false,
 		},
 		{
 			name:             "should validate valid distribution proportions",
 			distrProportions: DefaultDistributionProportions,
+			isValid:          true,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateDistributionProportions(tt.distrProportions)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validateDistributionProportions(tc.distrProportions)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
@@ -226,12 +223,12 @@ func TestValidateWeightedAddresses(t *testing.T) {
 	tests := []struct {
 		name              string
 		weightedAddresses interface{}
-		err               error
+		isValid           bool
 	}{
 		{
 			name:              "should prevent validate weighed addresses with invalid interface",
 			weightedAddresses: "string",
-			err:               errors.New("invalid parameter type: string"),
+			isValid:           false,
 		},
 		{
 			name: "should prevent validate weighed addresses with invalid SDK address",
@@ -241,7 +238,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 					Weight:  sdk.OneDec(),
 				},
 			},
-			err: errors.New("invalid address at index 0"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate weighed addresses with negative value",
@@ -251,7 +248,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 					Weight:  sdk.NewDec(-1),
 				},
 			},
-			err: errors.New("non-positive weight at index 0"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate weighed addresses with weight greater than 1",
@@ -261,7 +258,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 					Weight:  sdk.NewDec(2),
 				},
 			},
-			err: errors.New("more than 1 weight at index 0"),
+			isValid: false,
 		},
 		{
 			name: "should prevent validate weighed addresses with sum greater than 1",
@@ -275,7 +272,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 					Weight:  sdk.NewDecWithPrec(5, 1),
 				},
 			},
-			err: errors.New("invalid weight sum: 1.100000000000000000"),
+			isValid: false,
 		},
 		{
 			name:              "should validate valid empty weighted addresses",
@@ -293,14 +290,14 @@ func TestValidateWeightedAddresses(t *testing.T) {
 					Weight:  sdk.NewDecWithPrec(5, 1),
 				},
 			},
+			isValid: true,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateWeightedAddresses(tt.weightedAddresses)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := validateWeightedAddresses(tc.weightedAddresses)
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
