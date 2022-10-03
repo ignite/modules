@@ -29,7 +29,6 @@ func TestParamsValidate(t *testing.T) {
 		{
 			name:   "should validate valid params",
 			params: DefaultParams(),
-			err:    nil,
 		},
 	}
 	for _, tt := range tests {
