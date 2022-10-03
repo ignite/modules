@@ -1,7 +1,6 @@
 package types_test
 
 import (
-	"errors"
 	"math/rand"
 	"testing"
 
@@ -17,27 +16,26 @@ func TestValidateMinter(t *testing.T) {
 	invalid.Inflation = sdk.NewDec(-1)
 
 	tests := []struct {
-		name   string
-		minter types.Minter
-		err    error
+		name    string
+		minter  types.Minter
+		isValid bool
 	}{
 		{
-			name:   "should prevent validate for minter with negative inflation",
-			minter: invalid,
-			err:    errors.New("mint parameter Inflation should be positive, is -1.000000000000000000"),
+			name:    "should validate valid minter",
+			minter:  types.DefaultInitialMinter(),
+			isValid: true,
 		},
 		{
-			name:   "should validate valid minter",
-			minter: types.DefaultInitialMinter(),
-			err:    nil,
+			name:    "should prevent validate for minter with negative inflation",
+			minter:  invalid,
+			isValid: false,
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			err := types.ValidateMinter(tc.minter)
-			if tc.err != nil {
-				require.Error(t, err, tc.err)
-				require.Equal(t, err, tc.err)
+			err := tc.minter.Validate()
+			if !tc.isValid {
+				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)

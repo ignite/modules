@@ -17,5 +17,5 @@ func (gs GenesisState) Validate() error {
 		return err
 	}
 
-	return ValidateMinter(gs.Minter)
+	return gs.Minter.Validate()
 }
