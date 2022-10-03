@@ -20,9 +20,6 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
-	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
-	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	tmdb "github.com/tendermint/tm-db"
 
 	"github.com/ignite/modules/testutil/sample"
@@ -34,7 +31,6 @@ import (
 var moduleAccountPerms = map[string][]string{
 	authtypes.FeeCollectorName:     nil,
 	distrtypes.ModuleName:          nil,
-	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	minttypes.ModuleName:           {authtypes.Minter},
@@ -171,26 +167,6 @@ func (i initializer) Staking(
 		authKeeper,
 		bankKeeper,
 		stakingSubspace,
-	)
-}
-
-func (i initializer) IBC(
-	paramKeeper paramskeeper.Keeper,
-	stakingKeeper stakingkeeper.Keeper,
-	capabilityKeeper capabilitykeeper.Keeper,
-	upgradeKeeper upgradekeeper.Keeper,
-) *ibckeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(ibchost.StoreKey)
-
-	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
-
-	return ibckeeper.NewKeeper(
-		i.Codec,
-		storeKey,
-		paramKeeper.Subspace(ibchost.ModuleName),
-		stakingKeeper,
-		upgradeKeeper,
-		capabilityKeeper.ScopeToModule(ibchost.ModuleName),
 	)
 }
 
