@@ -10,11 +10,38 @@ import (
 )
 
 func TestParamsValidate(t *testing.T) {
-	invalidInflationMin := DefaultParams()
-	invalidInflationMin.InflationMin = invalidInflationMin.InflationMax.Add(invalidInflationMin.InflationMax)
-
 	invalidInflationMax := DefaultParams()
-	invalidInflationMax.InflationMin = invalidInflationMax.InflationMax.Sub(invalidInflationMax.InflationMax)
+	invalidInflationMax.InflationMin = invalidInflationMax.InflationMax.Add(invalidInflationMax.InflationMax)
+
+	negativeInflationMin := DefaultParams()
+	negativeInflationMin.InflationMin = sdk.NewDec(-1)
+
+	negativeInflationMax := DefaultParams()
+	negativeInflationMax.InflationMax = sdk.NewDec(-1)
+
+	negativeGoalBonded := DefaultParams()
+	negativeGoalBonded.GoalBonded = sdk.NewDec(-1)
+
+	invalidMintDenom := DefaultParams()
+	invalidMintDenom.MintDenom = ""
+
+	invalidBlocksPerYear := DefaultParams()
+	invalidBlocksPerYear.BlocksPerYear = 0
+
+	invalidDistrProportions := DefaultParams()
+	invalidDistrProportions.DistributionProportions = DistributionProportions{
+		Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
+		FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
+		CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+	}
+
+	invalidWeightedAddresses := DefaultParams()
+	invalidWeightedAddresses.FundedAddresses = []WeightedAddress{
+		{
+			Address: "invalid",
+			Weight:  sdk.OneDec(),
+		},
+	}
 
 	tests := []struct {
 		name    string
@@ -27,13 +54,43 @@ func TestParamsValidate(t *testing.T) {
 			isValid: true,
 		},
 		{
-			name:    "should prevent validate params with invalidInflationMin",
-			params:  invalidInflationMin,
+			name:    "should prevent validate params with inflation max less than inflation min",
+			params:  invalidInflationMax,
 			isValid: false,
 		},
 		{
-			name:    "should prevent validate params with invalidInflationMax",
-			params:  invalidInflationMax,
+			name:    "should prevent validate params with negative inflation min",
+			params:  negativeInflationMin,
+			isValid: false,
+		},
+		{
+			name:    "should prevent validate params with negative inflation max",
+			params:  negativeInflationMax,
+			isValid: false,
+		},
+		{
+			name:    "should prevent validate params with negative goal bonded",
+			params:  negativeGoalBonded,
+			isValid: false,
+		},
+		{
+			name:    "should prevent invalid mint denom",
+			params:  invalidMintDenom,
+			isValid: false,
+		},
+		{
+			name:    "should prevent invalid blocks per year",
+			params:  invalidBlocksPerYear,
+			isValid: false,
+		},
+		{
+			name:    "should prevent invalid distribution proportions",
+			params:  invalidDistrProportions,
+			isValid: false,
+		},
+		{
+			name:    "should prevent invalid weighted addresses",
+			params:  invalidWeightedAddresses,
 			isValid: false,
 		},
 	}
