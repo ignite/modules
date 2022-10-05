@@ -1,12 +1,6 @@
 package types
 
 // NewGenesisState creates a new GenesisState object
-func NewGenesisState(minter Minter, params Params) *GenesisState {
-	return &GenesisState{
-		Minter: minter,
-		Params: params,
-	}
-}
 
 // DefaultGenesis creates a default GenesisState object
 func DefaultGenesis() *GenesisState {
@@ -23,5 +17,5 @@ func (gs GenesisState) Validate() error {
 		return err
 	}
 
-	return ValidateMinter(gs.Minter)
+	return gs.Minter.Validate()
 }

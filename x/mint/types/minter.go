@@ -32,11 +32,11 @@ func DefaultInitialMinter() Minter {
 	)
 }
 
-// validate minter
-func ValidateMinter(minter Minter) error {
-	if minter.Inflation.IsNegative() {
+// Validate checks if inflation parameter is negative
+func (m Minter) Validate() error {
+	if m.Inflation.IsNegative() {
 		return fmt.Errorf("mint parameter Inflation should be positive, is %s",
-			minter.Inflation.String())
+			m.Inflation.String())
 	}
 	return nil
 }

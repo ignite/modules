@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"math/rand"
@@ -7,11 +7,45 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/ignite/modules/x/mint/types"
 )
 
+func TestValidateMinter(t *testing.T) {
+	invalid := types.DefaultInitialMinter()
+	invalid.Inflation = sdk.NewDec(-1)
+
+	tests := []struct {
+		name    string
+		minter  types.Minter
+		isValid bool
+	}{
+		{
+			name:    "should validate valid minter",
+			minter:  types.DefaultInitialMinter(),
+			isValid: true,
+		},
+		{
+			name:    "should prevent validate for minter with negative inflation",
+			minter:  invalid,
+			isValid: false,
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := tc.minter.Validate()
+			if !tc.isValid {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
 func TestNextInflation(t *testing.T) {
-	minter := DefaultInitialMinter()
-	params := DefaultParams()
+	minter := types.DefaultInitialMinter()
+	params := types.DefaultParams()
 	blocksPerYr := sdk.NewDec(int64(params.BlocksPerYear))
 
 	// Governing Mechanism:
@@ -59,8 +93,8 @@ func TestNextInflation(t *testing.T) {
 }
 
 func TestBlockProvision(t *testing.T) {
-	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
-	params := DefaultParams()
+	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	params := types.DefaultParams()
 
 	secondsPerYear := int64(60 * 60 * 8766)
 
@@ -94,8 +128,8 @@ func TestBlockProvision(t *testing.T) {
 // BenchmarkBlockProvision-4 3000000 429 ns/op
 func BenchmarkBlockProvision(b *testing.B) {
 	b.ReportAllocs()
-	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
-	params := DefaultParams()
+	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	params := types.DefaultParams()
 
 	s1 := rand.NewSource(100)
 	r1 := rand.New(s1)
@@ -111,8 +145,8 @@ func BenchmarkBlockProvision(b *testing.B) {
 // BenchmarkNextInflation-4 1000000 1828 ns/op
 func BenchmarkNextInflation(b *testing.B) {
 	b.ReportAllocs()
-	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
-	params := DefaultParams()
+	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	params := types.DefaultParams()
 	bondedRatio := sdk.NewDecWithPrec(1, 1)
 
 	// run the NextInflationRate function b.N times
@@ -125,8 +159,8 @@ func BenchmarkNextInflation(b *testing.B) {
 // BenchmarkNextAnnualProvisions-4 5000000 251 ns/op
 func BenchmarkNextAnnualProvisions(b *testing.B) {
 	b.ReportAllocs()
-	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
-	params := DefaultParams()
+	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	params := types.DefaultParams()
 	totalSupply := sdkmath.NewInt(100000000000000)
 
 	// run the NextAnnualProvisions function b.N times
