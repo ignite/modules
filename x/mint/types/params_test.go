@@ -10,39 +10,6 @@ import (
 )
 
 func TestParamsValidate(t *testing.T) {
-	invalidInflationMax := DefaultParams()
-	invalidInflationMax.InflationMin = invalidInflationMax.InflationMax.Add(invalidInflationMax.InflationMax)
-
-	negativeInflationMin := DefaultParams()
-	negativeInflationMin.InflationMin = sdk.NewDec(-1)
-
-	negativeInflationMax := DefaultParams()
-	negativeInflationMax.InflationMax = sdk.NewDec(-1)
-
-	negativeGoalBonded := DefaultParams()
-	negativeGoalBonded.GoalBonded = sdk.NewDec(-1)
-
-	invalidMintDenom := DefaultParams()
-	invalidMintDenom.MintDenom = ""
-
-	invalidBlocksPerYear := DefaultParams()
-	invalidBlocksPerYear.BlocksPerYear = 0
-
-	invalidDistrProportions := DefaultParams()
-	invalidDistrProportions.DistributionProportions = DistributionProportions{
-		Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
-		FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
-		CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
-	}
-
-	invalidWeightedAddresses := DefaultParams()
-	invalidWeightedAddresses.FundedAddresses = []WeightedAddress{
-		{
-			Address: "invalid",
-			Weight:  sdk.OneDec(),
-		},
-	}
-
 	tests := []struct {
 		name    string
 		params  Params
@@ -54,43 +21,124 @@ func TestParamsValidate(t *testing.T) {
 			isValid: true,
 		},
 		{
-			name:    "should prevent validate params with inflation max less than inflation min",
-			params:  invalidInflationMax,
+			name: "should prevent validate params with inflation max less than inflation min",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            DefaultInflationMin.Add(DefaultInflationMax),
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent validate params with negative inflation min",
-			params:  negativeInflationMin,
+			name: "should prevent validate params with negative inflation min",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            sdk.NewDec(-1),
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent validate params with negative inflation max",
-			params:  negativeInflationMax,
+			name: "should prevent validate params with negative inflation max",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            sdk.NewDec(-1),
+				InflationMin:            DefaultInflationMin,
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent validate params with negative goal bonded",
-			params:  negativeGoalBonded,
+			name: "should prevent validate params with negative goal bonded",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            DefaultInflationMin,
+				GoalBonded:              sdk.NewDec(-1),
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent invalid mint denom",
-			params:  invalidMintDenom,
+			name: "should prevent invalid mint denom",
+			params: Params{
+				MintDenom:               "",
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            DefaultInflationMin,
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent invalid blocks per year",
-			params:  invalidBlocksPerYear,
+			name: "should prevent invalid blocks per year",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            DefaultInflationMin,
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           0,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses:         DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent invalid distribution proportions",
-			params:  invalidDistrProportions,
+			name: "should prevent invalid distribution proportions",
+			params: Params{
+				MintDenom:           DefaultMintDenom,
+				InflationRateChange: DefaultInflationRateChange,
+				InflationMax:        DefaultInflationMax,
+				InflationMin:        DefaultInflationMin,
+				GoalBonded:          DefaultGoalBonded,
+				BlocksPerYear:       DefaultBlocksPerYear,
+				DistributionProportions: DistributionProportions{
+					Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
+					FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
+					CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+				},
+				FundedAddresses: DefaultFundedAddresses,
+			},
 			isValid: false,
 		},
 		{
-			name:    "should prevent invalid weighted addresses",
-			params:  invalidWeightedAddresses,
+			name: "should prevent invalid weighted addresses",
+			params: Params{
+				MintDenom:               DefaultMintDenom,
+				InflationRateChange:     DefaultInflationRateChange,
+				InflationMax:            DefaultInflationMax,
+				InflationMin:            DefaultInflationMin,
+				GoalBonded:              DefaultGoalBonded,
+				BlocksPerYear:           DefaultBlocksPerYear,
+				DistributionProportions: DefaultDistributionProportions,
+				FundedAddresses: []WeightedAddress{
+					{
+						Address: "invalid",
+						Weight:  sdk.OneDec(),
+					},
+				},
+			},
 			isValid: false,
 		},
 	}
