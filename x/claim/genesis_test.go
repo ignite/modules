@@ -50,16 +50,20 @@ func TestGenesis(t *testing.T) {
 	}
 
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	claim.InitGenesis(ctx, *tk.ClaimKeeper, genesisState)
-	got := claim.ExportGenesis(ctx, *tk.ClaimKeeper)
-	require.NotNil(t, got)
 
-	nullify.Fill(&genesisState)
-	nullify.Fill(got)
+	t.Run("should allow import and export of genesis", func(t *testing.T) {
+		claim.InitGenesis(ctx, *tk.ClaimKeeper, genesisState)
+		got := claim.ExportGenesis(ctx, *tk.ClaimKeeper)
+		require.NotNil(t, got)
 
-	require.ElementsMatch(t, genesisState.ClaimRecords, got.ClaimRecords)
-	require.ElementsMatch(t, genesisState.Missions, got.Missions)
-	require.Equal(t, genesisState.AirdropSupply, got.AirdropSupply)
-	require.Equal(t, genesisState.InitialClaim, got.InitialClaim)
-	// this line is used by starport scaffolding # genesis/test/assert
+		nullify.Fill(&genesisState)
+		nullify.Fill(got)
+
+		require.ElementsMatch(t, genesisState.ClaimRecords, got.ClaimRecords)
+		require.ElementsMatch(t, genesisState.Missions, got.Missions)
+		require.Equal(t, genesisState.AirdropSupply, got.AirdropSupply)
+		require.Equal(t, genesisState.InitialClaim, got.InitialClaim)
+		// this line is used by starport scaffolding # genesis/test/assert
+	})
+
 }
