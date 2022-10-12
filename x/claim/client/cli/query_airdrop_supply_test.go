@@ -23,18 +23,18 @@ func (suite *QueryTestSuite) TestShowAirdropSupply() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc string
+		name string
 		args []string
 		err  error
 		obj  sdk.Coin
 	}{
 		{
-			desc: "get",
+			name: "should allow get",
 			args: common,
 			obj:  airdropSupply,
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			var args []string
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowAirdropSupply(), args)

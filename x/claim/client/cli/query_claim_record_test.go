@@ -25,29 +25,26 @@ func (suite *QueryTestSuite) TestShowClaimRecord() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc    string
+		name    string
 		address string
-
-		args []string
-		err  error
-		obj  types.ClaimRecord
+		args    []string
+		err     error
+		obj     types.ClaimRecord
 	}{
 		{
-			desc:    "found",
+			name:    "should allow get",
 			address: objs[0].Address,
-
-			args: common,
-			obj:  objs[0],
+			args:    common,
+			obj:     objs[0],
 		},
 		{
-			desc:    "not found",
+			name:    "should return not found",
 			address: sample.Address(sample.Rand()),
-
-			args: common,
-			err:  status.Error(codes.NotFound, "not found"),
+			args:    common,
+			err:     status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
 				tc.address,
 			}
@@ -90,7 +87,7 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -105,7 +102,7 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 			)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -122,7 +119,7 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListClaimRecord(), args)
 		require.NoError(t, err)
