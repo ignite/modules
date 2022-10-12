@@ -14,6 +14,10 @@ func TestParams_Validate(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			name:   "should validate valid params",
+			params: DefaultParams(),
+		},
+		{
 			name: "should prevent validate params with invalid decay information",
 			params: NewParams(DecayInformation{
 				Enabled:    true,
@@ -21,10 +25,6 @@ func TestParams_Validate(t *testing.T) {
 				DecayEnd:   time.UnixMilli(1000),
 			}),
 			wantErr: true,
-		},
-		{
-			name:   "should validate valid params",
-			params: DefaultParams(),
 		},
 	}
 	for _, tt := range tests {
@@ -47,6 +47,12 @@ func TestValidateDecayInformation(t *testing.T) {
 		wantErr          bool
 	}{
 		{
+			name: "should validate valid decay information",
+			decayInformation: DecayInformation{
+				Enabled: false,
+			},
+		},
+		{
 			name:             "should prevent validate decay information with invalid interface",
 			decayInformation: "test",
 			wantErr:          true,
@@ -59,12 +65,6 @@ func TestValidateDecayInformation(t *testing.T) {
 				DecayEnd:   time.UnixMilli(1000),
 			},
 			wantErr: true,
-		},
-		{
-			name: "should validate valid decay information",
-			decayInformation: DecayInformation{
-				Enabled: false,
-			},
 		},
 	}
 	for _, tt := range tests {
