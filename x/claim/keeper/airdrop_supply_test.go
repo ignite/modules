@@ -18,26 +18,30 @@ import (
 func TestAirdropSupplyGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	sampleSupply := sample.Coin(r)
-	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
+	t.Run("should allow get", func(t *testing.T) {
+		sampleSupply := sample.Coin(r)
+		tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
 
-	rst, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-	require.True(t, found)
-	require.Equal(t,
-		nullify.Fill(&sampleSupply),
-		nullify.Fill(&rst),
-	)
+		rst, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&sampleSupply),
+			nullify.Fill(&rst),
+		)
+	})
 }
 
 func TestAirdropSupplyRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	tk.ClaimKeeper.SetAirdropSupply(ctx, sample.Coin(r))
-	_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-	require.True(t, found)
-	tk.ClaimKeeper.RemoveAirdropSupply(ctx)
-	_, found = tk.ClaimKeeper.GetAirdropSupply(ctx)
-	require.False(t, found)
+	t.Run("should allow remove", func(t *testing.T) {
+		tk.ClaimKeeper.SetAirdropSupply(ctx, sample.Coin(r))
+		_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+		require.True(t, found)
+		tk.ClaimKeeper.RemoveAirdropSupply(ctx)
+		_, found = tk.ClaimKeeper.GetAirdropSupply(ctx)
+		require.False(t, found)
+	})
 }
 
 func TestKeeper_InitializeAirdropSupply(t *testing.T) {
@@ -50,19 +54,19 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 		airdropSupply sdk.Coin
 	}{
 		{
-			name:          "should allows setting airdrop supply",
+			name:          "should allow setting airdrop supply",
 			airdropSupply: tc.Coin(t, "10000foo"),
 		},
 		{
-			name:          "should allows specifying a new token for the supply",
+			name:          "should allow specifying a new token for the supply",
 			airdropSupply: tc.Coin(t, "125000bar"),
 		},
 		{
-			name:          "should allows modifying a token for the supply",
+			name:          "should allow modifying a token for the supply",
 			airdropSupply: tc.Coin(t, "525000bar"),
 		},
 		{
-			name:          "should allows setting airdrop supply to zero",
+			name:          "should allow setting airdrop supply to zero",
 			airdropSupply: sdk.NewCoin("foo", sdkmath.ZeroInt()),
 		},
 	}

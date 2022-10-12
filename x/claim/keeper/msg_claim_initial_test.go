@@ -36,6 +36,28 @@ func Test_msgServer_ClaimInitial(t *testing.T) {
 		err        error
 	}{
 		{
+			name: "should allow to claim initial for an existing mission and claim record",
+			inputState: inputState{
+				initialClaim: types.InitialClaim{
+					Enabled:   true,
+					MissionID: 1,
+				},
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   claimer,
+					Claimable: sdkmath.NewIntFromUint64(1000),
+				},
+			},
+			// will fail because no claim record associated
+			msg: types.MsgClaimInitial{
+				Claimer: sample.Address(r),
+			},
+			err: types.ErrMissionCompleteFailure,
+		},
+		{
 			name: "should prevent claiming initial if initial claim doesn't exist",
 			inputState: inputState{
 				noInitialClaim: true,
@@ -69,28 +91,6 @@ func Test_msgServer_ClaimInitial(t *testing.T) {
 				},
 				noMission:     true,
 				noClaimRecord: true,
-			},
-			// will fail because no claim record associated
-			msg: types.MsgClaimInitial{
-				Claimer: sample.Address(r),
-			},
-			err: types.ErrMissionCompleteFailure,
-		},
-		{
-			name: "should allow to claim initial for an existing mission and claim record",
-			inputState: inputState{
-				initialClaim: types.InitialClaim{
-					Enabled:   true,
-					MissionID: 1,
-				},
-				mission: types.Mission{
-					MissionID: 1,
-					Weight:    sdk.OneDec(),
-				},
-				claimRecord: types.ClaimRecord{
-					Address:   claimer,
-					Claimable: sdkmath.NewIntFromUint64(1000),
-				},
 			},
 			// will fail because no claim record associated
 			msg: types.MsgClaimInitial{

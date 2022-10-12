@@ -24,12 +24,12 @@ func TestInitialClaimQuery(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "should allow valid query",
 			request:  &types.QueryGetInitialClaimRequest{},
 			response: &types.QueryGetInitialClaimResponse{InitialClaim: item},
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

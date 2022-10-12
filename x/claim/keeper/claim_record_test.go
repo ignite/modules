@@ -27,40 +27,46 @@ func createNClaimRecord(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 func TestClaimRecordGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.ClaimKeeper.GetClaimRecord(ctx,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
+		for _, item := range items {
+			rst, found := tk.ClaimKeeper.GetClaimRecord(ctx,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestClaimRecordRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
-	for _, item := range items {
-		tk.ClaimKeeper.RemoveClaimRecord(ctx,
-			item.Address,
-		)
-		_, found := tk.ClaimKeeper.GetClaimRecord(ctx,
-			item.Address,
-		)
-		require.False(t, found)
-	}
+	t.Run("should allow remove", func(t *testing.T) {
+		items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
+		for _, item := range items {
+			tk.ClaimKeeper.RemoveClaimRecord(ctx,
+				item.Address,
+			)
+			_, found := tk.ClaimKeeper.GetClaimRecord(ctx,
+				item.Address,
+			)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestClaimRecordGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.ClaimKeeper.GetAllClaimRecord(ctx)),
-	)
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.ClaimKeeper.GetAllClaimRecord(ctx)),
+		)
+	})
 }

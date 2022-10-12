@@ -30,36 +30,42 @@ func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Missi
 func TestMissionGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNMission(tk.ClaimKeeper, ctx, 10)
-	for _, item := range items {
-		got, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&got),
-		)
-	}
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		for _, item := range items {
+			got, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&got),
+			)
+		}
+	})
 }
 
 func TestMissionGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNMission(tk.ClaimKeeper, ctx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.ClaimKeeper.GetAllMission(ctx)),
-	)
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.ClaimKeeper.GetAllMission(ctx)),
+		)
+	})
 }
 
 func TestMissionRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	items := createNMission(tk.ClaimKeeper, ctx, 10)
-	for _, item := range items {
-		tk.ClaimKeeper.RemoveMission(ctx, item.MissionID)
-		_, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
-		require.False(t, found)
-	}
+	t.Run("should allow remove", func(t *testing.T) {
+		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		for _, item := range items {
+			tk.ClaimKeeper.RemoveMission(ctx, item.MissionID)
+			_, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestKeeper_CompleteMission(t *testing.T) {
