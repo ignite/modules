@@ -65,5 +65,4 @@ func TestGenesis(t *testing.T) {
 		require.Equal(t, genesisState.InitialClaim, got.InitialClaim)
 		// this line is used by starport scaffolding # genesis/test/assert
 	})
-
 }

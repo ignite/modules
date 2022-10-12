@@ -1,8 +1,9 @@
 package types_test
 
 import (
-	"github.com/ignite/modules/testutil/sample"
 	"testing"
+
+	"github.com/ignite/modules/testutil/sample"
 
 	"github.com/stretchr/testify/require"
 
