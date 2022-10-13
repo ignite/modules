@@ -24,26 +24,26 @@ func (suite *QueryTestSuite) TestShowMission() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc string
+		name string
 		id   string
 		args []string
 		err  error
 		obj  types.Mission
 	}{
 		{
-			desc: "found",
+			name: "should allow get",
 			id:   fmt.Sprintf("%d", objs[0].MissionID),
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc: "not found",
+			name: "should return not found",
 			id:   "not_found",
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{tc.id}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowMission(), args)

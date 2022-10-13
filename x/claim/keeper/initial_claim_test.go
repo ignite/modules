@@ -20,19 +20,25 @@ func createTestInitialClaim(keeper *keeper.Keeper, ctx sdk.Context) types.Initia
 
 func TestInitialClaimGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	item := createTestInitialClaim(tk.ClaimKeeper, ctx)
-	rst, found := tk.ClaimKeeper.GetInitialClaim(ctx)
-	require.True(t, found)
-	require.Equal(t,
-		nullify.Fill(&item),
-		nullify.Fill(&rst),
-	)
+
+	t.Run("should allow get", func(t *testing.T) {
+		item := createTestInitialClaim(tk.ClaimKeeper, ctx)
+		rst, found := tk.ClaimKeeper.GetInitialClaim(ctx)
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&item),
+			nullify.Fill(&rst),
+		)
+	})
 }
 
 func TestInitialClaimRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	createTestInitialClaim(tk.ClaimKeeper, ctx)
-	tk.ClaimKeeper.RemoveInitialClaim(ctx)
-	_, found := tk.ClaimKeeper.GetInitialClaim(ctx)
-	require.False(t, found)
+
+	t.Run("should allow remove", func(t *testing.T) {
+		createTestInitialClaim(tk.ClaimKeeper, ctx)
+		tk.ClaimKeeper.RemoveInitialClaim(ctx)
+		_, found := tk.ClaimKeeper.GetInitialClaim(ctx)
+		require.False(t, found)
+	})
 }

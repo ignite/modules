@@ -1,9 +1,10 @@
 package types
 
 import (
-	"github.com/ignite/modules/testutil/sample"
 	"math/rand"
 	"testing"
+
+	"github.com/ignite/modules/testutil/sample"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -213,7 +214,8 @@ func TestValidateDec(t *testing.T) {
 			name:    "should prevent validate dec with negative value",
 			value:   sdk.NewDec(-1),
 			isValid: false,
-		}, {
+		},
+		{
 			name:    "should prevent validate dec too large a value",
 			value:   sdk.NewDec(2),
 			isValid: false,

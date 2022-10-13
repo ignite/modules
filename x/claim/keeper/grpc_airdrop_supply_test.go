@@ -23,22 +23,22 @@ func TestAirdropSupplyQuery(t *testing.T) {
 	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
 
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetAirdropSupplyRequest
 		response *types.QueryGetAirdropSupplyResponse
 		err      error
 	}{
 		{
-			desc:     "First",
+			name:     "should allow valid query",
 			request:  &types.QueryGetAirdropSupplyRequest{},
 			response: &types.QueryGetAirdropSupplyResponse{AirdropSupply: sampleSupply},
 		},
 		{
-			desc: "InvalidRequest",
+			name: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.ClaimKeeper.AirdropSupply(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

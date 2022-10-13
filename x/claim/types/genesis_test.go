@@ -23,17 +23,17 @@ func TestGenesisState_Validate(t *testing.T) {
 	}
 
 	for _, tt := range []struct {
-		desc     string
+		name     string
 		genState *types.GenesisState
 		valid    bool
 	}{
 		{
-			desc:     "should validate default",
+			name:     "should validate default",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
 		{
-			desc: "should validate airdrop supply sum of claim amounts",
+			name: "should validate airdrop supply sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -66,7 +66,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow genesis state with no airdrop supply",
+			name: "should allow genesis state with no airdrop supply",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				Missions: []types.Mission{
@@ -80,7 +80,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow genesis state with no mission",
+			name: "should allow genesis state with no mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -98,7 +98,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow mission with 0 weight",
+			name: "should allow mission with 0 weight",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -126,7 +126,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow claim record with completed missions",
+			name: "should allow claim record with completed missions",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -156,7 +156,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow claim record with missions all completed",
+			name: "should allow claim record with missions all completed",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -186,7 +186,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should allow claim record with zero weight mission completed",
+			name: "should allow claim record with zero weight mission completed",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -216,7 +216,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should validate genesis state with initial claim enabled",
+			name: "should validate genesis state with initial claim enabled",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -244,7 +244,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should prevent validate duplicated claimRecord",
+			name: "should prevent validate duplicated claimRecord",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -268,7 +268,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate claim record with non positive allocation",
+			name: "should prevent validate claim record with non positive allocation",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -292,7 +292,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate airdrop supply higher than sum of claim amounts",
+			name: "should prevent validate airdrop supply higher than sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -316,7 +316,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate airdrop supply lower than sum of claim amounts",
+			name: "should prevent validate airdrop supply lower than sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -340,7 +340,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate invalid airdrop supply with records with completed missions",
+			name: "should prevent validate invalid airdrop supply with records with completed missions",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -369,7 +369,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate claim record with non existing mission",
+			name: "should prevent validate claim record with non existing mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -394,7 +394,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate invalid genesis supply coin",
+			name: "should prevent validate invalid genesis supply coin",
 			genState: &types.GenesisState{
 				Params:        types.DefaultParams(),
 				AirdropSupply: sdk.Coin{},
@@ -408,7 +408,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate duplicated mission",
+			name: "should prevent validate duplicated mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				Missions: []types.Mission{
@@ -425,7 +425,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate mission list weights are not equal to 1",
+			name: "should prevent validate mission list weights are not equal to 1",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				Missions: []types.Mission{
@@ -442,7 +442,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate initial claim enabled with non existing mission",
+			name: "should prevent validate initial claim enabled with non existing mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
@@ -464,7 +464,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent validate genesis state with invalid param",
+			name: "should prevent validate genesis state with invalid param",
 			genState: &types.GenesisState{
 				Params: types.NewParams(types.DecayInformation{
 					Enabled:    true,
@@ -483,7 +483,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
-		t.Run(tt.desc, func(t *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			err := tt.genState.Validate()
 			if tt.valid {
 				require.NoError(t, err)

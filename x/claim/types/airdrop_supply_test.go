@@ -15,14 +15,14 @@ func TestCheckAirdropSupply(t *testing.T) {
 	sampleAddr := sample.Address(r)
 
 	for _, tc := range []struct {
-		desc          string
+		name          string
 		airdropSupply sdk.Coin
 		missionMap    map[uint64]types.Mission
 		claimRecords  []types.ClaimRecord
 		valid         bool
 	}{
 		{
-			desc:          "should validate valid airdrop supply",
+			name:          "should validate valid airdrop supply",
 			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
 			missionMap: map[uint64]types.Mission{
 				0: {
@@ -40,7 +40,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 			},
 			valid: true,
 		}, {
-			desc:          "should be invalid with duplicated address in claim record",
+			name:          "should invalidate with duplicated address in claim record",
 			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
 			missionMap: map[uint64]types.Mission{
 				0: {
@@ -63,7 +63,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 			},
 			valid: false,
 		}, {
-			desc:          "should be invalid with address completing non existing mission",
+			name:          "should invalidate with address completing non existing mission",
 			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
 			missionMap: map[uint64]types.Mission{
 				0: {
@@ -81,7 +81,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 			},
 			valid: false,
 		}, {
-			desc:          "should be invalid with airdrop supply not equal to claimable amounts",
+			name:          "should invalidate with airdrop supply not equal to claimable amounts",
 			airdropSupply: sdk.NewCoin("test", sdkmath.NewInt(10)),
 			missionMap: map[uint64]types.Mission{
 				0: {
@@ -100,7 +100,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 			valid: false,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			err := types.CheckAirdropSupply(
 				tc.airdropSupply,
 				tc.missionMap,

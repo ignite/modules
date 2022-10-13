@@ -12,17 +12,17 @@ import (
 
 func TestMission_Validate(t *testing.T) {
 	for _, tc := range []struct {
-		desc    string
+		name    string
 		mission claim.Mission
 		valid   bool
 	}{
 		{
-			desc:    "valid mission",
+			name:    "should validate valid mission",
 			mission: sample.Mission(r),
 			valid:   true,
 		},
 		{
-			desc: "should accept weigth 0",
+			name: "should accept weigth 0",
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
@@ -31,7 +31,7 @@ func TestMission_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should accept weight 1",
+			name: "should accept weight 1",
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
@@ -40,7 +40,7 @@ func TestMission_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "should prevent weight greater than 1",
+			name: "should prevent weight greater than 1",
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
@@ -49,7 +49,7 @@ func TestMission_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should prevent weight less than 0",
+			name: "should prevent weight less than 0",
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
@@ -58,7 +58,7 @@ func TestMission_Validate(t *testing.T) {
 			valid: false,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			require.EqualValues(t, tc.valid, tc.mission.Validate() == nil)
 		})
 	}
