@@ -4,9 +4,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
@@ -60,7 +60,7 @@ func SimulateMsgClaimInitial(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           testutil.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -72,6 +72,6 @@ func SimulateMsgClaimInitial(
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
