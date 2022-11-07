@@ -71,10 +71,13 @@ test: govet govulncheck test-unit
 
 proto-all: proto-format proto-gen
 
-protoVer=v0.7
-protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
+protoVer=0.11.0
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 containerProtoGen=ignite-modules-proto-gen-$(protoVer)
 containerProtoFmt=ignite-modules-proto-fmt-$(protoVer)
+DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.9.0
+
+proto-all: proto-format proto-lint proto-gen
 
 proto-gen:
 	@echo "Generating Protobuf files"
@@ -83,9 +86,12 @@ proto-gen:
 
 proto-format:
 	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		find ./ -name "*.proto" -exec clang-format -i {} \; ; fi
 
+
+proto-lint:
+	@$(DOCKER_BUF) lint --error-format=json
 
 SIM_NUM_BLOCKS ?= 500
 SIM_BLOCK_SIZE ?= 100
