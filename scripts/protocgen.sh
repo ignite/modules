@@ -8,7 +8,7 @@ set -e
 
 echo "Generating gogo proto code"
 cd proto
-proto_dirs=$(find ./cosmos ./amino -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+proto_dirs=$(find ./modules -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 for dir in $proto_dirs; do
   for file in $(find "${dir}" -maxdepth 1 -name '*.proto'); do
     # this regex checks if a proto file has its go_package set to cosmossdk.io/api/...
@@ -23,7 +23,7 @@ done
 cd ..
 
 # move proto files to the right places
-cp -r github.com/cosmos/cosmos-sdk/* ./
+cp -r github.com/ignite/modules/* ./
 rm -rf github.com
 
 go mod tidy
