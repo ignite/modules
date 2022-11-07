@@ -1,8 +1,6 @@
 package app
 
 import (
-	"github.com/cosmos/cosmos-sdk/x/auth/posthandler"
-
 	"io"
 	"os"
 	"path/filepath"
@@ -26,6 +24,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+	"github.com/cosmos/cosmos-sdk/x/auth/posthandler"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -86,7 +85,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/ignite/modules/cmd"
 	"github.com/ignite/modules/x/claim"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 	claimtypes "github.com/ignite/modules/x/claim/types"
@@ -161,7 +159,6 @@ var (
 )
 
 var (
-	_ cmd.App                 = (*App)(nil)
 	_ servertypes.Application = (*App)(nil)
 	_ runtime.AppI            = (*App)(nil)
 )
@@ -230,8 +227,8 @@ func New(
 	skipUpgradeHeights map[int64]bool,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) cmd.App {
-	encodingConfig := cmd.MakeEncodingConfig(ModuleBasics)
+) *App {
+	encodingConfig := MakeEncodingConfig(ModuleBasics)
 
 	appCodec := encodingConfig.Marshaler
 	legacyAmino := encodingConfig.Amino

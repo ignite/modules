@@ -1,20 +1,21 @@
 package cmd
 
 import (
-	"cosmossdk.io/simapp"
 	"errors"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/ignite/modules/app"
 	"io"
 	"os"
 	"path/filepath"
 
+	"cosmossdk.io/simapp"
+	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
 	"github.com/cosmos/cosmos-sdk/client/debug"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/keys"
+	"github.com/cosmos/cosmos-sdk/client/pruning"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/server"
 	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
@@ -23,17 +24,17 @@ import (
 	snapshottypes "github.com/cosmos/cosmos-sdk/snapshots/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	tmcfg "github.com/tendermint/tendermint/config"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 )
@@ -48,7 +49,7 @@ type (
 		skipUpgradeHeights map[int64]bool,
 		homePath string,
 		invCheckPeriod uint,
-		encodingConfig EncodingConfig,
+		encodingConfig app.EncodingConfig,
 		appOpts servertypes.AppOptions,
 		baseAppOptions ...func(*baseapp.BaseApp),
 	) App
@@ -71,7 +72,7 @@ type (
 
 	// appCreator is an app creator
 	appCreator struct {
-		encodingConfig EncodingConfig
+		encodingConfig app.EncodingConfig
 		buildApp       AppBuilder
 	}
 )
@@ -125,16 +126,14 @@ func NewRootCmd(
 	accountAddressPrefix,
 	defaultNodeHome,
 	defaultChainID string,
-	moduleBasics module.BasicManager,
-	buildApp AppBuilder,
 	options ...Option,
-) (*cobra.Command, EncodingConfig) {
+) (*cobra.Command, app.EncodingConfig) {
 	rootOptions := newRootOptions(options...)
 
 	// Set config for prefixes
 	SetPrefixes(accountAddressPrefix)
 
-	encodingConfig := MakeEncodingConfig(moduleBasics)
+	encodingConfig := app.MakeEncodingConfig(app.ModuleBasics)
 	initClientCtx := client.Context{}.
 		WithCodec(encodingConfig.Marshaler).
 		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
@@ -171,20 +170,12 @@ func NewRootCmd(
 				return err
 			}
 
-			// startProxyForTunneledPeers(initClientCtx, cmd)
-
 			return nil
 		},
 	}
 
-	initRootCmd(
-		rootCmd,
-		encodingConfig,
-		defaultNodeHome,
-		moduleBasics,
-		buildApp,
-		rootOptions,
-	)
+	initRootCmd(rootCmd, encodingConfig)
+
 	overwriteFlagDefaults(rootCmd, map[string]string{
 		flags.FlagChainID:        defaultChainID,
 		flags.FlagKeyringBackend: "test",
@@ -193,72 +184,41 @@ func NewRootCmd(
 	return rootCmd, encodingConfig
 }
 
-func initRootCmd(
-	rootCmd *cobra.Command,
-	encodingConfig EncodingConfig,
-	defaultNodeHome string,
-	moduleBasics module.BasicManager,
-	buildApp AppBuilder,
-	options rootOptions,
-) {
+func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 	cfg := sdk.GetConfig()
 	cfg.Seal()
-	gentxModule := simapp.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
+	gentxModule := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
 
 	rootCmd.AddCommand(
-		genutilcli.InitCmd(moduleBasics, defaultNodeHome),
+		genutilcli.InitCmd(simapp.ModuleBasics, simapp.DefaultNodeHome),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, simapp.DefaultNodeHome,
 			gentxModule.GenTxValidator),
 		genutilcli.MigrateGenesisCmd(),
-		genutilcli.GenTxCmd(
-			moduleBasics,
-			encodingConfig.TxConfig,
-			banktypes.GenesisBalancesIterator{},
-			defaultNodeHome,
-		),
-		genutilcli.ValidateGenesisCmd(moduleBasics),
-		AddGenesisAccountCmd(defaultNodeHome),
-		tmcli.NewCompletionCmd(rootCmd, true),
+		genutilcli.GenTxCmd(simapp.ModuleBasics, encodingConfig.TxConfig,
+			banktypes.GenesisBalancesIterator{}, simapp.DefaultNodeHome),
+		genutilcli.ValidateGenesisCmd(simapp.ModuleBasics),
+		AddGenesisAccountCmd(simapp.DefaultNodeHome),
 		debug.Cmd(),
 		config.Cmd(),
+		pruning.PruningCmd(newApp),
 	)
 
-	a := appCreator{
-		encodingConfig,
-		buildApp,
-	}
-
-	// add server commands
-	server.AddCommands(
-		rootCmd,
-		defaultNodeHome,
-		a.newApp,
-		a.appExport,
-		func(cmd *cobra.Command) {
-			addModuleInitFlags(cmd)
-
-			if options.startCmdCustomizer != nil {
-				options.startCmdCustomizer(cmd)
-			}
-		},
-	)
+	server.AddCommands(rootCmd, simapp.DefaultNodeHome, newApp, appExport, addModuleInitFlags)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(
 		rpc.StatusCommand(),
-		queryCommand(moduleBasics),
-		txCommand(moduleBasics),
-		keys.Commands(defaultNodeHome),
+		queryCommand(),
+		txCommand(),
+		keys.Commands(simapp.DefaultNodeHome),
 	)
 
-	// add user given sub commands.
-	for _, cmd := range options.addSubCmds {
-		rootCmd.AddCommand(cmd)
-	}
+	// add rosetta
+	rootCmd.AddCommand(rosettaCmd.RosettaCommand(encodingConfig.InterfaceRegistry, encodingConfig.Marshaler))
 }
 
 // queryCommand returns the sub-command to send queries to the app
-func queryCommand(moduleBasics module.BasicManager) *cobra.Command {
+func queryCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "query",
 		Aliases:                    []string{"q"},
@@ -276,14 +236,14 @@ func queryCommand(moduleBasics module.BasicManager) *cobra.Command {
 		authcmd.QueryTxCmd(),
 	)
 
-	moduleBasics.AddQueryCommands(cmd)
+	app.ModuleBasics.AddQueryCommands(cmd)
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 
 	return cmd
 }
 
 // txCommand returns the sub-command to send transactions to the app
-func txCommand(moduleBasics module.BasicManager) *cobra.Command {
+func txCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
 		Short:                      "Transactions subcommands",
@@ -296,14 +256,15 @@ func txCommand(moduleBasics module.BasicManager) *cobra.Command {
 		authcmd.GetSignCommand(),
 		authcmd.GetSignBatchCommand(),
 		authcmd.GetMultiSignCommand(),
+		authcmd.GetMultiSignBatchCmd(),
 		authcmd.GetValidateSignaturesCommand(),
-		flags.LineBreak,
 		authcmd.GetBroadcastCommand(),
 		authcmd.GetEncodeCommand(),
 		authcmd.GetDecodeCommand(),
+		authcmd.GetAuxToFeeCommand(),
 	)
 
-	moduleBasics.AddTxCommands(cmd)
+	app.ModuleBasics.AddTxCommands(cmd)
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 
 	return cmd
@@ -330,7 +291,7 @@ func overwriteFlagDefaults(c *cobra.Command, defaults map[string]string) {
 }
 
 // newApp creates a new Cosmos SDK app
-func (a appCreator) newApp(
+func newApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -367,15 +328,12 @@ func (a appCreator) newApp(
 		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
 	)
 
-	return a.buildApp(
+	return app.New(
 		logger,
 		db,
 		traceStore,
 		true,
 		skipUpgradeHeights,
-		cast.ToString(appOpts.Get(flags.FlagHome)),
-		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
-		a.encodingConfig,
 		appOpts,
 		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
@@ -392,7 +350,7 @@ func (a appCreator) newApp(
 }
 
 // appExport creates a new simapp (optionally at a given height)
-func (a appCreator) appExport(
+func appExport(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -409,15 +367,12 @@ func (a appCreator) appExport(
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
 
-	exportableApp = a.buildApp(
+	exportableApp = app.New(
 		logger,
 		db,
 		traceStore,
 		height == -1, // -1: no height provided
 		map[int64]bool{},
-		homePath,
-		uint(1),
-		a.encodingConfig,
 		appOpts,
 	)
 

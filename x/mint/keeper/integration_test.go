@@ -11,7 +11,7 @@ import (
 )
 
 func setup(isCheckTx bool) *testapp.App {
-	app, genesisState := testutil.GenApp(!isCheckTx, 5)
+	app, genesisState := testutil.GenApp(!isCheckTx)
 	if !isCheckTx {
 		// init chain must be called to stop deliverState from being nil
 		stateBytes, err := json.MarshalIndent(genesisState, "", " ")

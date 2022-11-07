@@ -5,7 +5,6 @@ import (
 
 	"cosmossdk.io/simapp"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
-	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/stretchr/testify/require"
@@ -18,8 +17,7 @@ import (
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
 	db := dbm.NewMemDB()
-	encCdc := testutil.MakeTestEncodingConfig()
-	app := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, 5, encCdc, simtestutil.EmptyAppOptions{})
+	app := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, simtestutil.EmptyAppOptions{})
 
 	genesisState := simapp.GenesisStateWithSingleValidator(t, app)
 	stateBytes, err := tmjson.Marshal(genesisState)

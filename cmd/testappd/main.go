@@ -15,8 +15,6 @@ func main() {
 		app.AccountAddressPrefix,
 		app.DefaultNodeHome,
 		app.DefaultChainID,
-		app.ModuleBasics,
-		app.New,
 	)
 	if err := svrcmd.Execute(rootCmd, "", app.DefaultNodeHome); err != nil {
 		os.Exit(1)

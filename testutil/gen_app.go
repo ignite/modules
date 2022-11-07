@@ -21,7 +21,7 @@ import (
 	testapp "github.com/ignite/modules/app"
 )
 
-func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
+func GenApp(withGenesis bool) (*testapp.App, testapp.GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := testapp.MakeEncodingConfig(testapp.ModuleBasics)
 	app := testapp.New(
@@ -32,7 +32,6 @@ func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.Genesi
 		map[int64]bool{},
 		simtestutil.EmptyAppOptions{})
 
-	originalApp := app.(*testapp.App)
 	if withGenesis {
 		genesisState := testapp.NewDefaultGenesisState(encCdc.Marshaler)
 		privVal := mock.NewPV()
@@ -49,10 +48,10 @@ func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.Genesi
 			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(100000000000000))),
 		}
 		genesisState = genesisStateWithValSet(encCdc.Marshaler, genesisState, valSet, []authtypes.GenesisAccount{acc}, balances)
-		return originalApp, genesisState
+		return app, genesisState
 	}
 
-	return originalApp, testapp.GenesisState{}
+	return app, testapp.GenesisState{}
 }
 
 func genesisStateWithValSet(

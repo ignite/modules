@@ -79,7 +79,7 @@ func BenchmarkSimulation(b *testing.B) {
 
 	})
 
-	cmdApp := app.New(
+	app := app.New(
 		logger,
 		db,
 		nil,
@@ -87,9 +87,6 @@ func BenchmarkSimulation(b *testing.B) {
 		map[int64]bool{},
 		simtestutil.EmptyAppOptions{},
 	)
-
-	app, ok := cmdApp.(SimApp)
-	require.True(b, ok, "can't use simapp")
 
 	// Run randomized simulations
 	_, simParams, simErr := simulation.SimulateFromSeed(
@@ -143,7 +140,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			}
 
 			db := dbm.NewMemDB()
-			cmdApp := app.New(
+			app := app.New(
 				logger,
 				db,
 				nil,
@@ -152,9 +149,6 @@ func TestAppStateDeterminism(t *testing.T) {
 				simtestutil.EmptyAppOptions{},
 				interBlockCacheOpt(),
 			)
-
-			app, ok := cmdApp.(SimApp)
-			require.True(t, ok, "can't use simapp")
 
 			fmt.Printf(
 				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
