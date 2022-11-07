@@ -7,10 +7,10 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos_proto/cosmos.proto";
 
-import "claim/params.proto";
-import "claim/claim_record.proto";
-import "claim/mission.proto";
-import "claim/initial_claim.proto";
+import "modules/claim/params.proto";
+import "modules/claim/claim_record.proto";
+import "modules/claim/mission.proto";
+import "modules/claim/initial_claim.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/ignite/modules/x/claim/types";

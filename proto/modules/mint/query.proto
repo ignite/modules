@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos_proto/cosmos.proto";
 
-import "mint/mint.proto";
+import "modules/mint/mint.proto";
 
 option go_package = "github.com/ignite/modules/x/mint/types";
 
