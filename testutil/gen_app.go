@@ -19,12 +19,11 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	testapp "github.com/ignite/modules/app"
-	"github.com/ignite/modules/cmd"
 )
 
 func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := cmd.MakeEncodingConfig(testapp.ModuleBasics)
+	encCdc := testapp.MakeEncodingConfig(testapp.ModuleBasics)
 	app := testapp.New(
 		log.NewNopLogger(),
 		db,
