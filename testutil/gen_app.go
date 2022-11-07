@@ -1,10 +1,10 @@
 package testutil
 
 import (
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"cosmossdk.io/simapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -31,10 +31,7 @@ func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.Genesi
 		nil,
 		true,
 		map[int64]bool{},
-		simapp.DefaultNodeHome,
-		invCheckPeriod,
-		encCdc,
-		simapp.EmptyAppOptions{})
+		simtestutil.EmptyAppOptions{})
 
 	originalApp := app.(*testapp.App)
 	if withGenesis {
@@ -116,7 +113,8 @@ func genesisStateWithValSet(
 	})
 
 	// update total supply
-	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply, []banktypes.Metadata{})
+	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply,
+		[]banktypes.Metadata{}, []banktypes.SendEnabled{})
 	genesisState[banktypes.ModuleName] = cdc.MustMarshalJSON(bankGenesis)
 
 	return genesisState
