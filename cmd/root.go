@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"errors"
-	"github.com/ignite/modules/app"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/ignite/modules/app"
 
 	"cosmossdk.io/simapp"
 	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
@@ -68,12 +69,6 @@ type (
 			modulesToExport []string,
 		) (servertypes.ExportedApp, error)
 		LoadHeight(height int64) error
-	}
-
-	// appCreator is an app creator
-	appCreator struct {
-		encodingConfig app.EncodingConfig
-		buildApp       AppBuilder
 	}
 )
 

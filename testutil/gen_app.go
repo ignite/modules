@@ -1,8 +1,9 @@
 package testutil
 
 import (
-	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	"time"
+
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"

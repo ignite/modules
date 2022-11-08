@@ -1,13 +1,14 @@
 package app_test
 
 import (
-	"cosmossdk.io/simapp"
 	"encoding/json"
 	"fmt"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
+
+	"cosmossdk.io/simapp"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -76,7 +77,6 @@ func BenchmarkSimulation(b *testing.B) {
 	b.Cleanup(func() {
 		require.NoError(b, db.Close())
 		require.NoError(b, os.RemoveAll(dir))
-
 	})
 
 	app := app.New(
