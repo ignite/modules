@@ -1,12 +1,13 @@
 syntax = "proto3";
 package ignite.modules.mint;
 
+option go_package = "github.com/ignite/modules/x/mint/types";
+
+
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "modules/mint/mint.proto";
-
-option go_package = "github.com/ignite/modules/x/mint/types";
 
 // Query provides defines the gRPC querier service.
 service Query {

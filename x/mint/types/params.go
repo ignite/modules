@@ -8,20 +8,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
-// Parameter store keys
 var (
-	KeyMintDenom               = []byte("MintDenom")
-	KeyInflationRateChange     = []byte("InflationRateChange")
-	KeyInflationMax            = []byte("InflationMax")
-	KeyInflationMin            = []byte("InflationMin")
-	KeyGoalBonded              = []byte("GoalBonded")
-	KeyBlocksPerYear           = []byte("BlocksPerYear")
-	KeyDistributionProportions = []byte("DistributionProportions")
-	KeyFundedAddresses         = []byte("FundedAddresses")
-
 	DefaultMintDenom               = sdk.DefaultBondDenom
 	DefaultInflationRateChange     = sdk.NewDecWithPrec(13, 2)
 	DefaultInflationMax            = sdk.NewDecWithPrec(20, 2)
@@ -35,11 +24,6 @@ var (
 	}
 	DefaultFundedAddresses []WeightedAddress
 )
-
-// ParamTable for minting module.
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
 
 func NewParams(
 	mintDenom string,
@@ -113,20 +97,6 @@ func (p Params) Validate() error {
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
-}
-
-// ParamSetPairs implements params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyInflationRateChange, &p.InflationRateChange, validateDec),
-		paramtypes.NewParamSetPair(KeyInflationMax, &p.InflationMax, validateDec),
-		paramtypes.NewParamSetPair(KeyInflationMin, &p.InflationMin, validateDec),
-		paramtypes.NewParamSetPair(KeyGoalBonded, &p.GoalBonded, validateDec),
-		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
-		paramtypes.NewParamSetPair(KeyDistributionProportions, &p.DistributionProportions, validateDistributionProportions),
-		paramtypes.NewParamSetPair(KeyFundedAddresses, &p.FundedAddresses, validateWeightedAddresses),
-	}
 }
 
 func validateMintDenom(i interface{}) error {
