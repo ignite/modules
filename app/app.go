@@ -406,6 +406,7 @@ func New(
 		// register the governance hooks
 		),
 	)
+	app.GovKeeper.SetLegacyRouter(govRouter)
 
 	app.ClaimKeeper = *claimkeeper.NewKeeper(
 		appCodec,
