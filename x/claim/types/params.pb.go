@@ -6,8 +6,8 @@ package types
 import (
 	fmt "fmt"
 	_ "github.com/cosmos/gogoproto/gogoproto"
-	proto "github.com/gogo/protobuf/proto"
-	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
+	proto "github.com/cosmos/gogoproto/proto"
+	github_com_cosmos_gogoproto_types "github.com/cosmos/gogoproto/types"
 	_ "google.golang.org/protobuf/types/known/timestamppb"
 	io "io"
 	math "math"
@@ -216,7 +216,7 @@ func (m *DecayInformation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	n2, err2 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.DecayEnd, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.DecayEnd):])
+	n2, err2 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.DecayEnd, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.DecayEnd):])
 	if err2 != nil {
 		return 0, err2
 	}
@@ -224,7 +224,7 @@ func (m *DecayInformation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i = encodeVarintParams(dAtA, i, uint64(n2))
 	i--
 	dAtA[i] = 0x1a
-	n3, err3 := github_com_gogo_protobuf_types.StdTimeMarshalTo(m.DecayStart, dAtA[i-github_com_gogo_protobuf_types.SizeOfStdTime(m.DecayStart):])
+	n3, err3 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.DecayStart, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.DecayStart):])
 	if err3 != nil {
 		return 0, err3
 	}
@@ -276,9 +276,9 @@ func (m *DecayInformation) Size() (n int) {
 	if m.Enabled {
 		n += 2
 	}
-	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.DecayStart)
+	l = github_com_cosmos_gogoproto_types.SizeOfStdTime(m.DecayStart)
 	n += 1 + l + sovParams(uint64(l))
-	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.DecayEnd)
+	l = github_com_cosmos_gogoproto_types.SizeOfStdTime(m.DecayEnd)
 	n += 1 + l + sovParams(uint64(l))
 	return n
 }
@@ -450,7 +450,7 @@ func (m *DecayInformation) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.DecayStart, dAtA[iNdEx:postIndex]); err != nil {
+			if err := github_com_cosmos_gogoproto_types.StdTimeUnmarshal(&m.DecayStart, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -483,7 +483,7 @@ func (m *DecayInformation) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := github_com_gogo_protobuf_types.StdTimeUnmarshal(&m.DecayEnd, dAtA[iNdEx:postIndex]); err != nil {
+			if err := github_com_cosmos_gogoproto_types.StdTimeUnmarshal(&m.DecayEnd, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
