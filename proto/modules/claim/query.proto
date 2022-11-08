@@ -74,8 +74,8 @@ message QueryAllClaimRecordRequest {
 }
 
 message QueryAllClaimRecordResponse {
-  repeated ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated ClaimRecord                   claimRecord = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination  = 2;
 }
 
 message QueryGetMissionRequest {
@@ -91,7 +91,7 @@ message QueryAllMissionRequest {
 }
 
 message QueryAllMissionResponse {
-  repeated Mission Mission = 1 [(gogoproto.nullable) = false];
+  repeated Mission                       Mission    = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
