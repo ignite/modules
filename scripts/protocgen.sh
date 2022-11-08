@@ -27,5 +27,3 @@ cp -r github.com/ignite/modules/* ./
 rm -rf github.com
 
 go mod tidy
-
-./scripts/protocgen-pulsar.sh
