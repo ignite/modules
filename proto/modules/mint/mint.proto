@@ -3,6 +3,7 @@ package ignite.modules.mint;
 
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
+import "amino/amino.proto";
 
 option go_package = "github.com/ignite/modules/x/mint/types";
 
@@ -58,6 +59,7 @@ message DistributionProportions {
 // Params holds parameters for the mint module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
+  option (amino.name)                 = "cosmos-sdk/x/mint/Params";
 
   // type of coin to mint
   string mint_denom = 1;
