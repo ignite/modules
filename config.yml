@@ -31,6 +31,10 @@ faucet:
   - 5token
   - 100000stake
   host: 0.0.0.0:4500
+validators:
+  - name: alice
+    bonded: 100000000stake
+    home: $HOME/.testapp
 genesis:
   app_state:
     claim:
@@ -71,8 +75,6 @@ genesis:
         - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
           weight: "0.300000000000000000"
         mint_denom: stake
+        blocks_per_year: 10
   chain_id: testapp-0
-validators:
-- name: alice
-  bonded: 100000000stake
-  home: $HOME/.testapp
+
