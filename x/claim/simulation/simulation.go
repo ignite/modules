@@ -44,7 +44,7 @@ func SimulateMsgClaimInitial(
 		claimableAmount := cr.ClaimableFromMission(m)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 		// calculate claimable after decay factor
-		decayInfo := k.DecayInformation(ctx)
+		decayInfo := k.GetParams(ctx).DecayInformation
 		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
 
 		// check final claimable non-zero

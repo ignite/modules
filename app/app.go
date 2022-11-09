@@ -412,16 +412,15 @@ func New(
 		appCodec,
 		keys[claimtypes.StoreKey],
 		keys[claimtypes.MemStoreKey],
-		app.GetSubspace(claimtypes.ModuleName),
 		app.AccountKeeper,
 		app.DistrKeeper,
 		app.BankKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec,
 		keys[minttypes.StoreKey],
-		app.GetSubspace(minttypes.ModuleName),
 		app.StakingKeeper,
 		app.AccountKeeper,
 		app.BankKeeper,

@@ -48,12 +48,11 @@ type TestMsgServers struct {
 func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
-	paramKeeper := initializer.Param()
 	authKeeper := initializer.Auth()
 	bankKeeper := initializer.Bank(authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp

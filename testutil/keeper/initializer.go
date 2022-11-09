@@ -180,7 +180,6 @@ func (i initializer) Distribution(
 }
 
 func (i initializer) Claim(
-	paramKeeper paramskeeper.Keeper,
 	accountKeeper authkeeper.AccountKeeper,
 	distrKeeper distrkeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
@@ -191,16 +190,13 @@ func (i initializer) Claim(
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(claimtypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(claimtypes.ModuleName)
-
 	return claimkeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
-		subspace,
 		accountKeeper,
 		distrKeeper,
 		bankKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 }

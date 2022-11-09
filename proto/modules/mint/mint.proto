@@ -59,7 +59,7 @@ message DistributionProportions {
 // Params holds parameters for the mint module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  option (amino.name)                 = "cosmos-sdk/x/mint/Params";
+  option (amino.name)                 = "ignite/modules/x/mint/Params";
 
   // type of coin to mint
   string mint_denom = 1;

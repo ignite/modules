@@ -3,13 +3,16 @@ package ignite.modules.claim;
 
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
+import "amino/amino.proto";
 
 option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Params defines the parameters for the module.
 message Params {
-  DecayInformation decayInformation   = 1 [(gogoproto.nullable) = false];
   option (gogoproto.goproto_stringer) = false;
+  option (amino.name)                 = "ignite/modules/x/claim/Params";
+
+  DecayInformation decayInformation   = 1 [(gogoproto.nullable) = false];
 }
 
 // DecayInformation defines the information about decay for the airdrop

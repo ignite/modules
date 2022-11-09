@@ -65,7 +65,7 @@ func (k Keeper) EndAirdrop(ctx sdk.Context) error {
 		return nil
 	}
 
-	decayInfo := k.DecayInformation(ctx)
+	decayInfo := k.GetParams(ctx).DecayInformation
 	if decayInfo.Enabled && ctx.BlockTime().After(decayInfo.DecayEnd) {
 		err := k.distrKeeper.FundCommunityPool(
 			ctx,

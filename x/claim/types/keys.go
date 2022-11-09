@@ -33,3 +33,5 @@ const (
 const (
 	InitialClaimKey = "InitialClaim-value-"
 )
+
+var ParamsKey = []byte{0x00}
