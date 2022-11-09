@@ -3,16 +3,26 @@ package ignite.modules.claim;
 
 // this line is used by starport scaffolding # proto/tx/import
 
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+
 option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Msg defines the Msg service.
 service Msg {
+  option (cosmos.msg.v1.service) = true;
+
   rpc ClaimInitial(MsgClaimInitial) returns (MsgClaimInitialResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgClaimInitial {
-  string claimer = 1;
+  option (cosmos.msg.v1.signer) = "claimer";
+  option (amino.name)           = "modules/x/claim/MsgClaimInitial";
+
+  // claimer is the address making the claim
+  string claimer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message MsgClaimInitialResponse {}

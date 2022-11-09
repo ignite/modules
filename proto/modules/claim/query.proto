@@ -6,6 +6,8 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "amino/amino.proto";
+
 import "modules/claim/claim_record.proto";
 import "modules/claim/initial_claim.proto";
 import "modules/claim/mission.proto";
@@ -58,7 +60,7 @@ message QueryParamsRequest {}
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
   // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 
 message QueryGetClaimRecordRequest {
@@ -66,7 +68,7 @@ message QueryGetClaimRecordRequest {
 }
 
 message QueryGetClaimRecordResponse {
-  ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+  ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 
 message QueryAllClaimRecordRequest {
@@ -74,7 +76,7 @@ message QueryAllClaimRecordRequest {
 }
 
 message QueryAllClaimRecordResponse {
-  repeated ClaimRecord                   claimRecord = 1 [(gogoproto.nullable) = false];
+  repeated ClaimRecord                   claimRecord = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
   cosmos.base.query.v1beta1.PageResponse pagination  = 2;
 }
 
@@ -83,7 +85,7 @@ message QueryGetMissionRequest {
 }
 
 message QueryGetMissionResponse {
-  Mission Mission = 1 [(gogoproto.nullable) = false];
+  Mission Mission = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 
 message QueryAllMissionRequest {
@@ -91,18 +93,18 @@ message QueryAllMissionRequest {
 }
 
 message QueryAllMissionResponse {
-  repeated Mission                       Mission    = 1 [(gogoproto.nullable) = false];
+  repeated Mission                       Mission    = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetAirdropSupplyRequest {}
 
 message QueryGetAirdropSupplyResponse {
-  cosmos.base.v1beta1.Coin AirdropSupply = 1 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin AirdropSupply = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 message QueryGetInitialClaimRequest {}
 
 message QueryGetInitialClaimResponse {
-  InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false];
+  InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
 // this line is used by starport scaffolding # 3
