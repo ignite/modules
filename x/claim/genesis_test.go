@@ -52,7 +52,7 @@ func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	t.Run("should allow import and export of genesis", func(t *testing.T) {
-		claim.InitGenesis(ctx, *tk.ClaimKeeper, genesisState)
+		claim.InitGenesis(ctx, *tk.ClaimKeeper, &genesisState)
 		got := claim.ExportGenesis(ctx, *tk.ClaimKeeper)
 		require.NotNil(t, got)
 
