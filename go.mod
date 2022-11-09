@@ -8,7 +8,7 @@ require (
 	cosmossdk.io/simapp v0.0.0-20221107191907-c85447cdb9ea
 	cosmossdk.io/tools/rosetta v0.1.0
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
-	github.com/cosmos/cosmos-sdk v0.46.0-beta2.0.20221109114442-bcdf81cbaf8d
+	github.com/cosmos/cosmos-sdk v0.46.0-beta2.0.20221109155027-61effe826030
 	github.com/cosmos/gogoproto v1.4.2
 	github.com/golang/protobuf v1.5.2
 	github.com/golangci/golangci-lint v1.50.1
