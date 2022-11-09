@@ -5,7 +5,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
@@ -16,7 +15,6 @@ import (
 type Keeper struct {
 	cdc              codec.BinaryCodec
 	storeKey         storetypes.StoreKey
-	paramSpace       paramtypes.Subspace
 	stakingKeeper    types.StakingKeeper
 	accountKeeper    types.AccountKeeper
 	bankKeeper       types.BankKeeper

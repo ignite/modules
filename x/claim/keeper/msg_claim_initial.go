@@ -10,11 +10,11 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func (k msgServer) ClaimInitial(goCtx context.Context, msg *types.MsgClaimInitial) (*types.MsgClaimInitialResponse, error) {
+func (ms msgServer) ClaimInitial(goCtx context.Context, msg *types.MsgClaimInitial) (*types.MsgClaimInitialResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// retrieve initial claim information
-	initialClaim, found := k.GetInitialClaim(ctx)
+	initialClaim, found := ms.GetInitialClaim(ctx)
 	if !found {
 		return nil, types.ErrInitialClaimNotFound
 	}
@@ -22,7 +22,7 @@ func (k msgServer) ClaimInitial(goCtx context.Context, msg *types.MsgClaimInitia
 		return nil, types.ErrInitialClaimNotEnabled
 	}
 
-	if err := k.CompleteMission(ctx, initialClaim.MissionID, msg.Claimer); err != nil {
+	if err := ms.CompleteMission(ctx, initialClaim.MissionID, msg.Claimer); err != nil {
 		return nil, errors.Wrap(types.ErrMissionCompleteFailure, err.Error())
 	}
 

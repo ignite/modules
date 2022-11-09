@@ -9,7 +9,7 @@ import (
 
 // InitGenesis initializes the claim module's state from a provided genesis
 // state.
-func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
+func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState *types.GenesisState) {
 	// Set all the claimRecord
 	for _, elem := range genState.ClaimRecords {
 		k.SetClaimRecord(ctx, elem)
@@ -25,8 +25,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	k.SetInitialClaim(ctx, genState.InitialClaim)
 
-	k.SetParams(ctx, genState.Params)
-
+	if err := k.SetParams(ctx, genState.Params); err != nil {
+		panic(err)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 }
 

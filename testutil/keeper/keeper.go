@@ -67,7 +67,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	// Initialize params
 	require.NoError(t, distrKeeper.SetParams(ctx, distrtypes.DefaultParams()))
 	require.NoError(t, stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams()))
-	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
+	require.NoError(t, claimKeeper.SetParams(ctx, claimtypes.DefaultParams()))
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
