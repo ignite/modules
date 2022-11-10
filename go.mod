@@ -20,7 +20,7 @@ require (
 	golang.org/x/tools v0.2.0
 	golang.org/x/vuln v0.0.0-20220923181559-cbe0a6944b8b
 	google.golang.org/genproto v0.0.0-20220822174746-9e6da59bd2fc
-	google.golang.org/grpc v1.50.0
+	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
 	mvdan.cc/gofumpt v0.4.0
