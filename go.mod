@@ -8,8 +8,8 @@ require (
 	cosmossdk.io/simapp v0.0.0-20221107191907-c85447cdb9ea
 	cosmossdk.io/tools/rosetta v0.1.0
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
-	github.com/cosmos/cosmos-sdk v0.46.0-beta2.0.20221109155027-61effe826030
-	github.com/cosmos/gogoproto v1.4.2
+	github.com/cosmos/cosmos-sdk v0.46.0-beta2.0.20221114165010-39754dd7cc3b
+	github.com/cosmos/gogoproto v1.4.3
 	github.com/golang/protobuf v1.5.2
 	github.com/golangci/golangci-lint v1.50.1
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
@@ -65,7 +65,7 @@ require (
 	github.com/breml/bidichk v0.2.3 // indirect
 	github.com/breml/errchkjson v0.3.0 // indirect
 	github.com/btcsuite/btcd v0.22.3 // indirect
-	github.com/btcsuite/btcd/btcec/v2 v2.3.0 // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.3.1 // indirect
 	github.com/butuzov/ireturn v0.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
@@ -273,15 +273,15 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.22.0 // indirect
-	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/crypto v0.2.0 // indirect
 	golang.org/x/exp v0.0.0-20221019170559-20944726eadf // indirect
 	golang.org/x/exp/typeparams v0.0.0-20220827204233-334a2380cb91 // indirect
 	golang.org/x/mod v0.6.0 // indirect
-	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/oauth2 v0.1.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.102.0 // indirect
