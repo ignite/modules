@@ -1,10 +1,10 @@
 syntax = "proto3";
 package ignite.modules.mint;
 
-option go_package = "github.com/ignite/modules/x/mint/types";
-
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/ignite/modules/x/mint/types";
 
 // Minter represents the minting state.
 message Minter {
