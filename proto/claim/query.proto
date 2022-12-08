@@ -11,7 +11,6 @@ import "claim/params.proto";
 import "claim/claim_record.proto";
 import "claim/mission.proto";
 import "claim/initial_claim.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/ignite/modules/x/claim/types";
 
@@ -55,7 +54,6 @@ service Query {
       returns (QueryGetInitialClaimResponse) {
     option (google.api.http).get = "/ignite/modules/claim/initial_claim";
   }
-  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -109,4 +107,3 @@ message QueryGetInitialClaimRequest {}
 message QueryGetInitialClaimResponse {
   InitialClaim InitialClaim = 1 [ (gogoproto.nullable) = false ];
 }
-// this line is used by starport scaffolding # 3
