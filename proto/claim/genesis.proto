@@ -7,7 +7,6 @@ import "claim/params.proto";
 import "claim/claim_record.proto";
 import "claim/mission.proto";
 import "claim/initial_claim.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/ignite/modules/x/claim/types";
 
@@ -18,6 +17,4 @@ message GenesisState {
   repeated Mission missions = 3 [ (gogoproto.nullable) = false ];
   InitialClaim initialClaim = 4 [ (gogoproto.nullable) = false ];
   Params params = 5 [ (gogoproto.nullable) = false ];
-
-  // this line is used by starport scaffolding # genesis/proto/state
 }

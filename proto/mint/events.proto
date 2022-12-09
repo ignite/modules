@@ -1,10 +1,10 @@
 syntax = "proto3";
 package ignite.modules.mint;
 
-option go_package = "github.com/ignite/modules/x/mint/types";
-
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/ignite/modules/x/mint/types";
 
 // EventMint is emitted when new coins are minted by the minter
 message EventMint {
