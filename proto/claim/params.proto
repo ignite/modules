@@ -8,8 +8,10 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Params defines the parameters for the module.
 message Params {
-  DecayInformation decayInformation = 1 [ (gogoproto.nullable) = false ];
   option (gogoproto.goproto_stringer) = false;
+
+  DecayInformation decayInformation = 1 [ (gogoproto.nullable) = false ];
+  int64 AirdropStart                = 2;
 }
 
 // DecayInformation defines the information about decay for the airdrop
