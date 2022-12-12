@@ -7,9 +7,11 @@ import (
 )
 
 // GetParams get all parameters as types.Params
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramstore.GetParamSet(ctx, &params)
-	return params
+func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+	return types.NewParams(
+		k.DecayInformation(ctx),
+		k.AirdropStart(ctx),
+	)
 }
 
 // SetParams set the params
@@ -20,5 +22,11 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 // DecayInformation returns the param that defines decay information
 func (k Keeper) DecayInformation(ctx sdk.Context) (totalSupplyRange types.DecayInformation) {
 	k.paramstore.Get(ctx, types.KeyDecayInformation, &totalSupplyRange)
+	return
+}
+
+// AirdropStart returns the param that defines airdrop start
+func (k Keeper) AirdropStart(ctx sdk.Context) (airdropStart int64) {
+	k.paramstore.Get(ctx, types.KeyAirdropStart, &airdropStart)
 	return
 }

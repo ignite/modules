@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -23,7 +24,7 @@ func TestParams_Validate(t *testing.T) {
 				Enabled:    true,
 				DecayStart: time.UnixMilli(1001),
 				DecayEnd:   time.UnixMilli(1000),
-			}),
+			}, 10),
 			wantErr: true,
 		},
 	}
@@ -76,6 +77,45 @@ func TestValidateDecayInformation(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 			}
+		})
+	}
+}
+
+func TestValidateAirdropStart(t *testing.T) {
+	tests := []struct {
+		name              string
+		maxMetadataLength interface{}
+		err               error
+	}{
+		{
+			name:              "invalid interface",
+			maxMetadataLength: "test",
+			err:               fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:              "invalid float type",
+			maxMetadataLength: 0.5,
+			err:               fmt.Errorf("invalid parameter type: float64"),
+		},
+		{
+			name:              "invalid number type",
+			maxMetadataLength: uint32(5),
+			err:               fmt.Errorf("invalid parameter type: uint32"),
+		},
+		{
+			name:              "valid param",
+			maxMetadataLength: int64(1000),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateAirdropStart(tt.maxMetadataLength)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
 		})
 	}
 }

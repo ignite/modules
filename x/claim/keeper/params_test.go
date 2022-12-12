@@ -17,7 +17,7 @@ func TestGetParams(t *testing.T) {
 		params := types.NewParams(types.NewEnabledDecay(
 			time.Unix(1000, 0),
 			time.Unix(10000, 0),
-		))
+		), 1000)
 		tk.ClaimKeeper.SetParams(ctx, params)
 		require.EqualValues(t, params, tk.ClaimKeeper.GetParams(ctx))
 	})

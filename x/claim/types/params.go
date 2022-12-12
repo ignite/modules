@@ -9,7 +9,10 @@ import (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-var KeyDecayInformation = []byte("DecayInformation")
+var (
+	KeyDecayInformation = []byte("DecayInformation")
+	KeyAirdropStart     = []byte("AirdropStart")
+)
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
@@ -17,27 +20,41 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(di DecayInformation) Params {
+func NewParams(di DecayInformation, airdropStart int64) Params {
 	return Params{
 		DecayInformation: di,
+		AirdropStart:     airdropStart,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(NewDisabledDecay())
+	return NewParams(
+		NewDisabledDecay(),
+		0,
+	)
 }
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyDecayInformation, &p.DecayInformation, validateDecayInformation),
+		paramtypes.NewParamSetPair(KeyAirdropStart, &p.AirdropStart, validateAirdropStart),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	return validateDecayInformation(p.DecayInformation)
+	if err := validateDecayInformation(p.DecayInformation); err != nil {
+		return err
+	}
+	return validateAirdropStart(p.AirdropStart)
+}
+
+// String implements the Stringer interface.
+func (p Params) String() string {
+	out, _ := yaml.Marshal(p)
+	return string(out)
 }
 
 // validateDecayInformation validates the DecayInformation param
@@ -50,8 +67,9 @@ func validateDecayInformation(v interface{}) error {
 	return decayInfo.Validate()
 }
 
-// String implements the Stringer interface.
-func (p Params) String() string {
-	out, _ := yaml.Marshal(p)
-	return string(out)
+func validateAirdropStart(i interface{}) error {
+	if _, ok := i.(int64); !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return nil
 }

@@ -470,7 +470,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					Enabled:    true,
 					DecayStart: time.UnixMilli(1001),
 					DecayEnd:   time.UnixMilli(1000),
-				}),
+				}, 10),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
