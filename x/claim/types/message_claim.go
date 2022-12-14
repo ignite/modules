@@ -2,16 +2,18 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/ignite/modules/pkg/errors"
 )
 
 const TypeMsgClaim = "claim"
 
 var _ sdk.Msg = &MsgClaim{}
 
-func NewMsgClaim(claimer string) *MsgClaim {
+func NewMsgClaim(creator string, missionID uint64) *MsgClaim {
 	return &MsgClaim{
-		Claimer: claimer,
+		Claimer:   creator,
+		MissionID: missionID,
 	}
 }
 
@@ -37,9 +39,8 @@ func (msg *MsgClaim) GetSignBytes() []byte {
 }
 
 func (msg *MsgClaim) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Claimer)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	if _, err := sdk.AccAddressFromBech32(msg.Claimer); err != nil {
+		return errors.Wrapf(errors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	return nil
 }

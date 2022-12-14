@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"time"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -20,7 +21,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(di DecayInformation, airdropStart int64) Params {
+func NewParams(di DecayInformation, airdropStart time.Time) Params {
 	return Params{
 		DecayInformation: di,
 		AirdropStart:     airdropStart,
@@ -31,7 +32,7 @@ func NewParams(di DecayInformation, airdropStart int64) Params {
 func DefaultParams() Params {
 	return NewParams(
 		NewDisabledDecay(),
-		0,
+		time.Time{},
 	)
 }
 
@@ -68,7 +69,7 @@ func validateDecayInformation(v interface{}) error {
 }
 
 func validateAirdropStart(i interface{}) error {
-	if _, ok := i.(int64); !ok {
+	if _, ok := i.(time.Time); !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 	return nil

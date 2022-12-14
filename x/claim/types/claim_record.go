@@ -39,6 +39,16 @@ func (m ClaimRecord) IsMissionCompleted(missionID uint64) bool {
 	return false
 }
 
+// IsMissionClaimed checks if the specified mission ID is claimed for the claim record
+func (m ClaimRecord) IsMissionClaimed(missionID uint64) bool {
+	for _, claimed := range m.ClaimedMissions {
+		if claimed == missionID {
+			return true
+		}
+	}
+	return false
+}
+
 // ClaimableFromMission returns the amount claimable for this claim record from the provided mission completion
 func (m ClaimRecord) ClaimableFromMission(mission Mission) sdkmath.Int {
 	return mission.Weight.Mul(sdk.NewDecFromInt(m.Claimable)).TruncateInt()

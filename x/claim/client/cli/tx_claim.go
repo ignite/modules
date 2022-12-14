@@ -11,14 +11,17 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdClaim() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "claim",
+		Use:   "claim [mission-id]",
 		Short: "Broadcast message claim",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			missionID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -26,6 +29,7 @@ func CmdClaim() *cobra.Command {
 
 			msg := types.NewMsgClaim(
 				clientCtx.GetFromAddress().String(),
+				missionID,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -33,7 +37,6 @@ func CmdClaim() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/x/claim/types"
@@ -26,7 +28,7 @@ func (k Keeper) DecayInformation(ctx sdk.Context) (totalSupplyRange types.DecayI
 }
 
 // AirdropStart returns the param that defines airdrop start
-func (k Keeper) AirdropStart(ctx sdk.Context) (airdropStart int64) {
+func (k Keeper) AirdropStart(ctx sdk.Context) (airdropStart time.Time) {
 	k.paramstore.Get(ctx, types.KeyAirdropStart, &airdropStart)
 	return
 }
