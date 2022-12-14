@@ -6,8 +6,13 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 // Msg defines the Msg service.
 service Msg {
   rpc ClaimInitial(MsgClaimInitial) returns (MsgClaimInitialResponse);
+  rpc Claim(MsgClaim) returns (MsgClaimResponse);
 }
 
-message MsgClaimInitial { string claimer = 1; }
+message MsgClaimInitial {string claimer = 1;}
 
 message MsgClaimInitialResponse {}
+
+message MsgClaim {string claimer = 1;}
+
+message MsgClaimResponse {}

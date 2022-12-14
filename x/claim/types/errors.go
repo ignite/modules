@@ -16,4 +16,5 @@ var (
 	ErrInitialClaimNotEnabled = errors.Register(ModuleName, 7, "initial claim not enabled")
 	ErrMissionCompleteFailure = errors.Register(ModuleName, 8, "mission failed to complete")
 	ErrNoClaimable            = errors.Register(ModuleName, 9, "no amount to be claimed")
+	ErrMissionNotCompleted    = errors.Register(ModuleName, 4, "mission not completed yet")
 )
