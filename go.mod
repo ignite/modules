@@ -5,7 +5,7 @@ go 1.19
 require (
 	cosmossdk.io/errors v1.0.0-beta.7
 	cosmossdk.io/math v1.0.0-beta.4
-	github.com/cosmos/cosmos-proto v1.0.0-alpha7
+	github.com/cosmos/cosmos-proto v1.0.0-beta.1
 	github.com/cosmos/cosmos-sdk v0.46.4
 	github.com/cosmos/ibc-go/v5 v5.1.0
 	github.com/gogo/protobuf v1.3.3
