@@ -11,9 +11,9 @@ This method can be used by an external module importing `claim` in order to defi
 
 ```go
 CompleteMission(
-ctx sdk.Context,
-missionID uint64,
-address string,
+    ctx sdk.Context,
+    missionID uint64,
+    address string,
 ) error
 ```
 
@@ -35,9 +35,9 @@ chain.
 
 ```go
 ClaimMission(
-ctx sdk.Context,
-claimRecord types.ClaimRecord,
-missionID uint64,
+    ctx sdk.Context,
+    claimRecord types.ClaimRecord,
+    missionID uint64,
 ) error
 ```
 
