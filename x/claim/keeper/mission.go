@@ -50,6 +50,11 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 
 // CompleteMission save the completion of the mission
 func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
+	// retrieve mission
+	if _, found := k.GetMission(ctx, missionID); !found {
+		return errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
+	}
+
 	// retrieve claim record of the user
 	claimRecord, found := k.GetClaimRecord(ctx, address)
 	if !found {
@@ -77,22 +82,22 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 		return err
 	}
 
-	// try to claim mission
-	return k.ClaimMission(ctx, missionID, address)
+	// try to claim the mission if airdrop start is reached
+	airdropStart := k.AirdropStart(ctx)
+	if !ctx.BlockTime().Before(airdropStart) {
+		return k.ClaimMission(ctx, claimRecord, missionID)
+	}
+
+	return nil
 }
 
 // ClaimMission distribute the claimable portion of airdrop to the user the method
 // fails if the mission has already been claimed or not completed
-func (k Keeper) ClaimMission(ctx sdk.Context, missionID uint64, address string) error {
-	airdropStart := k.AirdropStart(ctx)
-	if ctx.BlockTime().Before(airdropStart) {
-		return errors.Wrapf(
-			types.ErrAirdropStartNotReached,
-			"airdrop start not reached: %s",
-			airdropStart.String(),
-		)
-	}
-
+func (k Keeper) ClaimMission(
+	ctx sdk.Context,
+	claimRecord types.ClaimRecord,
+	missionID uint64,
+) error {
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if !found {
 		return errors.Wrap(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
@@ -104,27 +109,21 @@ func (k Keeper) ClaimMission(ctx sdk.Context, missionID uint64, address string) 
 		return errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
 	}
 
-	// retrieve claim record of the user
-	claimRecord, found := k.GetClaimRecord(ctx, address)
-	if !found {
-		return errors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
-	}
-
 	// check if the mission is not completed for the claim record
 	if !claimRecord.IsMissionCompleted(missionID) {
 		return errors.Wrapf(
 			types.ErrMissionNotCompleted,
 			"mission %d is not completed for address %s",
 			missionID,
-			address,
+			claimRecord.Address,
 		)
 	}
 	if claimRecord.IsMissionClaimed(missionID) {
 		return errors.Wrapf(
-			types.ErrMissionNotCompleted,
+			types.ErrMissionAlreadyClaimed,
 			"mission %d is already claimed for address %s",
 			missionID,
-			address,
+			claimRecord.Address,
 		)
 	}
 	claimRecord.ClaimedMissions = append(claimRecord.ClaimedMissions, missionID)
@@ -149,7 +148,7 @@ func (k Keeper) ClaimMission(ctx sdk.Context, missionID uint64, address string) 
 	}
 
 	// send claimable to the user
-	claimer, err := sdk.AccAddressFromBech32(address)
+	claimer, err := sdk.AccAddressFromBech32(claimRecord.Address)
 	if err != nil {
 		return errors.Criticalf("invalid claimer address %s", err.Error())
 	}
@@ -163,6 +162,6 @@ func (k Keeper) ClaimMission(ctx sdk.Context, missionID uint64, address string) 
 
 	return ctx.EventManager().EmitTypedEvent(&types.EventMissionClaimed{
 		MissionID: missionID,
-		Claimer:   address,
+		Claimer:   claimRecord.Address,
 	})
 }

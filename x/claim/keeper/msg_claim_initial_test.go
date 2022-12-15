@@ -13,7 +13,7 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func Test_msgServer_ClaimInitial(t *testing.T) {
+func TestMsgClaimInitial(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 

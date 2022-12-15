@@ -17,5 +17,6 @@ var (
 	ErrMissionCompleteFailure = errors.Register(ModuleName, 8, "mission failed to complete")
 	ErrNoClaimable            = errors.Register(ModuleName, 9, "no amount to be claimed")
 	ErrMissionNotCompleted    = errors.Register(ModuleName, 10, "mission not completed yet")
-	ErrAirdropStartNotReached = errors.Register(ModuleName, 11, "Airdrop start has not been reached yet")
+	ErrMissionAlreadyClaimed  = errors.Register(ModuleName, 11, "mission already claimed")
+	ErrAirdropStartNotReached = errors.Register(ModuleName, 12, "Airdrop start has not been reached yet")
 )
