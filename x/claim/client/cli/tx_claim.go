@@ -14,7 +14,7 @@ import (
 func CmdClaim() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "claim [mission-id]",
-		Short: "Broadcast message claim",
+		Short: "claim the airdrop allocation by mission id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			missionID, err := strconv.ParseUint(args[0], 10, 64)

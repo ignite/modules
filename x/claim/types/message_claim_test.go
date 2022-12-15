@@ -3,12 +3,11 @@ package types_test
 import (
 	"testing"
 
-	"github.com/ignite/modules/x/claim/types"
-
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestMsgClaim_ValidateBasic(t *testing.T) {
