@@ -25,3 +25,27 @@ message MsgClaimInitial {
 - The claimer is not eligible
 - The initial claim mission doesn't exist
 - The initial claim mission has already been completed
+
+### `MsgClaim`
+
+Claim completed mission amount for airdrop
+
+```protobuf
+message MsgClaim {
+  string claimer = 1;
+  uint64 missionID = 2;
+}
+```
+
+**State transition**
+
+- Complete the claim for the mission and address
+- Transfer the claim amount to the claimer balance
+
+**Fails if**
+
+- Mission is not completed
+- The mission doesn't exist
+- The claimer is not eligible
+- The airdrop start time not reached
+- The mission has already been claimed

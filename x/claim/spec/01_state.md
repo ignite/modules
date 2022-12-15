@@ -43,7 +43,7 @@ message InitialClaim {
 
 ### `ClaimRecord`
 
-`ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and which missions have already been completed.
+`ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and which missions have already been completed and claimed.
 
 ```protobuf
 message ClaimRecord {
@@ -54,6 +54,7 @@ message ClaimRecord {
     (cosmos_proto.scalar)  = "cosmos.Int"
   ];
   repeated uint64 completedMissions = 3;
+  repeated uint64 claimedMissions = 4;
 }
 ```
 
@@ -63,12 +64,12 @@ message ClaimRecord {
 
 ```protobuf
 message Mission {
-  uint64 missionID   = 1;
+  uint64 missionID = 1;
   string description = 2;
-  string weight      = 3 [
-    (gogoproto.nullable)   = false,
+  string weight = 3 [
+    (gogoproto.nullable) = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar)  = "cosmos.Dec"
+    (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 }
 ```
