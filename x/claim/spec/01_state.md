@@ -64,12 +64,12 @@ message ClaimRecord {
 
 ```protobuf
 message Mission {
-  uint64 missionID = 1;
+  uint64 missionID   = 1;
   string description = 2;
-  string weight = 3 [
-    (gogoproto.nullable) = false,
+  string weight      = 3 [
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar) = "cosmos.Dec"
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }
 ```

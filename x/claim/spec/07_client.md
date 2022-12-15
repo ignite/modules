@@ -80,13 +80,13 @@ Example output:
 claimRecord:
   - address: cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er
     claimable: "500"
-    completedMissions: [ ]
+    completedMissions: []
   - address: cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9
     claimable: "400"
-    completedMissions: [ ]
+    completedMissions: []
   - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
     claimable: "100"
-    completedMissions: [ ]
+    completedMissions: []
 pagination:
   next_key: null
   total: "0"
@@ -106,7 +106,7 @@ Example output:
 claimRecord:
   address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
   claimable: "100"
-  completedMissions: [ ]
+  completedMissions: []
 ```
 
 #### `list-mission`
