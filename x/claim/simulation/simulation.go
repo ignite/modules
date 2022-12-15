@@ -95,8 +95,8 @@ func SimulateMsgClaim(
 		}
 
 		// verify if initial claim mission is completed
-		if cr.IsMissionCompleted(1) {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
+		if !cr.IsMissionCompleted(1) {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed claim"), nil, nil
 		}
 
 		// verify that there is claimable amount
