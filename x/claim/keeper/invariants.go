@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/x/claim/types"
@@ -8,18 +10,25 @@ import (
 
 const (
 	airdropSupplyRoute = "airdrop-supply"
+	claimRecordRoute   = "claim-record"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
 	ir.RegisterRoute(types.ModuleName, airdropSupplyRoute,
 		AirdropSupplyInvariant(k))
+	ir.RegisterRoute(types.ModuleName, claimRecordRoute,
+		ClaimRecordInvariant(k))
 }
 
 // AllInvariants runs all invariants of the module.
 func AllInvariants(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		return AirdropSupplyInvariant(k)(ctx)
+		res, stop := AirdropSupplyInvariant(k)(ctx)
+		if stop {
+			return res, stop
+		}
+		return ClaimRecordInvariant(k)(ctx)
 	}
 }
 
@@ -41,6 +50,24 @@ func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 			return err.Error(), true
 		}
 
+		return "", false
+	}
+}
+
+// ClaimRecordInvariant invariant checks that claim record was claimed but not completed
+func ClaimRecordInvariant(k Keeper) sdk.Invariant {
+	return func(ctx sdk.Context) (string, bool) {
+		missions := k.GetAllMission(ctx)
+		claimRecords := k.GetAllClaimRecord(ctx)
+
+		for _, claimRecord := range claimRecords {
+			for _, mission := range missions {
+				if !claimRecord.IsMissionCompleted(mission.MissionID) &&
+					claimRecord.IsMissionClaimed(mission.MissionID) {
+					return fmt.Sprintf("mission %d claimed but not completed", mission.MissionID), true
+				}
+			}
+		}
 		return "", false
 	}
 }
