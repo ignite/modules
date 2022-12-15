@@ -95,12 +95,12 @@ func SimulateMsgClaim(
 		}
 
 		// verify if initial claim mission is completed
-		if cr.IsMissionCompleted(0) {
+		if cr.IsMissionCompleted(1) {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
 		}
 
 		// verify that there is claimable amount
-		m, _ := k.GetMission(ctx, 0)
+		m, _ := k.GetMission(ctx, 1)
 		airdropSupply, _ := k.GetAirdropSupply(ctx)
 		claimableAmount := cr.ClaimableFromMission(m)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
@@ -114,7 +114,7 @@ func SimulateMsgClaim(
 		}
 
 		// initialize basic message
-		msg = &types.MsgClaimInitial{
+		msg = &types.MsgClaim{
 			Claimer: simAccount.Address.String(),
 		}
 
