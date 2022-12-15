@@ -65,6 +65,20 @@ func TestMsgClaim(t *testing.T) {
 			err: types.ErrAirdropSupplyNotFound,
 		},
 		{
+			name: "should fail if no claim record",
+			inputState: inputState{
+				noClaimRecord: true,
+				airdropSupply: sample.Coin(r),
+				mission:       sample.Mission(r),
+				params:        types.DefaultParams(),
+			},
+			msg: types.MsgClaim{
+				Claimer:   sample.Address(r),
+				MissionID: 1,
+			},
+			err: types.ErrClaimRecordNotFound,
+		},
+		{
 			name: "should fail if no mission",
 			inputState: inputState{
 				noMission:     true,
@@ -167,6 +181,27 @@ func TestMsgClaim(t *testing.T) {
 			err: errorsignite.ErrCritical,
 		},
 		{
+			name: "should fail if airdrop start not reached",
+			inputState: inputState{
+				airdropSupply: sample.Coin(r),
+				mission:       sample.Mission(r),
+				claimRecord: types.ClaimRecord{
+					Address:   addr[5],
+					Claimable: sdkmath.NewIntFromUint64(1000),
+				},
+				blockTime: time.Unix(0, 0),
+				params: types.NewParams(
+					types.NewDisabledDecay(),
+					time.Unix(20000, 0),
+				),
+			},
+			msg: types.MsgClaim{
+				Claimer:   addr[5],
+				MissionID: 1,
+			},
+			err: types.ErrAirdropStartNotReached,
+		},
+		{
 			name: "should allow distributing full airdrop to one account, one mission",
 			inputState: inputState{
 				airdropSupply: tc.Coin(t, "1000foo"),
@@ -175,14 +210,14 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    sdk.OneDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[5],
+					Address:           addr[6],
 					Claimable:         sdkmath.NewIntFromUint64(1000),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[5],
+				Claimer:   addr[6],
 				MissionID: 1,
 			},
 			expectedBalance: tc.Coin(t, "1000foo"),
@@ -196,14 +231,14 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    sdk.ZeroDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[6],
+					Address:           addr[7],
 					Claimable:         sdkmath.NewIntFromUint64(1000),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[6],
+				Claimer:   addr[7],
 				MissionID: 1,
 			},
 			err: types.ErrNoClaimable,
@@ -217,14 +252,14 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[7],
+					Address:           addr[8],
 					Claimable:         sdkmath.NewIntFromUint64(500),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[7],
+				Claimer:   addr[8],
 				MissionID: 1,
 			},
 			expectedBalance: tc.Coin(t, "250foo"),
@@ -238,14 +273,14 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[8],
+					Address:           addr[9],
 					Claimable:         sdkmath.NewIntFromUint64(201),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[8],
+				Claimer:   addr[9],
 				MissionID: 1,
 			},
 			expectedBalance: tc.Coin(t, "100foo"),
@@ -259,14 +294,14 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[9],
+					Address:           addr[10],
 					Claimable:         sdkmath.ZeroInt(),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[9],
+				Claimer:   addr[10],
 				MissionID: 1,
 			},
 			err: types.ErrNoClaimable,
@@ -280,45 +315,20 @@ func TestMsgClaim(t *testing.T) {
 					Weight:    tc.Dec(t, "0.3"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:           addr[10],
+					Address:           addr[11],
 					Claimable:         sdkmath.NewIntFromUint64(10000),
 					CompletedMissions: []uint64{0, 1, 3, 2, 4, 5, 6},
 				},
 				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   addr[10],
+				Claimer:   addr[11],
 				MissionID: 3,
 			},
 			expectedBalance: tc.Coin(t, "3000bar"),
 		},
 		{
 			name: "should allow applying decay factor if enabled",
-			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
-				mission: types.Mission{
-					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
-				},
-				claimRecord: types.ClaimRecord{
-					Address:           addr[11],
-					Claimable:         sdkmath.NewIntFromUint64(1000),
-					CompletedMissions: []uint64{1},
-				},
-				params: types.NewParams(types.NewEnabledDecay(
-					time.Unix(1000, 0),
-					time.Unix(2000, 0),
-				), time.Unix(0, 0)),
-				blockTime: time.Unix(1500, 0),
-			},
-			msg: types.MsgClaim{
-				Claimer:   addr[11],
-				MissionID: 1,
-			},
-			expectedBalance: tc.Coin(t, "250foo"),
-		},
-		{
-			name: "should allow distributing all funds if decay factor if enabled and decay not started",
 			inputState: inputState{
 				airdropSupply: tc.Coin(t, "1000foo"),
 				mission: types.Mission{
@@ -334,16 +344,16 @@ func TestMsgClaim(t *testing.T) {
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
 				), time.Unix(0, 0)),
-				blockTime: time.Unix(999, 0),
+				blockTime: time.Unix(1500, 0),
 			},
 			msg: types.MsgClaim{
 				Claimer:   addr[12],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "500foo"),
+			expectedBalance: tc.Coin(t, "250foo"),
 		},
 		{
-			name: "should prevent distributing funds if decay ended",
+			name: "should allow distributing all funds if decay factor if enabled and decay not started",
 			inputState: inputState{
 				airdropSupply: tc.Coin(t, "1000foo"),
 				mission: types.Mission{
@@ -359,10 +369,35 @@ func TestMsgClaim(t *testing.T) {
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
 				), time.Unix(0, 0)),
-				blockTime: time.Unix(2001, 0),
+				blockTime: time.Unix(999, 0),
 			},
 			msg: types.MsgClaim{
 				Claimer:   addr[13],
+				MissionID: 1,
+			},
+			expectedBalance: tc.Coin(t, "500foo"),
+		},
+		{
+			name: "should prevent distributing funds if decay ended",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[14],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(0, 0)),
+				blockTime: time.Unix(2001, 0),
+			},
+			msg: types.MsgClaim{
+				Claimer:   addr[14],
 				MissionID: 1,
 			},
 			err: types.ErrNoClaimable,
