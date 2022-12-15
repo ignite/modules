@@ -329,7 +329,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				), time.Time{}),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(1500, 0),
 			},
 			missionID:       1,
@@ -352,7 +352,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				), time.Time{}),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(999, 0),
 			},
 			missionID:       1,
@@ -375,7 +375,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				), time.Time{}),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(2001, 0),
 			},
 			missionID: 1,

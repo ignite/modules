@@ -5,9 +5,9 @@ import (
 
 	"github.com/ignite/modules/x/claim/types"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/testutil/sample"
 )
 
@@ -22,7 +22,7 @@ func TestMsgClaim_ValidateBasic(t *testing.T) {
 			msg: types.MsgClaim{
 				Claimer: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: errors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
 			msg: types.MsgClaim{

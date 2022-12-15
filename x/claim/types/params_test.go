@@ -24,7 +24,7 @@ func TestParams_Validate(t *testing.T) {
 				Enabled:    true,
 				DecayStart: time.UnixMilli(1001),
 				DecayEnd:   time.UnixMilli(1000),
-			}, time.Time{}),
+			}, time.Unix(0, 0)),
 			wantErr: true,
 		},
 	}
@@ -104,7 +104,7 @@ func TestValidateAirdropStart(t *testing.T) {
 		},
 		{
 			name:              "valid param",
-			maxMetadataLength: int64(1000),
+			maxMetadataLength: time.Unix(0, 0),
 		},
 	}
 	for _, tt := range tests {
