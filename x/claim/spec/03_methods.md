@@ -7,7 +7,7 @@ order: 3
 ### `CompleteMission`
 
 Complete a mission for an eligible address.
-This method can be used by an external module importing `claim` in order to define customized mission for the chain.
+This method can be used by an external chain importing `claim` in order to define customized mission for the chain.
 
 ```go
 CompleteMission(

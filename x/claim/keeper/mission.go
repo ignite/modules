@@ -48,7 +48,7 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 	return
 }
 
-// CompleteMission save the completion of the mission
+// CompleteMission saves the completion of the mission
 func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
 	// retrieve mission
 	if _, found := k.GetMission(ctx, missionID); !found {
@@ -91,8 +91,8 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	return nil
 }
 
-// ClaimMission distribute the claimable portion of airdrop to the user the method
-// fails if the mission has already been claimed or not completed
+// ClaimMission distribute the claimable portion of airdrop to the user
+// the method fails if the mission has already been claimed or not completed
 func (k Keeper) ClaimMission(
 	ctx sdk.Context,
 	claimRecord types.ClaimRecord,

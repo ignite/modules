@@ -8,9 +8,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var _ paramtypes.ParamSet = (*Params)(nil)
-
 var (
+	_ paramtypes.ParamSet = (*Params)(nil)
+
 	KeyDecayInformation = []byte("DecayInformation")
 	KeyAirdropStart     = []byte("AirdropStart")
 )
