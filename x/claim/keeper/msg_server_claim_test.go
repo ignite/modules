@@ -28,9 +28,11 @@ func TestMsgClaim(t *testing.T) {
 	type inputState struct {
 		noAirdropSupply bool
 		noMission       bool
+		noInitialClaim  bool
 		noClaimRecord   bool
 		airdropSupply   sdk.Coin
 		mission         types.Mission
+		initialClaim    types.InitialClaim
 		claimRecord     types.ClaimRecord
 		params          types.Params
 		airdropStart    time.Time
@@ -46,6 +48,7 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail if no airdrop supply",
 			inputState: inputState{
+				noInitialClaim:  true,
 				noAirdropSupply: true,
 				mission: types.Mission{
 					MissionID: 1,
@@ -67,10 +70,11 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail if no claim record",
 			inputState: inputState{
-				noClaimRecord: true,
-				airdropSupply: sample.Coin(r),
-				mission:       sample.Mission(r),
-				params:        types.DefaultParams(),
+				noInitialClaim: true,
+				noClaimRecord:  true,
+				airdropSupply:  sample.Coin(r),
+				mission:        sample.Mission(r),
+				params:         types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
 				Claimer:   sample.Address(r),
@@ -99,7 +103,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail if already claimed",
 			inputState: inputState{
-				airdropSupply: sample.Coin(r),
+				noInitialClaim: true,
+				airdropSupply:  sample.Coin(r),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
@@ -121,7 +126,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail if mission not completed",
 			inputState: inputState{
-				airdropSupply: sample.Coin(r),
+				noInitialClaim: true,
+				airdropSupply:  sample.Coin(r),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
@@ -141,7 +147,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail with critical if claimable amount is greater than module supply",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
@@ -162,7 +169,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail with critical if claimer address is not bech32",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
@@ -183,8 +191,9 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should fail if airdrop start not reached",
 			inputState: inputState{
-				airdropSupply: sample.Coin(r),
-				mission:       sample.Mission(r),
+				noInitialClaim: true,
+				airdropSupply:  sample.Coin(r),
+				mission:        sample.Mission(r),
 				claimRecord: types.ClaimRecord{
 					Address:   addr[5],
 					Claimable: sdkmath.NewIntFromUint64(1000),
@@ -204,7 +213,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow distributing full airdrop to one account, one mission",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
@@ -225,7 +235,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should prevent distributing fund for mission with 0 weight",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    sdk.ZeroDec(),
@@ -246,7 +257,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow distributing half for mission with 0.5 weight",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -267,7 +279,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow distributing half for mission with 0.5 weight and truncate decimal",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -288,7 +301,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should prevent distributing fund for empty claim record",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -309,7 +323,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow distributing airdrop with other already completed missions",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "10000bar"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "10000bar"),
 				mission: types.Mission{
 					MissionID: 3,
 					Weight:    tc.Dec(t, "0.3"),
@@ -330,7 +345,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow applying decay factor if enabled",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -355,7 +371,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow distributing all funds if decay factor if enabled and decay not started",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -380,7 +397,8 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should prevent distributing funds if decay ended",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "1000foo"),
+				noInitialClaim: true,
+				airdropSupply:  tc.Coin(t, "1000foo"),
 				mission: types.Mission{
 					MissionID: 1,
 					Weight:    tc.Dec(t, "0.5"),
@@ -402,6 +420,77 @@ func TestMsgClaim(t *testing.T) {
 			},
 			err: types.ErrNoClaimable,
 		},
+		{
+			name: "should allow to claim initial for an existing mission and claim record",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "100000foo"),
+				initialClaim: types.InitialClaim{
+					Enabled:   true,
+					MissionID: 1,
+				},
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[15],
+					Claimable: sdkmath.NewIntFromUint64(100),
+				},
+			},
+			msg: types.MsgClaim{
+				Claimer:   addr[15],
+				MissionID: 1,
+			},
+			expectedBalance: tc.Coin(t, "100foo"),
+		},
+		{
+			name: "should prevent claiming initial if initial claim not enabled",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "100000foo"),
+				initialClaim: types.InitialClaim{
+					Enabled:   false,
+					MissionID: 1,
+				},
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[16],
+					Claimable: sdkmath.NewIntFromUint64(100),
+				},
+			},
+			msg: types.MsgClaim{
+				Claimer:   addr[16],
+				MissionID: 1,
+			},
+			err: types.ErrInitialClaimNotEnabled,
+		},
+		{
+			name: "should prevent claiming initial already claimed",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "100000foo"),
+				initialClaim: types.InitialClaim{
+					Enabled:   true,
+					MissionID: 1,
+				},
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[17],
+					Claimable:         sdkmath.NewIntFromUint64(100),
+					CompletedMissions: []uint64{1},
+					ClaimedMissions:   []uint64{1},
+				},
+			},
+			msg: types.MsgClaim{
+				Claimer:   addr[17],
+				MissionID: 1,
+			},
+			err: types.ErrMissionAlreadyClaimed,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -411,6 +500,9 @@ func TestMsgClaim(t *testing.T) {
 			if !tt.inputState.noAirdropSupply {
 				err := tk.ClaimKeeper.InitializeAirdropSupply(sdkCtx, tt.inputState.airdropSupply)
 				require.NoError(t, err)
+			}
+			if !tt.inputState.noInitialClaim {
+				tk.ClaimKeeper.SetInitialClaim(sdkCtx, tt.inputState.initialClaim)
 			}
 			if !tt.inputState.noMission {
 				tk.ClaimKeeper.SetMission(sdkCtx, tt.inputState.mission)
@@ -467,6 +559,9 @@ func TestMsgClaim(t *testing.T) {
 			}
 			if !tt.inputState.noClaimRecord {
 				tk.ClaimKeeper.RemoveClaimRecord(sdkCtx, tt.inputState.claimRecord.Address)
+			}
+			if !tt.inputState.noInitialClaim {
+				tk.ClaimKeeper.RemoveInitialClaim(sdkCtx)
 			}
 		})
 	}
