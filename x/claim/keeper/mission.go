@@ -89,7 +89,7 @@ func (k Keeper) CompleteMission(
 
 	// try to claim the mission if airdrop start is reached
 	airdropStart := k.AirdropStart(ctx)
-	if !ctx.BlockTime().Before(airdropStart) {
+	if ctx.BlockTime().After(airdropStart) {
 		return k.ClaimMission(ctx, claimRecord, missionID)
 	}
 

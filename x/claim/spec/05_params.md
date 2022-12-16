@@ -9,7 +9,7 @@ The parameters of the module contain information about time-based decay for the 
 ```protobuf
 message Params {
   DecayInformation decayInformation = 1 [(gogoproto.nullable) = false];
-  google.protobuf.Timestamp AirdropStart = 2
+  google.protobuf.Timestamp airdropStart = 2
   [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }
 ```
