@@ -402,7 +402,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			err := tk.ClaimKeeper.ClaimMission(ctx, tt.inputState.claimRecord, tt.missionID)
+			claimed, err := tk.ClaimKeeper.ClaimMission(ctx, tt.inputState.claimRecord, tt.missionID)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
@@ -411,6 +411,9 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				// funds are distributed to the user
 				sdkAddr, err := sdk.AccAddressFromBech32(tt.address)
 				require.NoError(t, err)
+
+				require.Equal(t, tt.expectedBalance.Amount, claimed)
+
 				balance := tk.BankKeeper.GetBalance(ctx, sdkAddr, tt.inputState.airdropSupply.Denom)
 				require.True(t, balance.IsEqual(tt.expectedBalance),
 					"expected balance after mission complete: %s, actual balance: %s",
@@ -465,12 +468,13 @@ func TestKeeper_CompleteMission(t *testing.T) {
 		blockTime     time.Time
 	}
 	tests := []struct {
-		name       string
-		inputState inputState
-		missionID  uint64
-		address    string
-		claimed    bool
-		err        error
+		name            string
+		inputState      inputState
+		missionID       uint64
+		address         string
+		isClaimed       bool
+		expectedClaimed sdkmath.Int
+		err             error
 	}{
 		{
 			name: "should fail if mission id not found",
@@ -541,28 +545,6 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			err:       types.ErrMissionCompleted,
 		},
 		{
-			name: "should fail if mission already claimed",
-			inputState: inputState{
-				mission: types.Mission{
-					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
-				},
-				claimRecord: types.ClaimRecord{
-					Address:         addr[3],
-					Claimable:       sdkmath.NewIntFromUint64(1000),
-					ClaimedMissions: []uint64{1},
-				},
-				params: types.NewParams(types.NewEnabledDecay(
-					time.Unix(1000, 0),
-					time.Unix(2000, 0),
-				), time.Unix(2001, 0)),
-				blockTime: time.Unix(0, 0),
-			},
-			missionID: 1,
-			address:   addr[3],
-			err:       types.ErrMissionCompleted,
-		},
-		{
 			name: "should success",
 			inputState: inputState{
 				mission: types.Mission{
@@ -617,9 +599,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				params: types.DefaultParams(),
 			},
-			missionID: 1,
-			address:   addr[6],
-			claimed:   true,
+			missionID:       1,
+			address:         addr[6],
+			expectedClaimed: sdkmath.NewInt(1000),
 		},
 	}
 	for _, tt := range tests {
@@ -636,17 +618,17 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)
+			claimed, err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
+			require.Equal(t, tt.expectedClaimed, claimed)
 
 			claimRecord, found := tk.ClaimKeeper.GetClaimRecord(ctx, tt.address)
 			require.True(t, found)
 			require.True(t, claimRecord.IsMissionCompleted(tt.missionID))
-			require.Equal(t, tt.claimed, claimRecord.IsMissionClaimed(tt.missionID))
 		})
 	}
 }

@@ -1,10 +1,11 @@
 package keeper
 
 import (
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	errors "github.com/ignite/modules/pkg/errors"
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -49,21 +50,25 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 }
 
 // CompleteMission saves the completion of the mission
-func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
+func (k Keeper) CompleteMission(
+	ctx sdk.Context,
+	missionID uint64,
+	address string,
+) (claimed math.Int, err error) {
 	// retrieve mission
 	if _, found := k.GetMission(ctx, missionID); !found {
-		return errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
+		return claimed, errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
 	}
 
 	// retrieve claim record of the user
 	claimRecord, found := k.GetClaimRecord(ctx, address)
 	if !found {
-		return errors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
+		return claimed, errors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
 	}
 
 	// check if the mission is already completed for the claim record
-	if claimRecord.IsMissionCompleted(missionID) || claimRecord.IsMissionClaimed(missionID) {
-		return errors.Wrapf(
+	if claimRecord.IsMissionCompleted(missionID) {
+		return claimed, errors.Wrapf(
 			types.ErrMissionCompleted,
 			"mission %d completed for address %s",
 			missionID,
@@ -74,12 +79,12 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 
 	k.SetClaimRecord(ctx, claimRecord)
 
-	err := ctx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
 		MissionID: missionID,
 		Address:   address,
 	})
 	if err != nil {
-		return err
+		return claimed, err
 	}
 
 	// try to claim the mission if airdrop start is reached
@@ -88,30 +93,30 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 		return k.ClaimMission(ctx, claimRecord, missionID)
 	}
 
-	return nil
+	return claimed, nil
 }
 
-// ClaimMission distribute the claimable portion of airdrop to the user
+// ClaimMission distributes the claimable portion of the airdrop to the user
 // the method fails if the mission has already been claimed or not completed
 func (k Keeper) ClaimMission(
 	ctx sdk.Context,
 	claimRecord types.ClaimRecord,
 	missionID uint64,
-) error {
+) (claimed math.Int, err error) {
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if !found {
-		return errors.Wrap(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
+		return claimed, errors.Wrap(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
 	}
 
 	// retrieve mission
 	mission, found := k.GetMission(ctx, missionID)
 	if !found {
-		return errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
+		return claimed, errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
 	}
 
 	// check if the mission is not completed for the claim record
 	if !claimRecord.IsMissionCompleted(missionID) {
-		return errors.Wrapf(
+		return claimed, errors.Wrapf(
 			types.ErrMissionNotCompleted,
 			"mission %d is not completed for address %s",
 			missionID,
@@ -119,7 +124,7 @@ func (k Keeper) ClaimMission(
 		)
 	}
 	if claimRecord.IsMissionClaimed(missionID) {
-		return errors.Wrapf(
+		return claimed, errors.Wrapf(
 			types.ErrMissionAlreadyClaimed,
 			"mission %d is already claimed for address %s",
 			missionID,
@@ -138,29 +143,30 @@ func (k Keeper) ClaimMission(
 
 	// check final claimable non-zero
 	if claimable.Empty() {
-		return types.ErrNoClaimable
+		return claimed, types.ErrNoClaimable
 	}
 
 	// decrease airdrop supply
-	airdropSupply.Amount = airdropSupply.Amount.Sub(claimable.AmountOf(airdropSupply.Denom))
+	claimed = claimable.AmountOf(airdropSupply.Denom)
+	airdropSupply.Amount = airdropSupply.Amount.Sub(claimed)
 	if airdropSupply.Amount.IsNegative() {
-		return errors.Critical("airdrop supply is lower than total claimable")
+		return claimed, errors.Critical("airdrop supply is lower than total claimable")
 	}
 
 	// send claimable to the user
 	claimer, err := sdk.AccAddressFromBech32(claimRecord.Address)
 	if err != nil {
-		return errors.Criticalf("invalid claimer address %s", err.Error())
+		return claimed, errors.Criticalf("invalid claimer address %s", err.Error())
 	}
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, claimer, claimable); err != nil {
-		return errors.Criticalf("can't send claimable coins %s", err.Error())
+		return claimed, errors.Criticalf("can't send claimable coins %s", err.Error())
 	}
 
 	// update store
 	k.SetAirdropSupply(ctx, airdropSupply)
 	k.SetClaimRecord(ctx, claimRecord)
 
-	return ctx.EventManager().EmitTypedEvent(&types.EventMissionClaimed{
+	return claimed, ctx.EventManager().EmitTypedEvent(&types.EventMissionClaimed{
 		MissionID: missionID,
 		Claimer:   claimRecord.Address,
 	})

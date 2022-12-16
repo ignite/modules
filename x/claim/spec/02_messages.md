@@ -4,28 +4,6 @@ order: 2
 
 # Messages
 
-### `MsgClaimInitial`
-
-Claim the initial claim amount for airdrop defined in `InitialClaim`
-
-```protobuf
-message MsgClaimInitial {
-  string claimer = 1;
-}
-```
-
-**State transition**
-
-- Complete the initial claim mission for the address
-- Transfer the initial claim amount to the claimer balance
-
-**Fails if**
-
-- Initial claim is not enabled
-- The claimer is not eligible
-- The initial claim mission doesn't exist
-- The initial claim mission has already been completed
-
 ### `MsgClaim`
 
 Claim completed mission amount for airdrop
@@ -34,6 +12,14 @@ Claim completed mission amount for airdrop
 message MsgClaim {
   string claimer = 1;
   uint64 missionID = 2;
+}
+
+message MsgClaimResponse {
+  string claimed = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (cosmos_proto.scalar) = "cosmos.Int"
+  ];
 }
 ```
 

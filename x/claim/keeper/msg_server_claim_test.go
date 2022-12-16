@@ -422,7 +422,7 @@ func TestMsgClaim(t *testing.T) {
 				ctx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			_, err := ts.ClaimSrv.Claim(ctx, &tt.msg)
+			res, err := ts.ClaimSrv.Claim(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
@@ -431,6 +431,9 @@ func TestMsgClaim(t *testing.T) {
 				// funds are distributed to the user
 				sdkAddr, err := sdk.AccAddressFromBech32(tt.msg.Claimer)
 				require.NoError(t, err)
+
+				require.Equal(t, tt.expectedBalance.Amount, res.Claimed)
+
 				balance := tk.BankKeeper.GetBalance(sdkCtx, sdkAddr, tt.inputState.airdropSupply.Denom)
 				require.True(t, balance.IsEqual(tt.expectedBalance),
 					"expected balance after mission complete: %s, actual balance: %s",

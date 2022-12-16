@@ -1,21 +1,25 @@
 syntax = "proto3";
 package ignite.modules.claim;
 
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
 option go_package = "github.com/ignite/modules/x/claim/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc ClaimInitial(MsgClaimInitial) returns (MsgClaimInitialResponse);
   rpc Claim(MsgClaim) returns (MsgClaimResponse);
 }
-
-message MsgClaimInitial {string claimer = 1;}
-
-message MsgClaimInitialResponse {}
 
 message MsgClaim {
   string claimer = 1;
   uint64 missionID = 2;
 }
 
-message MsgClaimResponse {}
+message MsgClaimResponse {
+  string claimed = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (cosmos_proto.scalar) = "cosmos.Int"
+  ];
+}

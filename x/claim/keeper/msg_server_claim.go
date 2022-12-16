@@ -22,6 +22,19 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 		)
 	}
 
+	// check if the claim is an initial claim
+	initialClaim, found := k.GetInitialClaim(ctx)
+	if found {
+		if initialClaim.MissionID == msg.MissionID {
+			if !initialClaim.Enabled {
+				return nil, types.ErrInitialClaimNotEnabled
+			}
+			// if is an initial claim, automatically add to completed missions
+			// the `ClaimMission` will update the claim record later
+			claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, msg.MissionID)
+		}
+	}
+
 	// check if airdrop start time already reached
 	airdropStart := k.AirdropStart(ctx)
 	if ctx.BlockTime().Before(airdropStart) {
@@ -31,9 +44,12 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 			airdropStart.String(),
 		)
 	}
-	if err := k.ClaimMission(ctx, claimRecord, msg.MissionID); err != nil {
+	claimed, err := k.ClaimMission(ctx, claimRecord, msg.MissionID)
+	if err != nil {
 		return nil, err
 	}
 
-	return &types.MsgClaimResponse{}, nil
+	return &types.MsgClaimResponse{
+		Claimed: claimed,
+	}, nil
 }

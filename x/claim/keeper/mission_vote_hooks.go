@@ -20,7 +20,7 @@ var _ govtypes.GovHooks = MissionVoteHooks{}
 // AfterProposalVote completes mission when a vote is cast
 func (h MissionVoteHooks) AfterProposalVote(ctx sdk.Context, _ uint64, voterAddr sdk.AccAddress) {
 	// TODO: error handling
-	_ = h.k.CompleteMission(ctx, h.missionID, voterAddr.String())
+	_, _ = h.k.CompleteMission(ctx, h.missionID, voterAddr.String())
 }
 
 // AfterProposalSubmission implements GovHooks
