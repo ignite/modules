@@ -16,9 +16,6 @@ import (
 const (
 	airdropDenom = "drop"
 
-	opWeightMsgClaimInitial          = "op_weight_msg_claim_initial"
-	defaultWeightMsgClaimInitial int = 50
-
 	opWeightMsgClaim          = "op_weight_msg_claim"
 	defaultWeightMsgClaim int = 50
 
@@ -98,17 +95,6 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
-
-	var weightMsgClaimInitial int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimInitial, &weightMsgClaimInitial, nil,
-		func(_ *rand.Rand) {
-			weightMsgClaimInitial = defaultWeightMsgClaimInitial
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgClaimInitial,
-		claimsimulation.SimulateMsgClaimInitial(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
 
 	var weightMsgClaim int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaim, &weightMsgClaim, nil,
