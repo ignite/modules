@@ -13,6 +13,48 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
+func TestClaimRecordMissionInvariant(t *testing.T) {
+	t.Run("should not break with valid state", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
+			Address:           sample.Address(r),
+			Claimable:         sdkmath.NewInt(10),
+			CompletedMissions: []uint64{0, 1},
+		})
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   0,
+			Description: "mission 0",
+			Weight:      sdk.ZeroDec(),
+		})
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   1,
+			Description: "mission 1",
+			Weight:      sdk.ZeroDec(),
+		})
+
+		msg, broken := keeper.ClaimRecordMissionInvariant(*tk.ClaimKeeper)(ctx)
+		require.False(t, broken, msg)
+	})
+	t.Run("should break with invalid state", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
+			Address:           sample.Address(r),
+			Claimable:         sdkmath.NewInt(10),
+			CompletedMissions: []uint64{0, 1},
+		})
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   1,
+			Description: "mission 1",
+			Weight:      sdk.ZeroDec(),
+		})
+
+		msg, broken := keeper.ClaimRecordMissionInvariant(*tk.ClaimKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+}
+
 func TestAirdropSupplyInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
