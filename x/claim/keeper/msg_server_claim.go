@@ -9,6 +9,7 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
+// Claim claims the Airdrop by the mission id if available and reach the airdrop start time
 func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.MsgClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 

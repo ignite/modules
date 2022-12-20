@@ -49,7 +49,9 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 	return
 }
 
-// CompleteMission saves the completion of the mission
+// CompleteMission saves the completion of the mission. The claim will
+// be called automatically if the airdrop start has already been reached.
+// If not, it will only save the mission as completed.
 func (k Keeper) CompleteMission(
 	ctx sdk.Context,
 	missionID uint64,
