@@ -57,6 +57,7 @@ ignore:
   - "*.yml"
   - "*.yaml"
   - "*.pb.go"
+  - "*.pb.gw.go"
   - ".github/"
   - "app/"
   - "cmd/"
