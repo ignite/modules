@@ -13,6 +13,62 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
+func TestClaimRecordInvariant(t *testing.T) {
+	t.Run("should not break with a completed and claimed mission", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   10,
+			Description: "test mission",
+			Weight:      sdk.NewDec(100),
+		})
+		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
+			Address:           sample.Address(r),
+			Claimable:         sdkmath.NewInt(10),
+			CompletedMissions: []uint64{10},
+			ClaimedMissions:   []uint64{10},
+		})
+
+		msg, broken := keeper.ClaimRecordInvariant(*tk.ClaimKeeper)(ctx)
+		require.False(t, broken, msg)
+	})
+	t.Run("should not break with a completed but not claimed mission", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   10,
+			Description: "test mission",
+			Weight:      sdk.NewDec(100),
+		})
+		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
+			Address:           sample.Address(r),
+			Claimable:         sdkmath.NewInt(10),
+			CompletedMissions: []uint64{10},
+		})
+
+		msg, broken := keeper.ClaimRecordInvariant(*tk.ClaimKeeper)(ctx)
+		require.False(t, broken, msg)
+	})
+	t.Run("should break with claimed but not completed mission", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
+			Address:           sample.Address(r),
+			Claimable:         sdkmath.NewInt(10),
+			CompletedMissions: []uint64{},
+			ClaimedMissions:   []uint64{10},
+		})
+		tk.ClaimKeeper.SetMission(ctx, types.Mission{
+			MissionID:   10,
+			Description: "test mission",
+			Weight:      sdk.NewDec(100),
+		})
+
+		msg, broken := keeper.ClaimRecordInvariant(*tk.ClaimKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+}
+
 func TestAirdropSupplyInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)

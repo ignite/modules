@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -9,19 +11,25 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func CmdClaimInitial() *cobra.Command {
+func CmdClaim() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "claim-initial",
-		Short: "claim the initial airdrop allocation",
-		Args:  cobra.NoArgs,
+		Use:   "claim [mission-id]",
+		Short: "claim the airdrop allocation by mission id",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			missionID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgClaimInitial(
+			msg := types.NewMsgClaim(
 				clientCtx.GetFromAddress().String(),
+				missionID,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -29,7 +37,6 @@ func CmdClaimInitial() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
-
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

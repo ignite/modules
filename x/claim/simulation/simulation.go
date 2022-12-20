@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -15,14 +16,14 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func SimulateMsgClaimInitial(
+func SimulateMsgClaim(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		msg := &types.MsgClaimInitial{}
+		msg := &types.MsgClaim{}
 
 		// find an account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
@@ -33,15 +34,28 @@ func SimulateMsgClaimInitial(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account has no claim record"), nil, nil
 		}
 
-		// verify if initial claim mission is completed
-		if cr.IsMissionCompleted(0) {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
+		var (
+			mission    types.Mission
+			missions   = k.GetAllMission(ctx)
+			hasMission = false
+		)
+		for _, m := range missions {
+			if cr.IsMissionCompleted(m.MissionID) && !cr.IsMissionClaimed(m.MissionID) {
+				hasMission = true
+				mission = m
+			}
+		}
+		if !hasMission {
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				fmt.Sprintf("%s don't have mission to claim", simAccount.Address.String()),
+			), nil, nil
 		}
 
 		// verify that there is claimable amount
-		m, _ := k.GetMission(ctx, 0)
 		airdropSupply, _ := k.GetAirdropSupply(ctx)
-		claimableAmount := cr.ClaimableFromMission(m)
+		claimableAmount := cr.ClaimableFromMission(mission)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 		// calculate claimable after decay factor
 		decayInfo := k.DecayInformation(ctx)
@@ -53,7 +67,7 @@ func SimulateMsgClaimInitial(
 		}
 
 		// initialize basic message
-		msg = &types.MsgClaimInitial{
+		msg = &types.MsgClaim{
 			Claimer: simAccount.Address.String(),
 		}
 

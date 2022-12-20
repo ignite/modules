@@ -30,9 +30,9 @@ Params:         [] -> Params
 
 ### `InitialClaim`
 
-`InitialClaim` determines the rules for the initial claim, a portion of the airdrop that can be directly claimed without completing a specific task. The mission is completed by sending a `MsgClaimInitial` message.
+`InitialClaim` determines the rules for the initial claim, a portion of the airdrop that can be directly claimed without completing a specific task. The mission is completed by sending a `MsgClaim` message.
 
-The structure determines if the initial claim is enabled for the chain, and what mission is completed when sending `MsgClaimInitial`.
+The structure determines if the initial claim is enabled for the chain, and what mission is completed when sending `MsgClaim`.
 
 ```protobuf
 message InitialClaim {
@@ -43,7 +43,7 @@ message InitialClaim {
 
 ### `ClaimRecord`
 
-`ClaimRecord` contains information about an eligible address for airdrop, what amount the address is eligible for, and which missions have already been completed.
+`ClaimRecord` contains information about an address eligible for airdrop, what amount the address is eligible for, and which missions have already been completed and claimed.
 
 ```protobuf
 message ClaimRecord {
@@ -54,6 +54,7 @@ message ClaimRecord {
     (cosmos_proto.scalar)  = "cosmos.Int"
   ];
   repeated uint64 completedMissions = 3;
+  repeated uint64 claimedMissions = 4;
 }
 ```
 
