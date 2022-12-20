@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/simapp"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/store"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -20,6 +19,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/ignite/modules/app"
+	"github.com/ignite/modules/testutil/simapp"
 )
 
 func init() {
