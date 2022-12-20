@@ -11,22 +11,16 @@ import (
 	"cosmossdk.io/simapp"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
 	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/ignite/modules/app"
-	"github.com/ignite/modules/cmd"
 )
 
 func init() {
@@ -35,20 +29,6 @@ func init() {
 
 // SimAppChainID hardcoded chainID for simulation
 const SimAppChainID = "simulation-app"
-
-type SimApp interface {
-	cmd.App
-	GetBaseApp() *baseapp.BaseApp
-	AppCodec() codec.Codec
-	SimulationManager() *module.SimulationManager
-	ModuleAccountAddrs() map[string]bool
-	Name() string
-	LegacyAmino() *codec.LegacyAmino
-	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
-	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
-	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
-	LastCommitID() storetypes.CommitID
-}
 
 // interBlockCacheOpt returns a BaseApp option function that sets the persistent
 // inter-block write-through cache.

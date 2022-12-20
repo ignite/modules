@@ -4,11 +4,11 @@ go 1.19
 
 require (
 	cosmossdk.io/errors v1.0.0-beta.7
-	cosmossdk.io/math v1.0.0-beta.3
+	cosmossdk.io/math v1.0.0-beta.4
 	cosmossdk.io/simapp v0.0.0-20221107191907-c85447cdb9ea
 	cosmossdk.io/tools/rosetta v0.1.0
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
-	github.com/cosmos/cosmos-sdk v0.47.0-alpha1
+	github.com/cosmos/cosmos-sdk v0.47.0-alpha2
 	github.com/cosmos/gogoproto v1.4.3
 	github.com/golang/protobuf v1.5.2
 	github.com/golangci/golangci-lint v1.50.1
@@ -17,12 +17,12 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.1
-	github.com/tendermint/tendermint v0.37.0-rc1
+	github.com/tendermint/tendermint v0.37.0-rc2
 	github.com/tendermint/tm-db v0.6.7
 	golang.org/x/tools v0.2.0
 	golang.org/x/vuln v0.0.0-20220923181559-cbe0a6944b8b
-	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c
-	google.golang.org/grpc v1.50.1
+	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6
+	google.golang.org/grpc v1.51.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
 	mvdan.cc/gofumpt v0.4.0
@@ -33,9 +33,9 @@ require (
 	cloud.google.com/go v0.105.0 // indirect
 	cloud.google.com/go/compute v1.12.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.1 // indirect
-	cloud.google.com/go/iam v0.6.0 // indirect
+	cloud.google.com/go/iam v0.7.0 // indirect
 	cloud.google.com/go/storage v1.27.0 // indirect
-	cosmossdk.io/api v0.2.4 // indirect
+	cosmossdk.io/api v0.2.5 // indirect
 	cosmossdk.io/core v0.3.2 // indirect
 	cosmossdk.io/depinject v1.0.0-alpha.3 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
@@ -65,7 +65,7 @@ require (
 	github.com/breml/bidichk v0.2.3 // indirect
 	github.com/breml/errchkjson v0.3.0 // indirect
 	github.com/btcsuite/btcd v0.22.3 // indirect
-	github.com/btcsuite/btcd/btcec/v2 v2.3.1 // indirect
+	github.com/btcsuite/btcd/btcec/v2 v2.3.2 // indirect
 	github.com/butuzov/ireturn v0.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
@@ -75,7 +75,7 @@ require (
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cockroachdb/apd/v2 v2.0.2 // indirect
 	github.com/coinbase/rosetta-sdk-go v0.8.1 // indirect
-	github.com/confio/ics23/go v0.7.0 // indirect
+	github.com/confio/ics23/go v0.9.0 // indirect
 	github.com/cosmos/btcutil v1.0.4 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gogogateway v1.2.0 // indirect
