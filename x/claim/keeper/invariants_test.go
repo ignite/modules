@@ -13,47 +13,6 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func TestInitialClaimMissionInvariant(t *testing.T) {
-	t.Run("should not break with valid state", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-		tk.ClaimKeeper.SetInitialClaim(ctx, types.InitialClaim{
-			Enabled:   true,
-			MissionID: 0,
-		})
-		tk.ClaimKeeper.SetMission(ctx, types.Mission{
-			MissionID:   0,
-			Description: "mission 0",
-			Weight:      sdk.ZeroDec(),
-		})
-
-		msg, broken := keeper.InitialClaimMissionInvariant(*tk.ClaimKeeper)(ctx)
-		require.False(t, broken, msg)
-	})
-	t.Run("should not break with initial claim not enable", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-		tk.ClaimKeeper.SetInitialClaim(ctx, types.InitialClaim{
-			Enabled:   false,
-			MissionID: 1,
-		})
-
-		msg, broken := keeper.InitialClaimMissionInvariant(*tk.ClaimKeeper)(ctx)
-		require.False(t, broken, msg)
-	})
-	t.Run("should break with invalid state", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-		tk.ClaimKeeper.SetInitialClaim(ctx, types.InitialClaim{
-			Enabled:   true,
-			MissionID: 1,
-		})
-
-		msg, broken := keeper.InitialClaimMissionInvariant(*tk.ClaimKeeper)(ctx)
-		require.True(t, broken, msg)
-	})
-}
-
 func TestClaimRecordMissionInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)

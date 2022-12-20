@@ -9,17 +9,14 @@ import (
 )
 
 const (
-	airdropSupplyRoute       = "airdrop-supply"
-	initialClaimMissionRoute = "initial-claim-mission"
-	claimRecordMissionRoute  = "claim-record-mission"
+	airdropSupplyRoute      = "airdrop-supply"
+	claimRecordMissionRoute = "claim-record-mission"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
 	ir.RegisterRoute(types.ModuleName, airdropSupplyRoute,
 		AirdropSupplyInvariant(k))
-	ir.RegisterRoute(types.ModuleName, initialClaimMissionRoute,
-		InitialClaimMissionInvariant(k))
 	ir.RegisterRoute(types.ModuleName, claimRecordMissionRoute,
 		ClaimRecordMissionInvariant(k))
 }
@@ -27,11 +24,7 @@ func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
 // AllInvariants runs all invariants of the module.
 func AllInvariants(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		res, stop := InitialClaimMissionInvariant(k)(ctx)
-		if stop {
-			return res, stop
-		}
-		res, stop = ClaimRecordMissionInvariant(k)(ctx)
+		res, stop := ClaimRecordMissionInvariant(k)(ctx)
 		if stop {
 			return res, stop
 		}
@@ -80,23 +73,5 @@ func ClaimRecordMissionInvariant(k Keeper) sdk.Invariant {
 		}
 
 		return "", false
-	}
-}
-
-// InitialClaimMissionInvariant invariant checks the initial claim mission exist
-func InitialClaimMissionInvariant(k Keeper) sdk.Invariant {
-	return func(ctx sdk.Context) (string, bool) {
-		initialClaim, found := k.GetInitialClaim(ctx)
-		if !found || !initialClaim.Enabled {
-			return "", false
-		}
-		missions := k.GetAllMission(ctx)
-
-		for _, mission := range missions {
-			if mission.MissionID == initialClaim.MissionID {
-				return "", false
-			}
-		}
-		return fmt.Sprintf("initial claim mission %d not exist", initialClaim.MissionID), true
 	}
 }
