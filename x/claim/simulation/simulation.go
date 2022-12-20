@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -33,15 +34,28 @@ func SimulateMsgClaim(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account has no claim record"), nil, nil
 		}
 
-		// verify if initial claim mission is completed
-		if !cr.IsMissionCompleted(1) {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed claim"), nil, nil
+		var (
+			mission    types.Mission
+			missions   = k.GetAllMission(ctx)
+			hasMission = false
+		)
+		for _, m := range missions {
+			if cr.IsMissionCompleted(m.MissionID) && !cr.IsMissionClaimed(m.MissionID) {
+				hasMission = true
+				mission = m
+			}
+		}
+		if !hasMission {
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				fmt.Sprintf("%s don't have mission to claim", simAccount.Address.String()),
+			), nil, nil
 		}
 
 		// verify that there is claimable amount
-		m, _ := k.GetMission(ctx, 1)
 		airdropSupply, _ := k.GetAirdropSupply(ctx)
-		claimableAmount := cr.ClaimableFromMission(m)
+		claimableAmount := cr.ClaimableFromMission(mission)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 		// calculate claimable after decay factor
 		decayInfo := k.DecayInformation(ctx)
