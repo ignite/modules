@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"cosmossdk.io/simapp"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/store"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
