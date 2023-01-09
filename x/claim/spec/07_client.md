@@ -173,3 +173,17 @@ Example:
 ```sh
 testappd tx claim claim-initial --from alice
 ```
+
+#### `claim`
+
+Claim the airdrop allocation for the user and mission.
+
+```sh
+testappd tx claim claim 2
+```
+
+Example:
+
+```sh
+testappd tx claim claim 3 --from alice
+```

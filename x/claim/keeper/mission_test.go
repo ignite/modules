@@ -68,8 +68,14 @@ func TestMissionRemove(t *testing.T) {
 	})
 }
 
-func TestKeeper_CompleteMission(t *testing.T) {
+func TestKeeper_ClaimMission(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	// prepare addresses
+	addr := make([]string, 20)
+	for i := 0; i < len(addr); i++ {
+		addr[i] = sample.Address(r)
+	}
 
 	type inputState struct {
 		noAirdropSupply bool
@@ -81,13 +87,6 @@ func TestKeeper_CompleteMission(t *testing.T) {
 		params          types.Params
 		blockTime       time.Time
 	}
-
-	// prepare addresses
-	var addr []string
-	for i := 0; i < 20; i++ {
-		addr = append(addr, sample.Address(r))
-	}
-
 	tests := []struct {
 		name            string
 		inputState      inputState
@@ -125,22 +124,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			err:       types.ErrMissionNotFound,
 		},
 		{
-			name: "should fail if no claim record",
-			inputState: inputState{
-				noClaimRecord: true,
-				airdropSupply: sample.Coin(r),
-				mission: types.Mission{
-					MissionID: 1,
-					Weight:    sdk.OneDec(),
-				},
-				params: types.DefaultParams(),
-			},
-			missionID: 1,
-			address:   sample.Address(r),
-			err:       types.ErrClaimRecordNotFound,
-		},
-		{
-			name: "should fail if mission already completed",
+			name: "should fail if already claimed",
 			inputState: inputState{
 				airdropSupply: sample.Coin(r),
 				mission: types.Mission{
@@ -151,12 +135,31 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:           addr[1],
 					Claimable:         sdkmath.OneInt(),
 					CompletedMissions: []uint64{1},
+					ClaimedMissions:   []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   addr[1],
-			err:       types.ErrMissionCompleted,
+			err:       types.ErrMissionAlreadyClaimed,
+		},
+		{
+			name: "should fail if mission not completed",
+			inputState: inputState{
+				airdropSupply: sample.Coin(r),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[1],
+					Claimable: sdkmath.OneInt(),
+				},
+				params: types.DefaultParams(),
+			},
+			missionID: 1,
+			address:   addr[1],
+			err:       types.ErrMissionNotCompleted,
 		},
 		{
 			name: "should fail with critical if claimable amount is greater than module supply",
@@ -167,8 +170,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    sdk.OneDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[2],
-					Claimable: sdkmath.NewIntFromUint64(10000),
+					Address:           addr[2],
+					Claimable:         sdkmath.NewIntFromUint64(10000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -185,8 +189,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    sdk.OneDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   "invalid",
-					Claimable: sdkmath.OneInt(),
+					Address:           "invalid",
+					Claimable:         sdkmath.OneInt(),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -203,8 +208,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    sdk.OneDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[3],
-					Claimable: sdkmath.NewIntFromUint64(1000),
+					Address:           addr[3],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -221,8 +227,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    sdk.ZeroDec(),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[4],
-					Claimable: sdkmath.NewIntFromUint64(1000),
+					Address:           addr[4],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -239,8 +246,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[5],
-					Claimable: sdkmath.NewIntFromUint64(500),
+					Address:           addr[5],
+					Claimable:         sdkmath.NewIntFromUint64(500),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -257,8 +265,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[6],
-					Claimable: sdkmath.NewIntFromUint64(201),
+					Address:           addr[6],
+					Claimable:         sdkmath.NewIntFromUint64(201),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -275,8 +284,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[7],
-					Claimable: sdkmath.ZeroInt(),
+					Address:           addr[7],
+					Claimable:         sdkmath.ZeroInt(),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
 			},
@@ -295,7 +305,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				claimRecord: types.ClaimRecord{
 					Address:           addr[8],
 					Claimable:         sdkmath.NewIntFromUint64(10000),
-					CompletedMissions: []uint64{0, 1, 2, 4, 5, 6},
+					CompletedMissions: []uint64{0, 1, 3, 2, 4, 5, 6},
 				},
 				params: types.DefaultParams(),
 			},
@@ -312,13 +322,14 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[9],
-					Claimable: sdkmath.NewIntFromUint64(1000),
+					Address:           addr[9],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				)),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(1500, 0),
 			},
 			missionID:       1,
@@ -334,13 +345,14 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[10],
-					Claimable: sdkmath.NewIntFromUint64(1000),
+					Address:           addr[10],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				)),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(999, 0),
 			},
 			missionID:       1,
@@ -356,13 +368,14 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Weight:    tc.Dec(t, "0.5"),
 				},
 				claimRecord: types.ClaimRecord{
-					Address:   addr[11],
-					Claimable: sdkmath.NewIntFromUint64(1000),
+					Address:           addr[11],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
 					time.Unix(2000, 0),
-				)),
+				), time.Unix(0, 0)),
 				blockTime: time.Unix(2001, 0),
 			},
 			missionID: 1,
@@ -389,7 +402,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)
+			claimed, err := tk.ClaimKeeper.ClaimMission(ctx, tt.inputState.claimRecord, tt.missionID)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
@@ -398,6 +411,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				// funds are distributed to the user
 				sdkAddr, err := sdk.AccAddressFromBech32(tt.address)
 				require.NoError(t, err)
+
+				require.Equal(t, tt.expectedBalance.Amount, claimed)
+
 				balance := tk.BankKeeper.GetBalance(ctx, sdkAddr, tt.inputState.airdropSupply.Denom)
 				require.True(t, balance.IsEqual(tt.expectedBalance),
 					"expected balance after mission complete: %s, actual balance: %s",
@@ -432,6 +448,187 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			if !tt.inputState.noClaimRecord {
 				tk.ClaimKeeper.RemoveClaimRecord(ctx, tt.inputState.claimRecord.Address)
 			}
+		})
+	}
+}
+
+func TestKeeper_CompleteMission(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	addr := make([]string, 7)
+	for i := 0; i < len(addr); i++ {
+		addr[i] = sample.Address(r)
+	}
+
+	type inputState struct {
+		airdropSupply sdk.Coin
+		mission       types.Mission
+		claimRecord   types.ClaimRecord
+		params        types.Params
+		blockTime     time.Time
+	}
+	tests := []struct {
+		name            string
+		inputState      inputState
+		missionID       uint64
+		address         string
+		isClaimed       bool
+		expectedClaimed sdkmath.Int
+		err             error
+	}{
+		{
+			name: "should fail if mission id not found",
+			inputState: inputState{
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[0],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
+					ClaimedMissions:   []uint64{1},
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(2001, 0)),
+				blockTime: time.Unix(0, 0),
+			},
+			missionID: 10,
+			address:   addr[0],
+			err:       types.ErrMissionNotFound,
+		},
+		{
+			name: "should fail if claim record id not found",
+			inputState: inputState{
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[1],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
+					ClaimedMissions:   []uint64{1},
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(2001, 0)),
+				blockTime: time.Unix(0, 0),
+			},
+			missionID: 1,
+			address:   sample.Address(sample.Rand()),
+			err:       types.ErrClaimRecordNotFound,
+		},
+		{
+			name: "should fail if mission already completed",
+			inputState: inputState{
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[2],
+					Claimable:         sdkmath.NewIntFromUint64(1000),
+					CompletedMissions: []uint64{1},
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(2001, 0)),
+				blockTime: time.Unix(0, 0),
+			},
+			missionID: 1,
+			address:   addr[2],
+			err:       types.ErrMissionCompleted,
+		},
+		{
+			name: "should success",
+			inputState: inputState{
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[4],
+					Claimable: sdkmath.NewIntFromUint64(1000),
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(2001, 0)),
+				blockTime: time.Unix(0, 0),
+			},
+			missionID: 1,
+			address:   addr[4],
+		},
+		{
+			name: "should success and fail to claim balance",
+			inputState: inputState{
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[5],
+					Claimable: sdkmath.NewIntFromUint64(1000),
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				), time.Unix(0, 0)),
+				blockTime: time.Unix(50000, 0),
+			},
+			missionID: 1,
+			address:   addr[5],
+			err:       types.ErrAirdropSupplyNotFound,
+		},
+		{
+			name: "should complete mission and allow to claim",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[6],
+					Claimable: sdkmath.NewIntFromUint64(1000),
+				},
+				params: types.DefaultParams(),
+			},
+			missionID:       1,
+			address:         addr[6],
+			expectedClaimed: sdkmath.NewInt(1000),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.NoError(t, tt.inputState.params.Validate())
+			if !tt.inputState.airdropSupply.IsNil() && !tt.inputState.airdropSupply.IsZero() {
+				err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
+				require.NoError(t, err)
+			}
+			tk.ClaimKeeper.SetParams(ctx, tt.inputState.params)
+			tk.ClaimKeeper.SetMission(ctx, tt.inputState.mission)
+			tk.ClaimKeeper.SetClaimRecord(ctx, tt.inputState.claimRecord)
+			if !tt.inputState.blockTime.IsZero() {
+				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
+			}
+
+			claimed, err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.expectedClaimed, claimed)
+
+			claimRecord, found := tk.ClaimKeeper.GetClaimRecord(ctx, tt.address)
+			require.True(t, found)
+			require.True(t, claimRecord.IsMissionCompleted(tt.missionID))
 		})
 	}
 }

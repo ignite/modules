@@ -20,6 +20,7 @@ func TestParamsQuery(t *testing.T) {
 
 		response, err := tk.ClaimKeeper.Params(wctx, &types.QueryParamsRequest{})
 		require.NoError(t, err)
-		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+		require.EqualValues(t, params.DecayInformation, response.Params.DecayInformation)
+		require.Equal(t, params.AirdropStart.Unix(), response.Params.AirdropStart.Unix())
 	})
 }
