@@ -10,7 +10,6 @@ package tools
 
 //nolint:all
 import (
-	_ "github.com/cosmos/ibc-go/v6/modules/core"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "golang.org/x/tools/cmd/goimports"
 	_ "golang.org/x/vuln/cmd/govulncheck"
