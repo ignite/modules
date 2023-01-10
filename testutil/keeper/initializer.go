@@ -127,7 +127,7 @@ type ProtocolVersionSetter struct{}
 
 func (vs ProtocolVersionSetter) SetProtocolVersion(uint64) {}
 
-func (i initializer) Upgrade() upgradekeeper.Keeper {
+func (i initializer) Upgrade() *upgradekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(upgradetypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 

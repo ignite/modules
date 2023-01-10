@@ -13,7 +13,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/require"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -49,7 +48,7 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 // genesis and single validator. All other parameters are inherited from cosmos-sdk/testutil/network.DefaultConfig
 func DefaultConfig() network.Config {
 	encoding := app.MakeEncodingConfig(app.ModuleBasics)
-	appConstructor := func(val moduletestutil.Validator) servertypes.Application {
+	appConstructor := func(val network.ValidatorI) servertypes.Application {
 		return app.New(
 			val.GetCtx().Logger,
 			tmdb.NewMemDB(),
