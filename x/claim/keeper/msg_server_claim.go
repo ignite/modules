@@ -10,11 +10,11 @@ import (
 )
 
 // Claim claims the Airdrop by the mission id if available and reach the airdrop start time
-func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.MsgClaimResponse, error) {
+func (ms msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.MsgClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// retrieve claim record of the user
-	claimRecord, found := k.GetClaimRecord(ctx, msg.Claimer)
+	claimRecord, found := ms.GetClaimRecord(ctx, msg.Claimer)
 	if !found {
 		return &types.MsgClaimResponse{}, errors.Wrapf(
 			types.ErrClaimRecordNotFound,
@@ -24,7 +24,7 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 	}
 
 	// check if the claim is an initial claim
-	initialClaim, found := k.GetInitialClaim(ctx)
+	initialClaim, found := ms.GetInitialClaim(ctx)
 	if found {
 		if initialClaim.MissionID == msg.MissionID {
 			if !initialClaim.Enabled {
@@ -37,7 +37,7 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 	}
 
 	// check if airdrop start time already reached
-	airdropStart := k.AirdropStart(ctx)
+	airdropStart := ms.GetParams(ctx).AirdropStart
 	if ctx.BlockTime().Before(airdropStart) {
 		return &types.MsgClaimResponse{}, errors.Wrapf(
 			types.ErrAirdropStartNotReached,
@@ -45,7 +45,7 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 			airdropStart.String(),
 		)
 	}
-	claimed, err := k.ClaimMission(ctx, claimRecord, msg.MissionID)
+	claimed, err := ms.ClaimMission(ctx, claimRecord, msg.MissionID)
 	if err != nil {
 		return nil, err
 	}

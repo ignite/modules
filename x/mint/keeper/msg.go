@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/ignite/modules/x/claim/types"
+	"github.com/ignite/modules/x/mint/types"
 )
 
 var _ types.MsgServer = msgServer{}
@@ -16,10 +16,11 @@ type msgServer struct {
 	Keeper
 }
 
-// NewMsgServerImpl returns an implementation of the MsgServer interface
-// for the provided Keeper.
-func NewMsgServerImpl(keeper Keeper) types.MsgServer {
-	return &msgServer{Keeper: keeper}
+// NewMsgServerImpl returns an implementation of the x/mint MsgServer interface.
+func NewMsgServerImpl(k Keeper) types.MsgServer {
+	return &msgServer{
+		Keeper: k,
+	}
 }
 
 func (ms msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {

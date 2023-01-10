@@ -3,12 +3,13 @@ package testutil
 import (
 	"time"
 
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -19,24 +20,19 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	testapp "github.com/ignite/modules/app"
-	"github.com/ignite/modules/cmd"
 )
 
-func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
+func GenApp(withGenesis bool) (*testapp.App, testapp.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := cmd.MakeEncodingConfig(testapp.ModuleBasics)
+	encCdc := testapp.MakeEncodingConfig(testapp.ModuleBasics)
 	app := testapp.New(
 		log.NewNopLogger(),
 		db,
 		nil,
 		true,
 		map[int64]bool{},
-		simapp.DefaultNodeHome,
-		invCheckPeriod,
-		encCdc,
-		simapp.EmptyAppOptions{})
+		simtestutil.EmptyAppOptions{})
 
-	originalApp := app.(*testapp.App)
 	if withGenesis {
 		genesisState := testapp.NewDefaultGenesisState(encCdc.Marshaler)
 		privVal := mock.NewPV()
@@ -53,10 +49,10 @@ func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.Genesi
 			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(100000000000000))),
 		}
 		genesisState = genesisStateWithValSet(encCdc.Marshaler, genesisState, valSet, []authtypes.GenesisAccount{acc}, balances)
-		return originalApp, genesisState
+		return app, genesisState
 	}
 
-	return originalApp, testapp.GenesisState{}
+	return app, testapp.GenesisState{}
 }
 
 func genesisStateWithValSet(
@@ -116,7 +112,8 @@ func genesisStateWithValSet(
 	})
 
 	// update total supply
-	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply, []banktypes.Metadata{})
+	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply,
+		[]banktypes.Metadata{}, []banktypes.SendEnabled{})
 	genesisState[banktypes.ModuleName] = cdc.MustMarshalJSON(bankGenesis)
 
 	return genesisState

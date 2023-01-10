@@ -26,14 +26,15 @@ import (
 // Codec returns a codec with preregistered interfaces
 func Codec() codec.Codec {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
+	cdc := codec.NewProtoCodec(interfaceRegistry)
 
-	cryptocodec.RegisterInterfaces(interfaceRegistry)
-	authtypes.RegisterInterfaces(interfaceRegistry)
-	stakingtypes.RegisterInterfaces(interfaceRegistry)
-	banktypes.RegisterInterfaces(interfaceRegistry)
-	claim.RegisterInterfaces(interfaceRegistry)
+	cryptocodec.RegisterInterfaces(cdc.InterfaceRegistry())
+	authtypes.RegisterInterfaces(cdc.InterfaceRegistry())
+	stakingtypes.RegisterInterfaces(cdc.InterfaceRegistry())
+	banktypes.RegisterInterfaces(cdc.InterfaceRegistry())
+	claim.RegisterInterfaces(cdc.InterfaceRegistry())
 
-	return codec.NewProtoCodec(interfaceRegistry)
+	return cdc
 }
 
 // Bool returns randomly true or false

@@ -34,7 +34,7 @@ type TestKeepers struct {
 	AccountKeeper authkeeper.AccountKeeper
 	BankKeeper    bankkeeper.Keeper
 	DistrKeeper   distrkeeper.Keeper
-	StakingKeeper stakingkeeper.Keeper
+	StakingKeeper *stakingkeeper.Keeper
 	ClaimKeeper   *claimkeeper.Keeper
 }
 
@@ -48,12 +48,11 @@ type TestMsgServers struct {
 func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
-	paramKeeper := initializer.Param()
-	authKeeper := initializer.Auth(paramKeeper)
-	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
+	authKeeper := initializer.Auth()
+	bankKeeper := initializer.Bank(authKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
+	claimKeeper := initializer.Claim(authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -66,9 +65,9 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
 
 	// Initialize params
-	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
-	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
-	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
+	require.NoError(t, distrKeeper.SetParams(ctx, distrtypes.DefaultParams()))
+	require.NoError(t, stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams()))
+	require.NoError(t, claimKeeper.SetParams(ctx, claimtypes.DefaultParams()))
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 

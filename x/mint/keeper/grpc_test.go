@@ -10,6 +10,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	testapp "github.com/ignite/modules/app"
+	"github.com/ignite/modules/x/mint/keeper"
 	"github.com/ignite/modules/x/mint/types"
 )
 
@@ -19,6 +20,7 @@ type MintTestSuite struct {
 	app         *testapp.App
 	ctx         sdk.Context
 	queryClient types.QueryClient
+	msgServer   types.MsgServer
 }
 
 func (suite *MintTestSuite) SetupTest() {
@@ -28,11 +30,13 @@ func (suite *MintTestSuite) SetupTest() {
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, app.InterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, app.MintKeeper)
 	queryClient := types.NewQueryClient(queryHelper)
+	msgServer := keeper.NewMsgServerImpl(app.MintKeeper)
 
 	suite.app = app
 	suite.ctx = ctx
 
 	suite.queryClient = queryClient
+	suite.msgServer = msgServer
 }
 
 func (suite *MintTestSuite) TestGRPCParams() {

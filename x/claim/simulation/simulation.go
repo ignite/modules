@@ -5,9 +5,9 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
@@ -58,7 +58,7 @@ func SimulateMsgClaim(
 		claimableAmount := cr.ClaimableFromMission(mission)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 		// calculate claimable after decay factor
-		decayInfo := k.DecayInformation(ctx)
+		decayInfo := k.GetParams(ctx).DecayInformation
 		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
 
 		// check final claimable non-zero
@@ -74,7 +74,7 @@ func SimulateMsgClaim(
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			TxGen:           testutil.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
 			Msg:             msg,
 			MsgType:         msg.Type(),
@@ -86,6 +86,6 @@ func SimulateMsgClaim(
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }

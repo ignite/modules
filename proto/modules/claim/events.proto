@@ -12,4 +12,3 @@ message EventMissionClaimed {
   uint64 missionID = 1;
   string claimer = 2;
 }
-

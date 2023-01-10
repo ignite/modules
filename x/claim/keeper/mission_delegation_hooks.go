@@ -10,6 +10,10 @@ type MissionDelegationHooks struct {
 	missionID uint64
 }
 
+func (h MissionDelegationHooks) AfterUnbondingInitiated(ctx sdk.Context, id uint64) error {
+	return nil
+}
+
 // NewMissionDelegationHooks returns a StakingHooks that triggers mission completion on delegation for an account
 func (k Keeper) NewMissionDelegationHooks(missionID uint64) MissionDelegationHooks {
 	return MissionDelegationHooks{k, missionID}
