@@ -71,7 +71,7 @@ test: govet govulncheck test-unit
 
 proto-all: proto-format proto-gen
 
-protoVer=0.11.0
+protoVer=0.11.2
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 containerProtoGen=ignite-modules-proto-gen-$(protoVer)
 containerProtoFmt=ignite-modules-proto-fmt-$(protoVer)

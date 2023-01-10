@@ -10,15 +10,19 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  option (amino.name)                 = "ignite/modules/x/claim/Params";
+  option (amino.name) = "ignite/modules/x/claim/Params";
 
-  DecayInformation decayInformation   = 1 [(gogoproto.nullable) = false];
+  DecayInformation decayInformation = 1 [ (gogoproto.nullable) = false ];
+  google.protobuf.Timestamp airdropStart = 2
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
 }
 
 // DecayInformation defines the information about decay for the airdrop
 // when claimable airdrop amount starts to decrease and when it ends
 message DecayInformation {
-  bool                      enabled    = 1;
-  google.protobuf.Timestamp decayStart = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
-  google.protobuf.Timestamp decayEnd   = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  bool enabled = 1;
+  google.protobuf.Timestamp decayStart = 2
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
+  google.protobuf.Timestamp decayEnd = 3
+      [ (gogoproto.nullable) = false, (gogoproto.stdtime) = true ];
 }

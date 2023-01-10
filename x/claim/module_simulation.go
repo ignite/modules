@@ -16,8 +16,8 @@ import (
 const (
 	airdropDenom = "drop"
 
-	opWeightMsgClaimInitial          = "op_weight_msg_claim_initial"
-	defaultWeightMsgClaimInitial int = 50
+	opWeightMsgClaim          = "op_weight_msg_claim"
+	defaultWeightMsgClaim int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -91,15 +91,15 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgClaimInitial int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimInitial, &weightMsgClaimInitial, nil,
+	var weightMsgClaim int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaim, &weightMsgClaim, nil,
 		func(_ *rand.Rand) {
-			weightMsgClaimInitial = defaultWeightMsgClaimInitial
+			weightMsgClaim = defaultWeightMsgClaim
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgClaimInitial,
-		claimsimulation.SimulateMsgClaimInitial(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgClaim,
+		claimsimulation.SimulateMsgClaim(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

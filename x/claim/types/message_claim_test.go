@@ -3,32 +3,30 @@ package types_test
 import (
 	"testing"
 
-	"github.com/ignite/modules/testutil/sample"
-
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/pkg/errors"
+	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
 )
 
-func TestMsgClaimInitial_ValidateBasic(t *testing.T) {
+func TestMsgClaim_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgClaimInitial
+		msg  types.MsgClaim
 		err  error
 	}{
 		{
-			name: "should validate valid claimer address",
-			msg: types.MsgClaimInitial{
-				Claimer: sample.Address(r),
-			},
-		},
-		{
-			name: "should prevent validate invalid claimer address",
-			msg: types.MsgClaimInitial{
+			name: "invalid address",
+			msg: types.MsgClaim{
 				Claimer: "invalid_address",
 			},
 			err: errors.ErrInvalidAddress,
+		}, {
+			name: "valid address",
+			msg: types.MsgClaim{
+				Claimer: sample.Address(sample.Rand()),
+			},
 		},
 	}
 	for _, tt := range tests {

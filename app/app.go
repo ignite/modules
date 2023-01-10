@@ -103,6 +103,11 @@ const (
 	AccountAddressPrefix = "cosmos"
 	Name                 = "testapp"
 	DefaultChainID       = "testapp-0"
+
+	// missionIDStaking is the mission ID for staking mission to claim airdrop
+	missionIDStaking = 1
+	// missionIDVoting is the mission ID for voting mission to claim airdrop
+	missionIDVoting = 2
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -200,7 +205,7 @@ type App struct {
 	StakingKeeper         *stakingkeeper.Keeper
 	SlashingKeeper        slashingkeeper.Keeper
 	DistrKeeper           distrkeeper.Keeper
-	GovKeeper             govkeeper.Keeper
+	GovKeeper             *govkeeper.Keeper
 	CrisisKeeper          *crisiskeeper.Keeper
 	UpgradeKeeper         *upgradekeeper.Keeper
 	ParamsKeeper          paramskeeper.Keeper
@@ -371,12 +376,6 @@ func New(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	// register the staking hooks
-	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
-	app.StakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
-	)
-
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec,
@@ -393,7 +392,7 @@ func New(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper))
 	govConfig := govtypes.DefaultConfig()
-	govKeeper := govkeeper.NewKeeper(
+	app.GovKeeper = govkeeper.NewKeeper(
 		appCodec,
 		keys[govtypes.StoreKey],
 		app.AccountKeeper,
@@ -402,12 +401,6 @@ func New(
 		app.MsgServiceRouter(),
 		govConfig,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	app.GovKeeper = *govKeeper.SetHooks(
-		govtypes.NewMultiGovHooks(
-		// register the governance hooks
-		),
 	)
 	app.GovKeeper.SetLegacyRouter(govRouter)
 
@@ -430,6 +423,23 @@ func New(
 		app.DistrKeeper,
 		authtypes.FeeCollectorName,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	// register the staking hooks
+	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
+	app.StakingKeeper.SetHooks(
+		stakingtypes.NewMultiStakingHooks(
+			app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(),
+			app.ClaimKeeper.NewMissionDelegationHooks(missionIDStaking),
+		),
+	)
+
+	// register the gov hooks
+	app.GovKeeper.SetHooks(
+		govtypes.NewMultiGovHooks(
+			app.ClaimKeeper.NewMissionVoteHooks(missionIDVoting),
+		),
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -456,7 +466,7 @@ func New(
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)),
-		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
+		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper,
 			app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper,
@@ -574,7 +584,7 @@ func New(
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
-		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
+		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper,
 			app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper,

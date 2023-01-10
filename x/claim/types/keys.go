@@ -22,8 +22,7 @@ func KeyPrefix(p string) []byte {
 }
 
 const (
-	MissionKey      = "Mission-value-"
-	MissionCountKey = "Mission-count-"
+	MissionKey = "Mission-value-"
 )
 
 const (

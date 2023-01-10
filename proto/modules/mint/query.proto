@@ -3,7 +3,6 @@ package ignite.modules.mint;
 
 option go_package = "github.com/ignite/modules/x/mint/types";
 
-
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -24,7 +23,8 @@ service Query {
   }
 
   // AnnualProvisions current minting annual provisions value.
-  rpc AnnualProvisions(QueryAnnualProvisionsRequest) returns (QueryAnnualProvisionsResponse) {
+  rpc AnnualProvisions(QueryAnnualProvisionsRequest)
+      returns (QueryAnnualProvisionsResponse) {
     option (google.api.http).get = "/ignite/modules/mint/annual_provisions";
   }
 }
@@ -35,7 +35,8 @@ message QueryParamsRequest {}
 // QueryParamsResponse is the response type for the Query/Params RPC method.
 message QueryParamsResponse {
   // params defines the parameters of the module.
-  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  Params params = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
 // QueryInflationRequest is the request type for the Query/Inflation RPC method.
@@ -46,9 +47,9 @@ message QueryInflationRequest {}
 message QueryInflationResponse {
   // inflation is the current minting inflation value.
   bytes inflation = 1 [
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (amino.dont_omitempty) = true
   ];
 }
@@ -62,9 +63,9 @@ message QueryAnnualProvisionsRequest {}
 message QueryAnnualProvisionsResponse {
   // annual_provisions is the current minting annual provisions value.
   bytes annual_provisions = 1 [
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (amino.dont_omitempty) = true
   ];
 }
