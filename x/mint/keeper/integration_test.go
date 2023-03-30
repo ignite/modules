@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"encoding/json"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
-	abci "github.com/tendermint/tendermint/abci/types"
 
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"

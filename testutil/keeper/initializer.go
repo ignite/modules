@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	tmdb "github.com/cometbft/cometbft-db"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -20,7 +21,6 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	tmdb "github.com/tendermint/tm-db"
 
 	"github.com/ignite/modules/testutil/sample"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
