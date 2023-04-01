@@ -1,17 +1,20 @@
 package simulation
 
 import (
-	simappparams "cosmossdk.io/simapp/params"
 	"fmt"
+	"math/rand"
+
+	simappparams "cosmossdk.io/simapp/params"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/ignite/modules/testutil/simulation"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
-	"math/rand"
 )
 
 func SimulateMsgClaim(

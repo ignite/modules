@@ -1,6 +1,8 @@
 package mint_test
 
 import (
+	"testing"
+
 	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
 	abcitypes "github.com/cometbft/cometbft/abci/types"
@@ -11,7 +13,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {

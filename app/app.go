@@ -2,6 +2,10 @@ package app
 
 import (
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
@@ -78,6 +82,8 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/spf13/cast"
+
 	appparams "github.com/ignite/modules/app/params"
 	"github.com/ignite/modules/x/claim"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
@@ -85,10 +91,6 @@ import (
 	"github.com/ignite/modules/x/mint"
 	mintkeeper "github.com/ignite/modules/x/mint/keeper"
 	minttypes "github.com/ignite/modules/x/mint/types"
-	"github.com/spf13/cast"
-	"io"
-	"os"
-	"path/filepath"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -162,9 +164,7 @@ var (
 	}
 )
 
-var (
-	_ servertypes.Application = (*App)(nil)
-)
+var _ servertypes.Application = (*App)(nil)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()

@@ -4,11 +4,13 @@ package simulation
 
 import (
 	"fmt"
-	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/ignite/modules/x/mint/types"
 	"math/rand"
 	"strings"
+
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
+
+	"github.com/ignite/modules/x/mint/types"
 )
 
 const (

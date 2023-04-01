@@ -1,6 +1,8 @@
 package testutil
 
 import (
+	"time"
+
 	sdkmath "cosmossdk.io/math"
 	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
@@ -16,9 +18,9 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/cmd"
-	"time"
 )
 
 func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {

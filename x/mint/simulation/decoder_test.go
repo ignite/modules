@@ -2,13 +2,13 @@ package simulation_test
 
 import (
 	"fmt"
-	"github.com/ignite/modules/app"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/stretchr/testify/require"
 
+	"github.com/ignite/modules/app"
 	"github.com/ignite/modules/x/mint/simulation"
 	"github.com/ignite/modules/x/mint/types"
 )

@@ -2,8 +2,10 @@ package keeper_test
 
 import (
 	"encoding/json"
+
 	abci "github.com/cometbft/cometbft/abci/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
+
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"
 )
