@@ -2,10 +2,8 @@ package keeper_test
 
 import (
 	"encoding/json"
-
 	abci "github.com/cometbft/cometbft/abci/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
-
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"
 )
@@ -23,7 +21,7 @@ func setup(isCheckTx bool) *testapp.App {
 		app.InitChain(
 			abci.RequestInitChain{
 				Validators:      []abci.ValidatorUpdate{},
-				ConsensusParams: simapp.DefaultConsensusParams,
+				ConsensusParams: simtestutil.DefaultConsensusParams,
 				AppStateBytes:   stateBytes,
 			},
 		)

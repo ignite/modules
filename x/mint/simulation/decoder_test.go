@@ -15,13 +15,13 @@ import (
 
 func TestDecodeStore(t *testing.T) {
 	cdc := app.MakeEncodingConfig()
-	dec := simulation.NewDecodeStore(cdc)
+	dec := simulation.NewDecodeStore(cdc.Marshaler)
 
 	minter := types.NewMinter(sdk.OneDec(), sdk.NewDec(15))
 
 	kvPairs := kv.Pairs{
 		Pairs: []kv.Pair{
-			{Key: types.MinterKey, Value: cdc.MustMarshal(&minter)},
+			{Key: types.MinterKey, Value: cdc.Marshaler.MustMarshal(&minter)},
 			{Key: []byte{0x99}, Value: []byte{0x99}},
 		},
 	}

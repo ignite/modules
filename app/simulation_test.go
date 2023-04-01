@@ -3,6 +3,8 @@ package app_test
 import (
 	"encoding/json"
 	"fmt"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
+	"github.com/cosmos/ibc-go/v7/testing/simapp"
 	"math/rand"
 	"os"
 	"testing"
@@ -79,7 +81,7 @@ func BenchmarkSimulation(b *testing.B) {
 		app.DefaultNodeHome,
 		0,
 		encoding,
-		simapp.EmptyAppOptions{},
+		simtestutil.EmptyAppOptions{},
 	)
 
 	simApp, ok := app.(SimApp)
@@ -146,7 +148,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				app.DefaultNodeHome,
 				simapp.FlagPeriodValue,
 				encoding,
-				simapp.EmptyAppOptions{},
+				simtestutil.EmptyAppOptions{},
 				interBlockCacheOpt(),
 			)
 

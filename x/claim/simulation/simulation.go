@@ -1,19 +1,17 @@
 package simulation
 
 import (
+	simappparams "cosmossdk.io/simapp/params"
 	"fmt"
-	"math/rand"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
-
 	"github.com/ignite/modules/testutil/simulation"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
+	"math/rand"
 )
 
 func SimulateMsgClaim(
@@ -86,6 +84,6 @@ func SimulateMsgClaim(
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }

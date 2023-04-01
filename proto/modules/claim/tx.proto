@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ignite.modules.claim;
+package modules.claim;
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";

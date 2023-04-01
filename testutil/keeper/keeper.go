@@ -34,7 +34,7 @@ type TestKeepers struct {
 	AccountKeeper authkeeper.AccountKeeper
 	BankKeeper    bankkeeper.Keeper
 	DistrKeeper   distrkeeper.Keeper
-	StakingKeeper stakingkeeper.Keeper
+	StakingKeeper *stakingkeeper.Keeper
 	ClaimKeeper   *claimkeeper.Keeper
 }
 
@@ -49,10 +49,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
-	authKeeper := initializer.Auth(paramKeeper)
-	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	authKeeper := initializer.Auth()
+	bankKeeper := initializer.Bank(authKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
 	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 

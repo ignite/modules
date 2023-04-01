@@ -1,9 +1,8 @@
 package testutil
 
 import (
-	"time"
-
 	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	tmtypes "github.com/cometbft/cometbft/types"
@@ -11,15 +10,15 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/cosmos/cosmos-sdk/testutil/mock"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/cmd"
+	"time"
 )
 
 func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
@@ -34,7 +33,7 @@ func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.Genesi
 		simapp.DefaultNodeHome,
 		invCheckPeriod,
 		encCdc,
-		simapp.EmptyAppOptions{})
+		simtestutil.EmptyAppOptions{})
 
 	originalApp := app.(*testapp.App)
 	if withGenesis {

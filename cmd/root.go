@@ -2,10 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"io"
-	"os"
-	"path/filepath"
-
 	dbm "github.com/cometbft/cometbft-db"
 	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
@@ -29,10 +25,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/ignite/modules/app"
+	appparams "github.com/ignite/modules/app/params"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"io"
+	"os"
+	"path/filepath"
 )
 
 type (
@@ -45,7 +48,7 @@ type (
 		skipUpgradeHeights map[int64]bool,
 		homePath string,
 		invCheckPeriod uint,
-		encodingConfig EncodingConfig,
+		encodingConfig appparams.EncodingConfig,
 		appOpts servertypes.AppOptions,
 		baseAppOptions ...func(*baseapp.BaseApp),
 	) App
@@ -61,13 +64,14 @@ type (
 		ExportAppStateAndValidators(
 			forZeroHeight bool,
 			jailAllowedAddrs []string,
+			modulesToExport []string,
 		) (servertypes.ExportedApp, error)
 		LoadHeight(height int64) error
 	}
 
 	// appCreator is an app creator
 	appCreator struct {
-		encodingConfig EncodingConfig
+		encodingConfig appparams.EncodingConfig
 		buildApp       AppBuilder
 	}
 )
@@ -124,7 +128,7 @@ func NewRootCmd(
 	moduleBasics module.BasicManager,
 	buildApp AppBuilder,
 	options ...Option,
-) (*cobra.Command, EncodingConfig) {
+) (*cobra.Command, appparams.EncodingConfig) {
 	rootOptions := newRootOptions(options...)
 
 	// Set config for prefixes
@@ -138,7 +142,7 @@ func NewRootCmd(
 		WithLegacyAmino(encodingConfig.Amino).
 		WithInput(os.Stdin).
 		WithAccountRetriever(types.AccountRetriever{}).
-		WithBroadcastMode(flags.BroadcastBlock).
+		WithBroadcastMode(flags.BroadcastSync).
 		WithHomeDir(defaultNodeHome).
 		WithViper(rootOptions.envPrefix)
 
@@ -192,15 +196,16 @@ func NewRootCmd(
 
 func initRootCmd(
 	rootCmd *cobra.Command,
-	encodingConfig EncodingConfig,
+	encodingConfig appparams.EncodingConfig,
 	defaultNodeHome string,
 	moduleBasics module.BasicManager,
 	buildApp AppBuilder,
 	options rootOptions,
 ) {
+	gentxModule := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(moduleBasics, defaultNodeHome),
-		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, defaultNodeHome),
+		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome, gentxModule.GenTxValidator),
 		genutilcli.MigrateGenesisCmd(),
 		genutilcli.GenTxCmd(
 			moduleBasics,
@@ -392,6 +397,7 @@ func (a appCreator) appExport(
 	forZeroHeight bool,
 	jailAllowedAddrs []string,
 	appOpts servertypes.AppOptions,
+	modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
 	var exportableApp ExportableApp
 
@@ -418,7 +424,7 @@ func (a appCreator) appExport(
 		}
 	}
 
-	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
+	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }
 
 // initAppConfig helps to override default appConfig template and configs.
