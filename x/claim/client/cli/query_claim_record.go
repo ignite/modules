@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"context"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -28,7 +26,7 @@ func CmdListClaimRecord() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ClaimRecordAll(context.Background(), params)
+			res, err := queryClient.ClaimRecordAll(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -57,7 +55,7 @@ func CmdShowClaimRecord() *cobra.Command {
 				Address: args[0],
 			}
 
-			res, err := queryClient.ClaimRecord(context.Background(), params)
+			res, err := queryClient.ClaimRecord(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

@@ -22,7 +22,7 @@ func (suite *QueryTestSuite) TestShowAirdropSupply() {
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
-	for _, tc := range []struct {
+	tests := []struct {
 		name string
 		args []string
 		err  error
@@ -33,8 +33,12 @@ func (suite *QueryTestSuite) TestShowAirdropSupply() {
 			args: common,
 			obj:  airdropSupply,
 		},
-	} {
+	}
+	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
+			_, err := suite.Network.WaitForHeight(0)
+			require.NoError(t, err)
+
 			var args []string
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowAirdropSupply(), args)
@@ -42,16 +46,17 @@ func (suite *QueryTestSuite) TestShowAirdropSupply() {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
-			} else {
-				require.NoError(t, err)
-				var resp types.QueryGetAirdropSupplyResponse
-				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.AirdropSupply)
-				require.Equal(t,
-					nullify.Fill(&tc.obj),
-					nullify.Fill(&resp.AirdropSupply),
-				)
+				return
 			}
+
+			require.NoError(t, err)
+			var resp types.QueryGetAirdropSupplyResponse
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NotNil(t, resp.AirdropSupply)
+			require.Equal(t,
+				nullify.Fill(&tc.obj),
+				nullify.Fill(&resp.AirdropSupply),
+			)
 		})
 	}
 }

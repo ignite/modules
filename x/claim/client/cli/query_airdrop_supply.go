@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"context"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -22,7 +20,7 @@ func CmdShowAirdropSupply() *cobra.Command {
 
 			params := &types.QueryGetAirdropSupplyRequest{}
 
-			res, err := queryClient.AirdropSupply(context.Background(), params)
+			res, err := queryClient.AirdropSupply(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

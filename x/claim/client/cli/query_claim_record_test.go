@@ -24,7 +24,7 @@ func (suite *QueryTestSuite) TestShowClaimRecord() {
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
-	for _, tc := range []struct {
+	tests := []struct {
 		name    string
 		address string
 		args    []string
@@ -43,8 +43,12 @@ func (suite *QueryTestSuite) TestShowClaimRecord() {
 			args:    common,
 			err:     status.Error(codes.NotFound, "not found"),
 		},
-	} {
+	}
+	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
+			_, err := suite.Network.WaitForHeight(0)
+			require.NoError(t, err)
+
 			args := []string{
 				tc.address,
 			}
@@ -54,16 +58,17 @@ func (suite *QueryTestSuite) TestShowClaimRecord() {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
-			} else {
-				require.NoError(t, err)
-				var resp types.QueryGetClaimRecordResponse
-				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.ClaimRecord)
-				require.Equal(t,
-					nullify.Fill(&tc.obj),
-					nullify.Fill(&resp.ClaimRecord),
-				)
+				return
 			}
+
+			require.NoError(t, err)
+			var resp types.QueryGetClaimRecordResponse
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NotNil(t, resp.ClaimRecord)
+			require.Equal(t,
+				nullify.Fill(&tc.obj),
+				nullify.Fill(&resp.ClaimRecord),
+			)
 		})
 	}
 }
@@ -90,6 +95,9 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
+			_, err := suite.Network.WaitForHeight(0)
+			require.NoError(t, err)
+
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListClaimRecord(), args)
 			require.NoError(t, err)
@@ -106,6 +114,9 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
+			_, err := suite.Network.WaitForHeight(0)
+			require.NoError(t, err)
+
 			args := request(next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListClaimRecord(), args)
 			require.NoError(t, err)

@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"context"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -29,7 +28,7 @@ func CmdListMission() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.MissionAll(context.Background(), params)
+			res, err := queryClient.MissionAll(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -63,7 +62,7 @@ func CmdShowMission() *cobra.Command {
 				MissionID: id,
 			}
 
-			res, err := queryClient.Mission(context.Background(), params)
+			res, err := queryClient.Mission(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

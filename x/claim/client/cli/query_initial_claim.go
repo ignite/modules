@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"context"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -23,7 +21,7 @@ func CmdShowInitialClaim() *cobra.Command {
 
 			params := &types.QueryGetInitialClaimRequest{}
 
-			res, err := queryClient.InitialClaim(context.Background(), params)
+			res, err := queryClient.InitialClaim(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
