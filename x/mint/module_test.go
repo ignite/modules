@@ -9,6 +9,7 @@ import (
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -16,13 +17,17 @@ import (
 )
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
-	db := dbm.NewMemDB()
-	app := simapp.NewSimApp(
-		log.NewNopLogger(),
-		db,
-		nil,
-		true,
-		simtestutil.EmptyAppOptions{},
+	var (
+		chainID = "test-chain-id"
+		db      = dbm.NewMemDB()
+		app     = simapp.NewSimApp(
+			log.NewNopLogger(),
+			db,
+			nil,
+			true,
+			simtestutil.EmptyAppOptions{},
+			baseapp.SetChainID(chainID),
+		)
 	)
 
 	genesisState := simapp.GenesisStateWithSingleValidator(t, app)
@@ -32,7 +37,7 @@ func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
 	app.InitChain(
 		abcitypes.RequestInitChain{
 			AppStateBytes: stateBytes,
-			ChainId:       "test-chain-id",
+			ChainId:       chainID,
 		},
 	)
 

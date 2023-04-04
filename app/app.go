@@ -400,7 +400,7 @@ func New(
 	)
 	app.GovKeeper = *govKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-		// register the governance hooks
+			app.ClaimKeeper.NewMissionVoteHooks(MissionIDVoting),
 		),
 	)
 
@@ -423,13 +423,6 @@ func New(
 		app.BankKeeper,
 		app.DistrKeeper,
 		authtypes.FeeCollectorName,
-	)
-
-	// register the gov hooks
-	app.GovKeeper = *app.GovKeeper.SetHooks(
-		govtypes.NewMultiGovHooks(
-			app.ClaimKeeper.NewMissionVoteHooks(MissionIDVoting),
-		),
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition

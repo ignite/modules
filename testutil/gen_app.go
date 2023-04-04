@@ -8,6 +8,7 @@ import (
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	tmtypes "github.com/cometbft/cometbft/types"
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -23,20 +24,23 @@ import (
 	"github.com/ignite/modules/cmd"
 )
 
-func GenApp(withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
-	db := dbm.NewMemDB()
-	encCdc := cmd.MakeEncodingConfig(testapp.ModuleBasics)
-	app := testapp.New(
-		log.NewNopLogger(),
-		db,
-		nil,
-		true,
-		map[int64]bool{},
-		simapp.DefaultNodeHome,
-		invCheckPeriod,
-		encCdc,
-		simtestutil.EmptyAppOptions{})
-
+func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
+	var (
+		db     = dbm.NewMemDB()
+		encCdc = cmd.MakeEncodingConfig(testapp.ModuleBasics)
+		app    = testapp.New(
+			log.NewNopLogger(),
+			db,
+			nil,
+			true,
+			map[int64]bool{},
+			simapp.DefaultNodeHome,
+			invCheckPeriod,
+			encCdc,
+			simtestutil.EmptyAppOptions{},
+			baseapp.SetChainID(chainID),
+		)
+	)
 	originalApp := app.(*testapp.App)
 	if withGenesis {
 		genesisState := testapp.NewDefaultGenesisState(encCdc.Marshaler)

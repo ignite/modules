@@ -121,13 +121,14 @@ func TestAppStateDeterminism(t *testing.T) {
 	config.OnOperation = true
 	config.AllInvariants = true
 
-	rand.Seed(time.Now().Unix())
-	numSeeds := 3
-	numTimesToRunPerSeed := 5
-	appHashList := make([]json.RawMessage, numTimesToRunPerSeed)
-
+	var (
+		r                    = rand.New(rand.NewSource(time.Now().Unix()))
+		numSeeds             = 3
+		numTimesToRunPerSeed = 5
+		appHashList          = make([]json.RawMessage, numTimesToRunPerSeed)
+	)
 	for i := 0; i < numSeeds; i++ {
-		config.Seed = rand.Int63()
+		config.Seed = r.Int63()
 
 		for j := 0; j < numTimesToRunPerSeed; j++ {
 			var logger log.Logger
@@ -137,19 +138,23 @@ func TestAppStateDeterminism(t *testing.T) {
 				logger = log.NewNopLogger()
 			}
 
-			db := dbm.NewMemDB()
-			encoding := cmd.MakeEncodingConfig(app.ModuleBasics)
-			cmdApp := app.New(
-				logger,
-				db,
-				nil,
-				true,
-				map[int64]bool{},
-				app.DefaultNodeHome,
-				simapp.FlagPeriodValue,
-				encoding,
-				simtestutil.EmptyAppOptions{},
-				interBlockCacheOpt(),
+			var (
+				chainID  = fmt.Sprintf("chain-id-%d-%d", i, j)
+				db       = dbm.NewMemDB()
+				encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
+				cmdApp   = app.New(
+					logger,
+					db,
+					nil,
+					true,
+					map[int64]bool{},
+					app.DefaultNodeHome,
+					simapp.FlagPeriodValue,
+					encoding,
+					simtestutil.EmptyAppOptions{},
+					interBlockCacheOpt(),
+					baseapp.SetChainID(chainID),
+				)
 			)
 
 			app, ok := cmdApp.(SimApp)

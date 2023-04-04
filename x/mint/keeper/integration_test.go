@@ -11,7 +11,8 @@ import (
 )
 
 func setup(isCheckTx bool) *testapp.App {
-	app, genesisState := testutil.GenApp(!isCheckTx, 5)
+	chainID := "simapp-chain-id"
+	app, genesisState := testutil.GenApp(chainID, !isCheckTx, 5)
 	if !isCheckTx {
 		// init chain must be called to stop deliverState from being nil
 		stateBytes, err := json.MarshalIndent(genesisState, "", " ")
@@ -25,6 +26,7 @@ func setup(isCheckTx bool) *testapp.App {
 				Validators:      []abci.ValidatorUpdate{},
 				ConsensusParams: simtestutil.DefaultConsensusParams,
 				AppStateBytes:   stateBytes,
+				ChainId:         chainID,
 			},
 		)
 	}
