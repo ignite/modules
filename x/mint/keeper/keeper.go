@@ -106,7 +106,7 @@ func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
 }
 
 // GetProportion gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
-func (k Keeper) GetProportion(ctx sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
+func (k Keeper) GetProportion(_ sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
 	return sdk.NewCoin(mintedCoin.Denom, sdk.NewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
 }
 

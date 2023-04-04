@@ -37,46 +37,15 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/ignite/modules/app"
+	"github.com/ignite/modules/app/exported"
 	appparams "github.com/ignite/modules/app/params"
 )
 
-type (
-	// AppBuilder is a method that allows to build an app
-	AppBuilder func(
-		logger log.Logger,
-		db dbm.DB,
-		traceStore io.Writer,
-		loadLatest bool,
-		skipUpgradeHeights map[int64]bool,
-		homePath string,
-		invCheckPeriod uint,
-		encodingConfig appparams.EncodingConfig,
-		appOpts servertypes.AppOptions,
-		baseAppOptions ...func(*baseapp.BaseApp),
-	) App
-
-	// App represents a Cosmos SDK application that can be run as a server and with an exportable state
-	App interface {
-		servertypes.Application
-		ExportableApp
-	}
-
-	// ExportableApp represents an app with an exportable state
-	ExportableApp interface {
-		ExportAppStateAndValidators(
-			forZeroHeight bool,
-			jailAllowedAddrs []string,
-			modulesToExport []string,
-		) (servertypes.ExportedApp, error)
-		LoadHeight(height int64) error
-	}
-
-	// appCreator is an app creator
-	appCreator struct {
-		encodingConfig appparams.EncodingConfig
-		buildApp       AppBuilder
-	}
-)
+// appCreator is an app creator
+type appCreator struct {
+	encodingConfig appparams.EncodingConfig
+	buildApp       exported.AppBuilder
+}
 
 // Option configures root command option.
 type Option func(*rootOptions)
@@ -128,7 +97,7 @@ func NewRootCmd(
 	defaultNodeHome,
 	defaultChainID string,
 	moduleBasics module.BasicManager,
-	buildApp AppBuilder,
+	buildApp exported.AppBuilder,
 	options ...Option,
 ) (*cobra.Command, appparams.EncodingConfig) {
 	rootOptions := newRootOptions(options...)
@@ -201,7 +170,7 @@ func initRootCmd(
 	encodingConfig appparams.EncodingConfig,
 	defaultNodeHome string,
 	moduleBasics module.BasicManager,
-	buildApp AppBuilder,
+	buildApp exported.AppBuilder,
 	options rootOptions,
 ) {
 	gentxModule := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
@@ -399,9 +368,9 @@ func (a appCreator) appExport(
 	forZeroHeight bool,
 	jailAllowedAddrs []string,
 	appOpts servertypes.AppOptions,
-	modulesToExport []string,
+	modulesToExport []string, //nolint:revive
 ) (servertypes.ExportedApp, error) {
-	var exportableApp ExportableApp
+	var exportableApp exported.ExportableApp
 
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
@@ -426,7 +395,7 @@ func (a appCreator) appExport(
 		}
 	}
 
-	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
 }
 
 // initAppConfig helps to override default appConfig template and configs.

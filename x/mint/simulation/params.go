@@ -24,7 +24,7 @@ const (
 
 // ParamChanges defines the parameters that can be modified by param change proposals
 // on the simulation
-func ParamChanges(r *rand.Rand) []simtypes.LegacyParamChange {
+func ParamChanges() []simtypes.LegacyParamChange {
 	return []simtypes.LegacyParamChange{
 		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationRateChange,
 			func(r *rand.Rand) string {
@@ -33,17 +33,17 @@ func ParamChanges(r *rand.Rand) []simtypes.LegacyParamChange {
 		),
 		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationMax,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenInflationMax(r))
+				return fmt.Sprintf("\"%s\"", GenInflationMax())
 			},
 		),
 		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationMin,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenInflationMin(r))
+				return fmt.Sprintf("\"%s\"", GenInflationMin())
 			},
 		),
 		simulation.NewSimLegacyParamChange(types.ModuleName, keyGoalBonded,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenGoalBonded(r))
+				return fmt.Sprintf("\"%s\"", GenGoalBonded())
 			},
 		),
 		simulation.NewSimLegacyParamChange(types.ModuleName, keyDistributionProportions,

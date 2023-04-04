@@ -66,8 +66,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
 
 	// Initialize params
-	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
-	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
+	err := distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	require.NoError(t, err)
+	err = stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
+	require.NoError(t, err)
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)

@@ -37,17 +37,17 @@ func GenInflationRateChange(r *rand.Rand) sdk.Dec {
 }
 
 // GenInflationMax randomized InflationMax
-func GenInflationMax(r *rand.Rand) sdk.Dec {
+func GenInflationMax() sdk.Dec {
 	return sdk.NewDecWithPrec(20, 2)
 }
 
 // GenInflationMin randomized InflationMin
-func GenInflationMin(r *rand.Rand) sdk.Dec {
+func GenInflationMin() sdk.Dec {
 	return sdk.NewDecWithPrec(7, 2)
 }
 
 // GenGoalBonded randomized GoalBonded
-func GenGoalBonded(r *rand.Rand) sdk.Dec {
+func GenGoalBonded() sdk.Dec {
 	return sdk.NewDecWithPrec(67, 2)
 }
 
@@ -110,19 +110,19 @@ func RandomizedGenState(simState *module.SimulationState) {
 	var inflationMax sdk.Dec
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, InflationMax, &inflationMax, simState.Rand,
-		func(r *rand.Rand) { inflationMax = GenInflationMax(r) },
+		func(r *rand.Rand) { inflationMax = GenInflationMax() },
 	)
 
 	var inflationMin sdk.Dec
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, InflationMin, &inflationMin, simState.Rand,
-		func(r *rand.Rand) { inflationMin = GenInflationMin(r) },
+		func(r *rand.Rand) { inflationMin = GenInflationMin() },
 	)
 
 	var goalBonded sdk.Dec
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, GoalBonded, &goalBonded, simState.Rand,
-		func(r *rand.Rand) { goalBonded = GenGoalBonded(r) },
+		func(r *rand.Rand) { goalBonded = GenGoalBonded() },
 	)
 
 	var distributionProportions types.DistributionProportions

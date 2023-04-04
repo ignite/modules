@@ -84,6 +84,7 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/spf13/cast"
 
+	"github.com/ignite/modules/app/exported"
 	appparams "github.com/ignite/modules/app/params"
 	"github.com/ignite/modules/x/claim"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
@@ -99,10 +100,10 @@ const (
 	Name                 = "testapp"
 	DefaultChainID       = "testapp-0"
 
-	// missionIDStaking is the mission ID for staking mission to claim airdrop
-	missionIDStaking = 1
-	// missionIDVoting is the mission ID for voting mission to claim airdrop
-	missionIDVoting = 2
+	// MissionIDStaking is the mission ID for staking mission to claim airdrop
+	MissionIDStaking = 1
+	// MissionIDVoting is the mission ID for voting mission to claim airdrop
+	MissionIDVoting = 2
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -233,7 +234,7 @@ func New(
 	encodingConfig appparams.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *App {
+) exported.App {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -427,7 +428,7 @@ func New(
 	// register the gov hooks
 	app.GovKeeper = *app.GovKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-			app.ClaimKeeper.NewMissionVoteHooks(missionIDVoting),
+			app.ClaimKeeper.NewMissionVoteHooks(MissionIDVoting),
 		),
 	)
 
@@ -712,7 +713,7 @@ func (app *App) RegisterNodeService(clientCtx client.Context) {
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *App) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -761,7 +762,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govv1.ParamKeyTable())
+	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govv1.ParamKeyTable()) //nolint:staticcheck
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(claimtypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace

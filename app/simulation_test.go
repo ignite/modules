@@ -24,6 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/app"
+	"github.com/ignite/modules/app/exported"
 	"github.com/ignite/modules/cmd"
 )
 
@@ -32,7 +33,7 @@ func init() {
 }
 
 type SimApp interface {
-	cmd.App
+	exported.App
 	GetBaseApp() *baseapp.BaseApp
 	AppCodec() codec.Codec
 	SimulationManager() *module.SimulationManager
