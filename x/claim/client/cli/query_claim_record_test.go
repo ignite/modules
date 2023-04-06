@@ -46,8 +46,7 @@ func (suite *QueryTestSuite) TestShowClaimRecord() {
 	}
 	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
-			_, err := suite.Network.WaitForHeight(0)
-			require.NoError(t, err)
+			require.NoError(t, suite.Network.WaitForNextBlock())
 
 			args := []string{
 				tc.address,
@@ -95,8 +94,7 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			_, err := suite.Network.WaitForHeight(0)
-			require.NoError(t, err)
+			require.NoError(t, suite.Network.WaitForNextBlock())
 
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListClaimRecord(), args)
@@ -114,8 +112,7 @@ func (suite *QueryTestSuite) TestListClaimRecord() {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			_, err := suite.Network.WaitForHeight(0)
-			require.NoError(t, err)
+			require.NoError(t, suite.Network.WaitForNextBlock())
 
 			args := request(next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListClaimRecord(), args)

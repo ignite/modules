@@ -45,8 +45,7 @@ func (suite *QueryTestSuite) TestShowMission() {
 	}
 	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
-			_, err := suite.Network.WaitForHeight(0)
-			require.NoError(t, err)
+			require.NoError(t, suite.Network.WaitForNextBlock())
 
 			args := []string{tc.id}
 			args = append(args, tc.args...)

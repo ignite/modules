@@ -18,41 +18,41 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 service Query {
   // Parameters queries the parameters of the module
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/modules/claim/params";
+    option (google.api.http).get = "/ignite/modules/claim/params";
   }
 
   // Queries a ClaimRecord by address.
   rpc ClaimRecord(QueryGetClaimRecordRequest)
       returns (QueryGetClaimRecordResponse) {
     option (google.api.http).get =
-        "/modules/claim/claim_record/{address}";
+        "/ignite/modules/claim/claim_record/{address}";
   }
 
   // Queries a list of ClaimRecord items.
   rpc ClaimRecordAll(QueryAllClaimRecordRequest)
       returns (QueryAllClaimRecordResponse) {
-    option (google.api.http).get = "/modules/claim/claim_record";
+    option (google.api.http).get = "/ignite/modules/claim/claim_record";
   }
 
   // Queries a Mission by ID.
   rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-    option (google.api.http).get = "/modules/claim/mission/{missionID}";
+    option (google.api.http).get = "/ignite/modules/claim/mission/{missionID}";
   }
 
   // Queries a list of Mission items.
   rpc MissionAll(QueryAllMissionRequest) returns (QueryAllMissionResponse) {
-    option (google.api.http).get = "/modules/claim/mission";
+    option (google.api.http).get = "/ignite/modules/claim/mission";
   }
 
   // Queries a AirdropSupply by index.
   rpc AirdropSupply(QueryGetAirdropSupplyRequest)
       returns (QueryGetAirdropSupplyResponse) {
-    option (google.api.http).get = "/modules/claim/airdrop_supply";
+    option (google.api.http).get = "/ignite/modules/claim/airdrop_supply";
   }
   // Queries a InitialClaim by index.
   rpc InitialClaim(QueryGetInitialClaimRequest)
       returns (QueryGetInitialClaimResponse) {
-    option (google.api.http).get = "/modules/claim/initial_claim";
+    option (google.api.http).get = "/ignite/modules/claim/initial_claim";
   }
 }
 

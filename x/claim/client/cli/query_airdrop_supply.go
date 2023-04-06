@@ -14,12 +14,13 @@ func CmdShowAirdropSupply() *cobra.Command {
 		Short: "shows the airdrop supply",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryGetAirdropSupplyRequest{}
-
 			res, err := queryClient.AirdropSupply(cmd.Context(), params)
 			if err != nil {
 				return err

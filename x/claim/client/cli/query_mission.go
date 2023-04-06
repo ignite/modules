@@ -15,19 +15,20 @@ func CmdListMission() *cobra.Command {
 		Use:   "list-mission",
 		Short: "list all missions to claim airdrop",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
 				return err
 			}
 
-			queryClient := types.NewQueryClient(clientCtx)
-
 			params := &types.QueryAllMissionRequest{
 				Pagination: pageReq,
 			}
-
 			res, err := queryClient.MissionAll(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -49,8 +50,10 @@ func CmdShowMission() *cobra.Command {
 		Short: "shows a mission to claim airdrop",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
 			queryClient := types.NewQueryClient(clientCtx)
 
 			id, err := strconv.ParseUint(args[0], 10, 64)

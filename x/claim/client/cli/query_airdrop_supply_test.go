@@ -36,8 +36,7 @@ func (suite *QueryTestSuite) TestShowAirdropSupply() {
 	}
 	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
-			_, err := suite.Network.WaitForHeight(0)
-			require.NoError(t, err)
+			require.NoError(t, suite.Network.WaitForNextBlock())
 
 			var args []string
 			args = append(args, tc.args...)
