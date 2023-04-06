@@ -21,13 +21,12 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	testapp "github.com/ignite/modules/app"
-	"github.com/ignite/modules/cmd"
 )
 
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
 	var (
 		db     = dbm.NewMemDB()
-		encCdc = cmd.MakeEncodingConfig(testapp.ModuleBasics)
+		encCdc = testapp.MakeEncodingConfig()
 		app    = testapp.New(
 			log.NewNopLogger(),
 			db,

@@ -27,7 +27,6 @@ import (
 
 	"github.com/ignite/modules/app"
 	"github.com/ignite/modules/app/exported"
-	"github.com/ignite/modules/cmd"
 )
 
 type SimApp interface {
@@ -83,7 +82,7 @@ func BenchmarkSimulation(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	encoding := cmd.MakeEncodingConfig(app.ModuleBasics)
+	encoding := app.MakeEncodingConfig()
 	bApp := app.New(
 		logger,
 		db,
@@ -159,7 +158,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			var (
 				chainID  = fmt.Sprintf("chain-id-%d-%d", i, j)
 				db       = dbm.NewMemDB()
-				encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
+				encoding = app.MakeEncodingConfig()
 				cmdApp   = app.New(
 					logger,
 					db,
