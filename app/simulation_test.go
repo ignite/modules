@@ -12,7 +12,9 @@ import (
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -21,18 +23,12 @@ import (
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
-	"github.com/cosmos/ibc-go/v7/testing/simapp"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/app"
 	"github.com/ignite/modules/app/exported"
 	"github.com/ignite/modules/cmd"
 )
-
-// Get fl≤≥ags every time the simulator is run
-func init() {
-	simcli.GetSimulatorFlags()
-}
 
 type SimApp interface {
 	exported.App
@@ -46,6 +42,11 @@ type SimApp interface {
 	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
 	LastCommitID() storetypes.CommitID
+}
+
+// Get fl≤≥ags every time the simulator is run
+func init() {
+	simcli.GetSimulatorFlags()
 }
 
 // interBlockCacheOpt returns a BaseApp option function that sets the persistent
@@ -63,18 +64,27 @@ func BenchmarkSimulation(b *testing.B) {
 	simcli.FlagEnabledValue = true
 	simcli.FlagCommitValue = true
 
-	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
+	config := simcli.NewConfigFromFlags()
+	config.ChainID = app.DefaultChainID
+	db, dir, logger, _, err := simtestutil.SetupSimulation(
+		config,
+		"leveldb-bApp-sim",
+		"Simulation",
+		simcli.FlagVerboseValue,
+		simcli.FlagEnabledValue,
+	)
 	require.NoError(b, err, "simulation setup failed")
 
 	b.Cleanup(func() {
-		db.Close()
-		err = os.RemoveAll(dir)
-		require.NoError(b, err)
+		require.NoError(b, db.Close())
+		require.NoError(b, os.RemoveAll(dir))
 	})
+	appOptions := make(simtestutil.AppOptionsMap, 0)
+	appOptions[flags.FlagHome] = app.DefaultNodeHome
+	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
 	encoding := cmd.MakeEncodingConfig(app.ModuleBasics)
-
-	app := app.New(
+	bApp := app.New(
 		logger,
 		db,
 		nil,
@@ -84,31 +94,37 @@ func BenchmarkSimulation(b *testing.B) {
 		0,
 		encoding,
 		simtestutil.EmptyAppOptions{},
+		baseapp.SetChainID(app.DefaultChainID),
 	)
+	require.Equal(b, app.Name, bApp.Name())
 
-	simApp, ok := app.(SimApp)
+	simApp, ok := bApp.(SimApp)
 	require.True(b, ok, "can't use simapp")
 
-	// Run randomized simulations
+	// run randomized simulation
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
 		simApp.GetBaseApp(),
-		simapp.AppStateFn(simApp.AppCodec(), simApp.SimulationManager()),
+		simtestutil.AppStateFn(
+			simApp.AppCodec(),
+			simApp.SimulationManager(),
+			app.NewDefaultGenesisState(simApp.AppCodec()),
+		),
 		simulationtypes.RandomAccounts,
-		simapp.SimulationOperations(simApp, simApp.AppCodec(), config),
+		simtestutil.SimulationOperations(bApp, simApp.AppCodec(), config),
 		simApp.ModuleAccountAddrs(),
 		config,
 		simApp.AppCodec(),
 	)
 
 	// export state and simParams before the simulation error is checked
-	err = simapp.CheckExportSimulation(simApp, config, simParams)
+	err = simtestutil.CheckExportSimulation(bApp, config, simParams)
 	require.NoError(b, err)
 	require.NoError(b, simErr)
 
 	if config.Commit {
-		simapp.PrintStats(db)
+		simtestutil.PrintStats(db)
 	}
 }
 
@@ -159,7 +175,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				)
 			)
 
-			app, ok := cmdApp.(SimApp)
+			simApp, ok := cmdApp.(SimApp)
 			require.True(t, ok, "can't use simapp")
 
 			fmt.Printf(
@@ -170,21 +186,25 @@ func TestAppStateDeterminism(t *testing.T) {
 			_, _, err := simulation.SimulateFromSeed(
 				t,
 				os.Stdout,
-				app.GetBaseApp(),
-				simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				simApp.GetBaseApp(),
+				simtestutil.AppStateFn(
+					simApp.AppCodec(),
+					simApp.SimulationManager(),
+					app.NewDefaultGenesisState(simApp.AppCodec()),
+				),
 				simulationtypes.RandomAccounts,
-				simapp.SimulationOperations(app, app.AppCodec(), config),
-				app.ModuleAccountAddrs(),
+				simtestutil.SimulationOperations(simApp, simApp.AppCodec(), config),
+				simApp.ModuleAccountAddrs(),
 				config,
-				app.AppCodec(),
+				simApp.AppCodec(),
 			)
 			require.NoError(t, err)
 
 			if config.Commit {
-				simapp.PrintStats(db)
+				simtestutil.PrintStats(db)
 			}
 
-			appHash := app.LastCommitID().Hash
+			appHash := simApp.LastCommitID().Hash
 			appHashList[j] = appHash
 
 			if j != 0 {

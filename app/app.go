@@ -20,6 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	runtimeservices "github.com/cosmos/cosmos-sdk/runtime/services"
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
@@ -150,9 +151,9 @@ var (
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		vesting.AppModuleBasic{},
-		claim.AppModuleBasic{},
-		mint.AppModuleBasic{},
 		consensus.AppModuleBasic{},
+		mint.AppModuleBasic{},
+		claim.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -169,7 +170,10 @@ var (
 	}
 )
 
-var _ servertypes.Application = (*App)(nil)
+var (
+	_ runtime.AppI            = (*App)(nil)
+	_ servertypes.Application = (*App)(nil)
+)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()
@@ -387,28 +391,6 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	govRouter := govv1beta1.NewRouter()
-	govRouter.
-		AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
-		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
-		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper))
-	govConfig := govtypes.DefaultConfig()
-	govKeeper := govkeeper.NewKeeper(
-		appCodec,
-		keys[govtypes.StoreKey],
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.StakingKeeper,
-		app.MsgServiceRouter(),
-		govConfig,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-	app.GovKeeper = *govKeeper.SetHooks(
-		govtypes.NewMultiGovHooks(
-			app.ClaimKeeper.NewMissionVoteHooks(MissionIDVoting),
-		),
-	)
-
 	app.ClaimKeeper = *claimkeeper.NewKeeper(
 		appCodec,
 		keys[claimtypes.StoreKey],
@@ -428,6 +410,31 @@ func New(
 		app.BankKeeper,
 		app.DistrKeeper,
 		authtypes.FeeCollectorName,
+	)
+
+	govConfig := govtypes.DefaultConfig()
+	govKeeper := govkeeper.NewKeeper(
+		appCodec,
+		keys[govtypes.StoreKey],
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.StakingKeeper,
+		app.MsgServiceRouter(),
+		govConfig,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	govRouter := govv1beta1.NewRouter()
+	govRouter.
+		AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper))
+	govKeeper.SetLegacyRouter(govRouter)
+
+	app.GovKeeper = *govKeeper.SetHooks(
+		govtypes.NewMultiGovHooks(
+			app.ClaimKeeper.NewMissionVoteHooks(MissionIDVoting),
+		),
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -463,7 +470,6 @@ func New(
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
@@ -471,8 +477,8 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		params.NewAppModule(app.ParamsKeeper),
-		claim.NewAppModule(appCodec, app.ClaimKeeper, app.AccountKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
+		claim.NewAppModule(appCodec, app.ClaimKeeper, app.AccountKeeper, app.BankKeeper),
 		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)), // always be last to make sure that it checks for all invariants and not only part of them
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -583,9 +589,6 @@ func New(
 	app.MountMemoryStores(memKeys)
 
 	// initialize BaseApp
-	app.SetInitChainer(app.InitChainer)
-	app.SetBeginBlocker(app.BeginBlocker)
-
 	anteHandler, err := ante.NewAnteHandler(
 		ante.HandlerOptions{
 			AccountKeeper:   app.AccountKeeper,

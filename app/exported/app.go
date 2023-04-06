@@ -4,9 +4,13 @@ import (
 	"io"
 
 	dbm "github.com/cometbft/cometbft-db"
+	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 
 	appparams "github.com/ignite/modules/app/params"
 )
@@ -37,7 +41,14 @@ type (
 		ExportAppStateAndValidators(
 			forZeroHeight bool,
 			jailAllowedAddrs []string,
+			modulesToExport []string,
 		) (servertypes.ExportedApp, error)
 		LoadHeight(height int64) error
+		Name() string
+		LegacyAmino() *codec.LegacyAmino
+		BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
+		EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
+		InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
+		SimulationManager() *module.SimulationManager
 	}
 )

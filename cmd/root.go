@@ -409,7 +409,7 @@ func (a appCreator) appExport(
 		}
 	}
 
-	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
+	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }
 
 // initAppConfig helps to override default appConfig template and configs.
