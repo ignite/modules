@@ -36,16 +36,12 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-
-	"github.com/ignite/modules/app"
-	"github.com/ignite/modules/app/exported"
-	appparams "github.com/ignite/modules/app/params"
 )
 
 // appCreator is an app creator
 type appCreator struct {
-	encodingConfig appparams.EncodingConfig
-	buildApp       exported.AppBuilder
+	encodingConfig EncodingConfig
+	buildApp       AppBuilder
 }
 
 // Option configures root command option.
@@ -98,15 +94,15 @@ func NewRootCmd(
 	defaultNodeHome,
 	defaultChainID string,
 	moduleBasics module.BasicManager,
-	buildApp exported.AppBuilder,
+	buildApp AppBuilder,
 	options ...Option,
-) (*cobra.Command, appparams.EncodingConfig) {
+) (*cobra.Command, EncodingConfig) {
 	rootOptions := newRootOptions(options...)
 
 	// Set config for prefixes
 	SetPrefixes(accountAddressPrefix)
 
-	encodingConfig := app.MakeEncodingConfig()
+	encodingConfig := MakeEncodingConfig(moduleBasics)
 	initClientCtx := client.Context{}.
 		WithCodec(encodingConfig.Marshaler).
 		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
@@ -168,16 +164,16 @@ func NewRootCmd(
 
 func initRootCmd(
 	rootCmd *cobra.Command,
-	encodingConfig appparams.EncodingConfig,
+	encodingConfig EncodingConfig,
 	defaultNodeHome string,
 	moduleBasics module.BasicManager,
-	buildApp exported.AppBuilder,
+	buildApp AppBuilder,
 	options rootOptions,
 ) {
-	gentxModule := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
+	gentxModule := moduleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(moduleBasics, defaultNodeHome),
-		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome, gentxModule.GenTxValidator),
+		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, defaultNodeHome, gentxModule.GenTxValidator),
 		genutilcli.MigrateGenesisCmd(),
 		genutilcli.GenTxCmd(
 			moduleBasics,
@@ -384,7 +380,7 @@ func (a appCreator) appExport(
 	appOpts servertypes.AppOptions,
 	modulesToExport []string, //nolint:revive
 ) (servertypes.ExportedApp, error) {
-	var exportableApp exported.ExportableApp
+	var exportableApp ExportableApp
 
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {

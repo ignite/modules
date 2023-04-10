@@ -3,6 +3,8 @@ package testutil
 import (
 	"time"
 
+	"github.com/ignite/modules/cmd"
+
 	sdkmath "cosmossdk.io/math"
 	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
@@ -26,7 +28,7 @@ import (
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
 	var (
 		db     = dbm.NewMemDB()
-		encCdc = testapp.MakeEncodingConfig()
+		encCdc = cmd.MakeEncodingConfig(testapp.ModuleBasics)
 		app    = testapp.New(
 			log.NewNopLogger(),
 			db,

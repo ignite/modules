@@ -19,6 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/app"
+	"github.com/ignite/modules/cmd"
 )
 
 type (
@@ -48,7 +49,7 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 // genesis and single validator. All other parameters are inherited from cosmos-sdk/testutil/network.DefaultConfig
 func DefaultConfig() network.Config {
 	var (
-		encoding = app.MakeEncodingConfig()
+		encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
 		chainID  = "chain-" + tmrand.NewRand().Str(6)
 	)
 	return network.Config{

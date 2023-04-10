@@ -9,12 +9,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/app"
+	"github.com/ignite/modules/cmd"
 	"github.com/ignite/modules/x/mint/simulation"
 	"github.com/ignite/modules/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {
-	cdc := app.MakeEncodingConfig()
+	cdc := cmd.MakeEncodingConfig(app.ModuleBasics)
 	dec := simulation.NewDecodeStore(cdc.Marshaler)
 
 	minter := types.NewMinter(sdk.OneDec(), sdk.NewDec(15))

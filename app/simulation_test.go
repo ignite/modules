@@ -26,11 +26,11 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/app"
-	"github.com/ignite/modules/app/exported"
+	"github.com/ignite/modules/cmd"
 )
 
 type SimApp interface {
-	exported.App
+	cmd.App
 	GetBaseApp() *baseapp.BaseApp
 	AppCodec() codec.Codec
 	SimulationManager() *module.SimulationManager
@@ -67,7 +67,7 @@ func BenchmarkSimulation(b *testing.B) {
 	config.ChainID = app.DefaultChainID
 	db, dir, logger, _, err := simtestutil.SetupSimulation(
 		config,
-		"leveldb-bApp-sim",
+		"leveldb-app-sim",
 		"Simulation",
 		simcli.FlagVerboseValue,
 		simcli.FlagEnabledValue,
@@ -82,7 +82,7 @@ func BenchmarkSimulation(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	encoding := app.MakeEncodingConfig()
+	encoding := cmd.MakeEncodingConfig(app.ModuleBasics)
 	bApp := app.New(
 		logger,
 		db,
@@ -158,7 +158,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			var (
 				chainID  = fmt.Sprintf("chain-id-%d-%d", i, j)
 				db       = dbm.NewMemDB()
-				encoding = app.MakeEncodingConfig()
+				encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
 				cmdApp   = app.New(
 					logger,
 					db,
