@@ -38,11 +38,43 @@ import (
 	"github.com/spf13/pflag"
 )
 
-// appCreator is an app creator
-type appCreator struct {
-	encodingConfig EncodingConfig
-	buildApp       AppBuilder
-}
+type (
+	// AppBuilder is a method that allows to build an app
+	AppBuilder func(
+		logger log.Logger,
+		db dbm.DB,
+		traceStore io.Writer,
+		loadLatest bool,
+		skipUpgradeHeights map[int64]bool,
+		homePath string,
+		invCheckPeriod uint,
+		encodingConfig EncodingConfig,
+		appOpts servertypes.AppOptions,
+		baseAppOptions ...func(*baseapp.BaseApp),
+	) App
+
+	// App represents a Cosmos SDK application that can be run as a server and with an exportable state
+	App interface {
+		servertypes.Application
+		ExportableApp
+	}
+
+	// ExportableApp represents an app with an exportable state
+	ExportableApp interface {
+		ExportAppStateAndValidators(
+			forZeroHeight bool,
+			jailAllowedAddrs []string,
+			modulesToExport []string,
+		) (servertypes.ExportedApp, error)
+		LoadHeight(height int64) error
+	}
+
+	// appCreator is an app creator
+	appCreator struct {
+		encodingConfig EncodingConfig
+		buildApp       AppBuilder
+	}
+)
 
 // Option configures root command option.
 type Option func(*rootOptions)

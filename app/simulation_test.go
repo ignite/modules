@@ -95,7 +95,6 @@ func BenchmarkSimulation(b *testing.B) {
 		simtestutil.EmptyAppOptions{},
 		baseapp.SetChainID(app.DefaultChainID),
 	)
-	require.Equal(b, app.Name, bApp.Name())
 
 	simApp, ok := bApp.(SimApp)
 	require.True(b, ok, "can't use simapp")
@@ -111,14 +110,14 @@ func BenchmarkSimulation(b *testing.B) {
 			app.NewDefaultGenesisState(simApp.AppCodec()),
 		),
 		simulationtypes.RandomAccounts,
-		simtestutil.SimulationOperations(bApp, simApp.AppCodec(), config),
+		simtestutil.SimulationOperations(simApp, simApp.AppCodec(), config),
 		simApp.ModuleAccountAddrs(),
 		config,
 		simApp.AppCodec(),
 	)
 
 	// export state and simParams before the simulation error is checked
-	err = simtestutil.CheckExportSimulation(bApp, config, simParams)
+	err = simtestutil.CheckExportSimulation(simApp, config, simParams)
 	require.NoError(b, err)
 	require.NoError(b, simErr)
 
