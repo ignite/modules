@@ -79,11 +79,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&claimGenesis)
 }
 
-// ProposalContents doesn't return any content functions for governance proposals
-func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedProposalContent { //nolint:staticcheck
-	return nil
-}
-
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.LegacyParamChange {
 	return []simtypes.LegacyParamChange{}
