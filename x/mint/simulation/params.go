@@ -24,29 +24,29 @@ const (
 
 // ParamChanges defines the parameters that can be modified by param change proposals
 // on the simulation
-func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, keyInflationRateChange,
+func ParamChanges() []simtypes.LegacyParamChange {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationRateChange,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%s\"", GenInflationRateChange(r))
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyInflationMax,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationMax,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenInflationMax(r))
+				return fmt.Sprintf("\"%s\"", GenInflationMax())
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyInflationMin,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyInflationMin,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenInflationMin(r))
+				return fmt.Sprintf("\"%s\"", GenInflationMin())
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyGoalBonded,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyGoalBonded,
 			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%s\"", GenGoalBonded(r))
+				return fmt.Sprintf("\"%s\"", GenGoalBonded())
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyDistributionProportions,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyDistributionProportions,
 			func(r *rand.Rand) string {
 				proportions := GenDistributionProportions(r)
 				return fmt.Sprintf(
@@ -57,7 +57,7 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 				)
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyFundedAddresses,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyFundedAddresses,
 			func(r *rand.Rand) string {
 				weightedAddrs := GenFundedAddresses(r)
 				weightedAddrsStr := make([]string, 0)

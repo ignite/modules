@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cometbft/cometbft/libs/log"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -13,8 +15,6 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 	claimtypes "github.com/ignite/modules/x/claim/types"
@@ -34,7 +34,7 @@ type TestKeepers struct {
 	AccountKeeper authkeeper.AccountKeeper
 	BankKeeper    bankkeeper.Keeper
 	DistrKeeper   distrkeeper.Keeper
-	StakingKeeper stakingkeeper.Keeper
+	StakingKeeper *stakingkeeper.Keeper
 	ClaimKeeper   *claimkeeper.Keeper
 }
 
@@ -49,10 +49,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
-	authKeeper := initializer.Auth(paramKeeper)
-	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	authKeeper := initializer.Auth()
+	bankKeeper := initializer.Bank(authKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
 	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
@@ -66,8 +66,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
 
 	// Initialize params
-	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
-	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
+	err := distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	require.NoError(t, err)
+	err = stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
+	require.NoError(t, err)
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)

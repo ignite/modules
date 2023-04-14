@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"context"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -17,13 +15,16 @@ func CmdShowInitialClaim() *cobra.Command {
 		Long:  "shows if initial claim is enabled and what is the mission ID completed by initial claim",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
 
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryGetInitialClaimRequest{}
 
-			res, err := queryClient.InitialClaim(context.Background(), params)
+			res, err := queryClient.InitialClaim(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

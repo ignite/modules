@@ -2,11 +2,11 @@ package keeper
 
 import (
 	sdkmath "cosmossdk.io/math"
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/tendermint/tendermint/libs/log"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/mint/types"
@@ -106,7 +106,7 @@ func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
 }
 
 // GetProportion gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
-func (k Keeper) GetProportion(ctx sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
+func (k Keeper) GetProportion(_ sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
 	return sdk.NewCoin(mintedCoin.Denom, sdk.NewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
 }
 

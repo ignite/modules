@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"context"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -16,13 +14,14 @@ func CmdShowAirdropSupply() *cobra.Command {
 		Short: "shows the airdrop supply",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryGetAirdropSupplyRequest{}
-
-			res, err := queryClient.AirdropSupply(context.Background(), params)
+			res, err := queryClient.AirdropSupply(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

@@ -24,6 +24,11 @@ func (h MissionDelegationHooks) BeforeDelegationCreated(ctx sdk.Context, delAddr
 	return nil
 }
 
+// AfterUnbondingInitiated implements StakingHooks
+func (h MissionDelegationHooks) AfterUnbondingInitiated(sdk.Context, uint64) error {
+	return nil
+}
+
 // AfterValidatorCreated implements StakingHooks
 func (h MissionDelegationHooks) AfterValidatorCreated(_ sdk.Context, _ sdk.ValAddress) error {
 	return nil

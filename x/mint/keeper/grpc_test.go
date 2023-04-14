@@ -4,10 +4,10 @@ import (
 	gocontext "context"
 	"testing"
 
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/x/mint/types"

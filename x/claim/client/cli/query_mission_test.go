@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
+	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -23,7 +23,7 @@ func (suite *QueryTestSuite) TestShowMission() {
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
-	for _, tc := range []struct {
+	tests := []struct {
 		name string
 		id   string
 		args []string
@@ -42,8 +42,11 @@ func (suite *QueryTestSuite) TestShowMission() {
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
-	} {
+	}
+	for _, tc := range tests {
 		suite.T().Run(tc.name, func(t *testing.T) {
+			require.NoError(t, suite.Network.WaitForNextBlock())
+
 			args := []string{tc.id}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowMission(), args)
@@ -51,16 +54,17 @@ func (suite *QueryTestSuite) TestShowMission() {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
-			} else {
-				require.NoError(t, err)
-				var resp types.QueryGetMissionResponse
-				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.Mission)
-				require.Equal(t,
-					nullify.Fill(&tc.obj),
-					nullify.Fill(&resp.Mission),
-				)
+				return
 			}
+
+			require.NoError(t, err)
+			var resp types.QueryGetMissionResponse
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NotNil(t, resp.Mission)
+			require.Equal(t,
+				nullify.Fill(&tc.obj),
+				nullify.Fill(&resp.Mission),
+			)
 		})
 	}
 }

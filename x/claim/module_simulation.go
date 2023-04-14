@@ -79,14 +79,9 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&claimGenesis)
 }
 
-// ProposalContents doesn't return any content functions for governance proposals
-func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedProposalContent {
-	return nil
-}
-
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.LegacyParamChange {
+	return []simtypes.LegacyParamChange{}
 }
 
 // RegisterStoreDecoder registers a decoder
@@ -110,4 +105,19 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
+}
+
+// ProposalMsgs returns msgs used for governance proposals for simulations.
+func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
+	return []simtypes.WeightedProposalMsg{
+		simulation.NewWeightedProposalMsg(
+			opWeightMsgClaim,
+			defaultWeightMsgClaim,
+			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
+				claimsimulation.SimulateMsgClaim(am.accountKeeper, am.bankKeeper, am.keeper)
+				return nil
+			},
+		),
+		// this line is used by starport scaffolding # simapp/module/OpMsg
+	}
 }

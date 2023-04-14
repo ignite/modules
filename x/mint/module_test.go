@@ -3,22 +3,32 @@ package mint_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-	abcitypes "github.com/tendermint/tendermint/abci/types"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	dbm "github.com/tendermint/tm-db"
-
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"cosmossdk.io/simapp"
+	dbm "github.com/cometbft/cometbft-db"
+	abcitypes "github.com/cometbft/cometbft/abci/types"
+	tmjson "github.com/cometbft/cometbft/libs/json"
+	"github.com/cometbft/cometbft/libs/log"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
-	db := dbm.NewMemDB()
-	encCdc := simapp.MakeTestEncodingConfig()
-	app := simapp.NewSimApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, simapp.DefaultNodeHome, 5, encCdc, simapp.EmptyAppOptions{})
+	var (
+		chainID = "test-chain-id"
+		db      = dbm.NewMemDB()
+		app     = simapp.NewSimApp(
+			log.NewNopLogger(),
+			db,
+			nil,
+			true,
+			simtestutil.EmptyAppOptions{},
+			baseapp.SetChainID(chainID),
+		)
+	)
 
 	genesisState := simapp.GenesisStateWithSingleValidator(t, app)
 	stateBytes, err := tmjson.Marshal(genesisState)
@@ -27,7 +37,7 @@ func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
 	app.InitChain(
 		abcitypes.RequestInitChain{
 			AppStateBytes: stateBytes,
-			ChainId:       "test-chain-id",
+			ChainId:       chainID,
 		},
 	)
 

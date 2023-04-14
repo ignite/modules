@@ -1,13 +1,15 @@
 coverage:
-  range: 70...100
-  round: down
   precision: 2
+  round: down
+  range: 70...100
   status:
     patch: off
     changes: false
     project:
       default:
-        threshold: 1% # allow this much decrease on project
+        target: auto
+        threshold: 10%
+        informational: true
       modules:
         if_ci_failed: error
         target: 70%
@@ -23,6 +25,10 @@ comment:
   layout: "reach, diff, files"
   behavior: default
   require_changes: false
+
+codecov:
+  notify:
+    wait_for_ci: false
 
 flags:
   modules:

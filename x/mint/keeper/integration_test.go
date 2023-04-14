@@ -3,15 +3,16 @@ package keeper_test
 import (
 	"encoding/json"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
-	abci "github.com/tendermint/tendermint/abci/types"
+	abci "github.com/cometbft/cometbft/abci/types"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 
 	testapp "github.com/ignite/modules/app"
 	"github.com/ignite/modules/testutil"
 )
 
 func setup(isCheckTx bool) *testapp.App {
-	app, genesisState := testutil.GenApp(!isCheckTx, 5)
+	chainID := "simapp-chain-id"
+	app, genesisState := testutil.GenApp(chainID, !isCheckTx, 5)
 	if !isCheckTx {
 		// init chain must be called to stop deliverState from being nil
 		stateBytes, err := json.MarshalIndent(genesisState, "", " ")
@@ -23,8 +24,9 @@ func setup(isCheckTx bool) *testapp.App {
 		app.InitChain(
 			abci.RequestInitChain{
 				Validators:      []abci.ValidatorUpdate{},
-				ConsensusParams: simapp.DefaultConsensusParams,
+				ConsensusParams: simtestutil.DefaultConsensusParams,
 				AppStateBytes:   stateBytes,
+				ChainId:         chainID,
 			},
 		)
 	}

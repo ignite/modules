@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"math/rand"
 
+	simappparams "cosmossdk.io/simapp/params"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
@@ -86,6 +87,6 @@ func SimulateMsgClaim(
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, simtestutil.DefaultGenTxGas)
 	}
 }
