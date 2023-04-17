@@ -141,15 +141,18 @@ test-sim-after-import: runsim
 	@echo "Running application simulation-after-import. This may take several minutes..."
 	@$(BINDIR)/runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 2 2 TestAppSimulationAfterImport
 
+# test-sim-nondeterminism-long: Run simulation test checking for app state nondeterminism with a big data
 test-sim-nondeterminism-long:
 	@echo "Running non-determinism test..."
 	@go test -mod=readonly $(SIMAPP) -run TestAppStateDeterminism -Enabled=true \
 		-NumBlocks=100 -BlockSize=100 -Commit=true -Period=0 -v -timeout 1h
 
+# test-sim-import-export-long: Test import/export simulation
 test-sim-import-export-long: runsim
 	@echo "Running application import/export simulation. This may take several minutes..."
 	@$(BINDIR)/runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 5 5 TestAppImportExport
 
+# test-sim-import-export-long: Test import/export simulation with a big data
 test-sim-after-import-long: runsim
 	@echo "Running application simulation-after-import. This may take several minutes..."
 	@$(BINDIR)/runsim -Jobs=4 -SimAppPkg=$(SIMAPP) -ExitOnFail 5 5 TestAppSimulationAfterImport
