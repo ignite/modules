@@ -102,20 +102,12 @@ proto-format:
 ###                               Simulation                                ###
 ###############################################################################
 
-SIMAPP = ./app
-SIM_NUM_BLOCKS ?= 500
-SIM_BLOCK_SIZE ?= 100
-SIM_CI_NUM_BLOCKS ?= 200
-SIM_CI_BLOCK_SIZE ?= 26
-SIM_PERIOD ?= 50
-SIM_COMMIT ?= true
-SIM_TIMEOUT ?= 24h
-
 # The below include contains the tools and runsim targets.
 include contrib/devtools/Makefile
 
-SIM_NUM_BLOCKS ?= 100
-SIM_BLOCK_SIZE ?= 50
+SIMAPP = ./app
+SIM_NUM_BLOCKS ?= 500
+SIM_BLOCK_SIZE ?= 100
 SIM_CI_NUM_BLOCKS ?= 200
 SIM_CI_BLOCK_SIZE ?= 26
 SIM_PERIOD ?= 50
