@@ -225,7 +225,9 @@ type App struct {
 	mm *module.Manager
 
 	// sm is the simulation manager
-	sm           *module.SimulationManager
+	sm *module.SimulationManager
+
+	// module configurator
 	configurator module.Configurator
 }
 
@@ -247,7 +249,7 @@ func New(
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 	txConfig := encodingConfig.TxConfig
 
-	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	bApp := baseapp.NewBaseApp(Name, logger, db, txConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
@@ -763,7 +765,7 @@ func (app *App) RegisterTendermintService(clientCtx client.Context) {
 	)
 }
 
-// initParamsKeeper init params keeper and its subspaces
+// initParamsKeeper init params keeper and its subspaces.
 func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
@@ -782,7 +784,14 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	return paramsKeeper
 }
 
-// SimulationManager implements the SimulationApp interface
+// SimulationManager implements the SimulationApp interface.
 func (app *App) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+// InitGenesis performs init genesis functionality for modules. Exactly one
+// module must return a non-empty validator set update to correctly initialize
+// the chain.
+func (app *App) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, genesisData map[string]json.RawMessage) {
+	app.mm.InitGenesis(ctx, cdc, genesisData)
 }
