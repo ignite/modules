@@ -14,7 +14,6 @@ BUILDDIR ?= $(CURDIR)/build
 
 export GO111MODULE = on
 
-
 # process build tags
 
 build_tags = netgo
