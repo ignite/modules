@@ -2,6 +2,7 @@ vue/node_modules
 vue/dist
 build/
 release/
+build/
 .idea/
 .vscode/
 .DS_Store
