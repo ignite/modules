@@ -4,7 +4,6 @@ import (
 	"time"
 
 	sdkmath "cosmossdk.io/math"
-	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	tmtypes "github.com/cometbft/cometbft/types"
@@ -20,9 +19,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/ignite/modules/cmd"
-
 	testapp "github.com/ignite/modules/app"
+	"github.com/ignite/modules/cmd"
 )
 
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*testapp.App, testapp.GenesisState) {
@@ -35,7 +33,7 @@ func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*testapp.App
 			nil,
 			true,
 			map[int64]bool{},
-			simapp.DefaultNodeHome,
+			testapp.DefaultNodeHome,
 			invCheckPeriod,
 			encCdc,
 			simtestutil.EmptyAppOptions{},
