@@ -213,6 +213,8 @@ proto-lint:
 	@echo "Linting Protobuf Files"
 	@buf lint
 
+.PHONY: proto-all proto-gen-gogo proto-gen-swagger proto-gen-ts proto-format proto-lint
+
 ###############################################################################
 ###                               Simulation                                ###
 ###############################################################################
