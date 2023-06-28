@@ -189,22 +189,29 @@ test: govet govulncheck test-unit
 ###                                Protobuf                                 ###
 ###############################################################################
 
-proto-all: proto-format proto-gen
+proto-all: proto-format proto-lint proto-gen-gogo
 
-protoVer=v0.7
-protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
-containerProtoGen=ignite-modules-proto-gen-$(protoVer)
-containerProtoFmt=ignite-modules-proto-fmt-$(protoVer)
+proto-gen-gogo:
+	@echo "Generating Protobuf Files"
+	@buf generate --template $(CURDIR)/proto/buf.gen.gogo.yaml --output $(CURDIR)/gen/go
+	@cp -r gen/go/github.com/ignite/modules/x ./
+	@rm -R gen/go
 
-proto-gen:
-	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
+proto-gen-swagger:
+	@echo "Generating Protobuf Swagger"
+	@buf generate --template $(CURDIR)/proto/buf.gen.swagger.yaml --output $(CURDIR)/gen/swagger
+
+proto-gen-ts:
+	@echo "Generating Protobuf Typescript"
+	@buf generate --template $(CURDIR)/proto/buf.gen.ts.yaml --output $(CURDIR)/gen/ts
 
 proto-format:
-	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@echo "Formatting Protobuf Files"
+	@buf format --write
+
+proto-lint:
+	@echo "Linting Protobuf Files"
+	@buf lint
 
 ###############################################################################
 ###                               Simulation                                ###

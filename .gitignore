@@ -1,3 +1,4 @@
+gen/
 vue/node_modules
 vue/dist
 ts-client/
