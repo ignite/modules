@@ -31,6 +31,9 @@ faucet:
   - 5token
   - 100000stake
   host: 0.0.0.0:4500
+client:
+  typescript:
+    path: ts-client
 genesis:
   app_state:
     claim:
