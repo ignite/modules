@@ -37,8 +37,11 @@ Modules are under active development and should not be currently considered for 
 
 - [`claim`](x/claim): this module can be used by blockchains that wish to offer airdrops to eligible addresses upon the completion of specific actions. Eligible addresses with airdrop allocations are listed in the genesis state of the module. Initial claim, staking, and voting missions are natively supported. The developer can add custom missions related to their blockchain functionality.
 
-
 - [`mint`](x/mint): this module is an enhanced version of [Cosmos SDK `mint` module](https://docs.cosmos.network/master/modules/mint/) where developers can use the minted coins from inflations for specific purposes other than staking rewards.
+
+## Importing
+
+You can import modules to your app using the [documentation](docs/importing.md).
 
 ## Testing
 
@@ -64,7 +67,7 @@ We welcome contributions from everyone. You can create a branch from `main` and 
 
 ## Community
 
-Ignite Modules is a free and open-source project maintained by [Ignite](https://ignite.com). Here's where you can find us. 
+Ignite Modules is a free and open-source project maintained by [Ignite](https://ignite.com). Here's where you can find us.
 
 - [@ignite_dev on Twitter](https://twitter.com/ignite_dev)
 - [Ignite Blog](https://ignite.com/blog/)
