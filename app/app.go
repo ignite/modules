@@ -191,6 +191,7 @@ type App struct {
 
 	cdc               *codec.LegacyAmino
 	appCodec          codec.Codec
+	txConfig          client.TxConfig
 	interfaceRegistry types.InterfaceRegistry
 
 	invCheckPeriod uint
@@ -268,6 +269,7 @@ func New(
 	app := &App{
 		BaseApp:           bApp,
 		cdc:               cdc,
+		txConfig:          txConfig,
 		appCodec:          appCodec,
 		interfaceRegistry: interfaceRegistry,
 		invCheckPeriod:    invCheckPeriod,
@@ -796,4 +798,9 @@ func (app *App) SimulationManager() *module.SimulationManager {
 // the chain.
 func (app *App) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, genesisData map[string]json.RawMessage) {
 	app.mm.InitGenesis(ctx, cdc, genesisData)
+}
+
+// TxConfig returns App's TxConfig
+func (app *App) TxConfig() client.TxConfig {
+	return app.txConfig
 }

@@ -619,19 +619,19 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ClaimRecord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "claim_record", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ClaimRecord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "claim_record", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ClaimRecordAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "claim_record"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ClaimRecordAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "claim_record"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Mission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "mission", "missionID"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Mission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "mission", "missionID"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_MissionAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "mission"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MissionAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "mission"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_AirdropSupply_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "airdrop_supply"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_AirdropSupply_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "airdrop_supply"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_InitialClaim_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "initial_claim"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_InitialClaim_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "initial_claim"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
