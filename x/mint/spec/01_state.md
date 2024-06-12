@@ -22,12 +22,12 @@ Params: [] -> Params
 message Minter {
   string inflation = 1 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string annual_provisions = 2 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }

@@ -12,9 +12,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
 
-	"github.com/ignite/modules/x/mint/client/cli"
+	"github.com/ignite/modules/x/mint/exported"
 	"github.com/ignite/modules/x/mint/keeper"
 	"github.com/ignite/modules/x/mint/types"
 )
@@ -67,20 +66,13 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	}
 }
 
-// GetTxCmd returns no root tx command for the mint module.
-func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
-
-// GetQueryCmd returns the root query command for the mint module.
-func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd()
-}
-
 // AppModule implements an application module for the mint module.
 type AppModule struct {
 	AppModuleBasic
 
-	keeper     keeper.Keeper
-	authKeeper types.AccountKeeper
+	keeper         keeper.Keeper
+	authKeeper     types.AccountKeeper
+	legacySubspace exported.Subspace
 }
 
 // NewAppModule creates a new AppModule object
@@ -88,13 +80,21 @@ func NewAppModule(
 	cdc codec.Codec,
 	keeper keeper.Keeper,
 	ak types.AccountKeeper,
+	legacySubspace exported.Subspace,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{cdc: cdc},
 		keeper:         keeper,
 		authKeeper:     ak,
+		legacySubspace: legacySubspace,
 	}
 }
+
+// IsOnePerModuleType implements the depinject.OnePerModuleType interface.
+func (am AppModule) IsOnePerModuleType() {}
+
+// IsAppModule implements the appmodule.AppModule interface.
+func (am AppModule) IsAppModule() {}
 
 // Name returns the mint module's name.
 func (AppModule) Name() string {
@@ -108,6 +108,11 @@ func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 // module-specific gRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
+
+	m := keeper.NewMigrator(am.keeper, am.legacySubspace)
+	if err := cfg.RegisterMigration(types.ModuleName, 1, m.Migrate1to2); err != nil {
+		panic(fmt.Sprintf("failed to migrate x/%s from version 1 to 2: %v", types.ModuleName, err))
+	}
 }
 
 // InitGenesis performs genesis initialization for the mint module. It returns
@@ -128,20 +133,9 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
-func (AppModule) ConsensusVersion() uint64 { return 1 }
+func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock returns the begin blocker for the mint module.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
-	if err := am.keeper.BeginBlocker(ctx); err != nil {
-		ctx.Logger().Error(
-			fmt.Sprintf("error minting new coins: %s",
-				err.Error()),
-		)
-	}
-}
-
-// EndBlock returns the end blocker for the mint module. It returns no validator
-// updates.
-func (AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
-	return []abci.ValidatorUpdate{}
+func (am AppModule) BeginBlock(ctx context.Context) error {
+	return am.keeper.BeginBlocker(ctx)
 }

@@ -8,10 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/ignite/modules/testutil/constructor"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
-	"github.com/ignite/modules/testutil/sample"
 	claim "github.com/ignite/modules/x/claim/types"
 )
 
@@ -19,7 +17,7 @@ func TestAirdropSupplyGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	t.Run("should allow get", func(t *testing.T) {
-		sampleSupply := sample.Coin(r)
+		sampleSupply := sdk.NewCoin("foo", sdkmath.NewInt(1000))
 		tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
 
 		rst, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
@@ -35,7 +33,7 @@ func TestAirdropSupplyRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	t.Run("should allow remove", func(t *testing.T) {
-		tk.ClaimKeeper.SetAirdropSupply(ctx, sample.Coin(r))
+		tk.ClaimKeeper.SetAirdropSupply(ctx, sdk.NewCoin("foo", sdkmath.NewInt(1000)))
 		_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
 		require.True(t, found)
 		tk.ClaimKeeper.RemoveAirdropSupply(ctx)
@@ -55,15 +53,15 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 	}{
 		{
 			name:          "should allow setting airdrop supply",
-			airdropSupply: tc.Coin(t, "10000foo"),
+			airdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(10000)),
 		},
 		{
 			name:          "should allow specifying a new token for the supply",
-			airdropSupply: tc.Coin(t, "125000bar"),
+			airdropSupply: sdk.NewCoin("bar", sdkmath.NewInt(125000)),
 		},
 		{
 			name:          "should allow modifying a token for the supply",
-			airdropSupply: tc.Coin(t, "525000bar"),
+			airdropSupply: sdk.NewCoin("bar", sdkmath.NewInt(525000)),
 		},
 		{
 			name:          "should allow setting airdrop supply to zero",

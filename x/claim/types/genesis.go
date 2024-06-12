@@ -29,7 +29,7 @@ func (gs GenesisState) Validate() error {
 	}
 
 	// check missions
-	weightSum := sdk.ZeroDec()
+	weightSum := sdkmath.LegacyZeroDec()
 	missionMap := make(map[uint64]Mission)
 	for _, mission := range gs.Missions {
 		err := mission.Validate()
@@ -46,7 +46,7 @@ func (gs GenesisState) Validate() error {
 
 	// ensure mission weight sum is 1
 	if len(gs.Missions) > 0 {
-		if !weightSum.Equal(sdk.OneDec()) {
+		if !weightSum.Equal(sdkmath.LegacyOneDec()) {
 			return errors.New("sum of mission weights must be 1")
 		}
 	}

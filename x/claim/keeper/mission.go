@@ -1,8 +1,11 @@
 package keeper
 
 import (
+	"context"
+
 	"cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/store/prefix"
+	"cosmossdk.io/store/prefix"
+	storetypes "cosmossdk.io/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/pkg/errors"
@@ -36,7 +39,7 @@ func (k Keeper) RemoveMission(ctx sdk.Context, id uint64) {
 // GetAllMission returns all mission
 func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MissionKey))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	iterator := storetypes.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
@@ -53,10 +56,12 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 // be called automatically if the airdrop start has already been reached.
 // If not, it will only save the mission as completed.
 func (k Keeper) CompleteMission(
-	ctx sdk.Context,
+	goCtx context.Context,
 	missionID uint64,
 	address string,
 ) (claimed math.Int, err error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	// retrieve mission
 	if _, found := k.GetMission(ctx, missionID); !found {
 		return claimed, errors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)

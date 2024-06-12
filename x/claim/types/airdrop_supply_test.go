@@ -12,7 +12,7 @@ import (
 )
 
 func TestCheckAirdropSupply(t *testing.T) {
-	sampleAddr := sample.Address(r)
+	sampleAddr := sample.AccAddress()
 
 	for _, tc := range []struct {
 		name          string
@@ -28,7 +28,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -46,7 +46,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -69,7 +69,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -87,7 +87,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{

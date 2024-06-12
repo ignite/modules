@@ -22,7 +22,7 @@ func TestMsgClaim(t *testing.T) {
 	// prepare addresses
 	var addr []string
 	for i := 0; i < 20; i++ {
-		addr = append(addr, sample.Address(r))
+		addr = append(addr, sample.AccAddress())
 	}
 
 	type inputState struct {
@@ -52,7 +52,7 @@ func TestMsgClaim(t *testing.T) {
 				noAirdropSupply: true,
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[0],
@@ -72,12 +72,12 @@ func TestMsgClaim(t *testing.T) {
 			inputState: inputState{
 				noInitialClaim: true,
 				noClaimRecord:  true,
-				airdropSupply:  sample.Coin(r),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission:        sample.Mission(r),
 				params:         types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
-				Claimer:   sample.Address(r),
+				Claimer:   sample.AccAddress(),
 				MissionID: 1,
 			},
 			err: types.ErrClaimRecordNotFound,
@@ -86,7 +86,7 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail if no mission",
 			inputState: inputState{
 				noMission:     true,
-				airdropSupply: sample.Coin(r),
+				airdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				claimRecord: types.ClaimRecord{
 					Address:           addr[1],
 					Claimable:         sdkmath.OneInt(),
@@ -104,10 +104,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail if already claimed",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  sample.Coin(r),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[2],
@@ -127,10 +127,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail if mission not completed",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  sample.Coin(r),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[3],
@@ -148,10 +148,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail with critical if claimable amount is greater than module supply",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[4],
@@ -170,10 +170,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail with critical if claimer address is not bech32",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           "invalid",
@@ -192,7 +192,7 @@ func TestMsgClaim(t *testing.T) {
 			name: "should fail if airdrop start not reached",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  sample.Coin(r),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission:        sample.Mission(r),
 				claimRecord: types.ClaimRecord{
 					Address:   addr[5],
@@ -214,10 +214,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow distributing full airdrop to one account, one mission",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[6],
@@ -230,16 +230,16 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[6],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "1000foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 		},
 		{
 			name: "should prevent distributing fund for mission with 0 weight",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.ZeroDec(),
+					Weight:    sdkmath.LegacyZeroDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[7],
@@ -258,10 +258,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow distributing half for mission with 0.5 weight",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[8],
@@ -280,10 +280,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow distributing half for mission with 0.5 weight and truncate decimal",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[9],
@@ -302,10 +302,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should prevent distributing fund for empty claim record",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[10],
@@ -346,10 +346,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow applying decay factor if enabled",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[12],
@@ -372,10 +372,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow distributing all funds if decay factor if enabled and decay not started",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[13],
@@ -398,10 +398,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should prevent distributing funds if decay ended",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "1000foo"),
+				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    tc.Dec(t, "0.5"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.5"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[14],
@@ -430,7 +430,7 @@ func TestMsgClaim(t *testing.T) {
 				},
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[15],
@@ -453,7 +453,7 @@ func TestMsgClaim(t *testing.T) {
 				},
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[16],
@@ -476,7 +476,7 @@ func TestMsgClaim(t *testing.T) {
 				},
 				mission: types.Mission{
 					MissionID: 1,
-					Weight:    sdk.OneDec(),
+					Weight:    sdkmath.LegacyOneDec(),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[17],

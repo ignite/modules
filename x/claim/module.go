@@ -12,9 +12,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
 
-	"github.com/ignite/modules/x/claim/client/cli"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
 )
@@ -67,15 +65,11 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	}
 }
 
-// GetTxCmd returns the claim module's root tx command.
-func (a AppModuleBasic) GetTxCmd() *cobra.Command {
-	return cli.GetTxCmd()
-}
+// IsOnePerModuleType implements the depinject.OnePerModuleType interface.
+func (am AppModule) IsOnePerModuleType() {}
 
-// GetQueryCmd returns the claim module's root query command.
-func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd()
-}
+// IsAppModule implements the appmodule.AppModule interface.
+func (am AppModule) IsAppModule() {}
 
 // ----------------------------------------------------------------------------
 // AppModule
@@ -142,18 +136,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 // ConsensusVersion implements ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
-// BeginBlock executes all ABCI BeginBlock logic respective to the claim module.
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
-
-// EndBlock executes all ABCI EndBlock logic respective to the claim module. It
-// returns no validator updates.
-func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
-	err := am.keeper.EndAirdrop(ctx)
-	if err != nil {
-		ctx.Logger().Error(
-			err.Error(),
-		)
-	}
-
-	return []abci.ValidatorUpdate{}
+// EndBlock executes all ABCI EndBlock logic respective to the claim module.
+func (am AppModule) EndBlock(ctx context.Context) error {
+	return am.keeper.EndAirdrop(ctx)
 }

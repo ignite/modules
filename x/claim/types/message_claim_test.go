@@ -25,7 +25,7 @@ func TestMsgClaim_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: types.MsgClaim{
-				Claimer: sample.Address(sample.Rand()),
+				Claimer: sample.AccAddress(),
 			},
 		},
 	}

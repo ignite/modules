@@ -1,7 +1,10 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
+	"context"
+
+	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/pkg/errors"
@@ -59,7 +62,9 @@ func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin)
 	return nil
 }
 
-func (k Keeper) EndAirdrop(ctx sdk.Context) error {
+func (k Keeper) EndAirdrop(goCtx context.Context) error {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if !found || !airdropSupply.IsPositive() {
 		return nil
@@ -75,7 +80,7 @@ func (k Keeper) EndAirdrop(ctx sdk.Context) error {
 			return err
 		}
 
-		airdropSupply.Amount = sdk.ZeroInt()
+		airdropSupply.Amount = sdkmath.ZeroInt()
 		k.SetAirdropSupply(ctx, airdropSupply)
 	}
 

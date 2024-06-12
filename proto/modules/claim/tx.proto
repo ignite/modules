@@ -1,6 +1,7 @@
 syntax = "proto3";
 package modules.claim;
 
+import "cosmos/msg/v1/msg.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
@@ -12,6 +13,8 @@ service Msg {
 }
 
 message MsgClaim {
+  option (cosmos.msg.v1.signer) = "claimer";
+
   string claimer = 1;
   uint64 missionID = 2;
 }
@@ -19,7 +22,7 @@ message MsgClaim {
 message MsgClaimResponse {
   string claimed = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (cosmos_proto.scalar) = "cosmos.Int"
   ];
 }

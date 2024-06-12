@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 )
 
 // GetMissionIDBytes returns the byte representation of the ID
@@ -16,7 +16,7 @@ func GetMissionIDBytes(id uint64) []byte {
 
 // Validate checks the mission is valid
 func (m Mission) Validate() error {
-	if m.Weight.LT(sdk.ZeroDec()) || m.Weight.GT(sdk.OneDec()) {
+	if m.Weight.LT(sdkmath.LegacyZeroDec()) || m.Weight.GT(sdkmath.LegacyOneDec()) {
 		return errors.New("mission weight must be in range [0:1]")
 	}
 

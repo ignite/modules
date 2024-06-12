@@ -1,9 +1,10 @@
 package claim_test
 
 import (
-	"math/rand"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/ignite/modules/testutil/keeper"
@@ -13,24 +14,16 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-var r *rand.Rand
-
-// initialize random generator
-func init() {
-	s := rand.NewSource(1)
-	r = rand.New(s)
-}
-
 func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
 		ClaimRecords: []types.ClaimRecord{
 			{
-				Address: sample.Address(r),
+				Address: sample.AccAddress(),
 			},
 			{
-				Address: sample.Address(r),
+				Address: sample.AccAddress(),
 			},
 		},
 		Missions: []types.Mission{
@@ -41,7 +34,7 @@ func TestGenesis(t *testing.T) {
 				MissionID: 1,
 			},
 		},
-		AirdropSupply: sample.Coin(r),
+		AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(1000)),
 		InitialClaim: types.InitialClaim{
 			Enabled:   true,
 			MissionID: 35,

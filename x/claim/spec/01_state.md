@@ -50,7 +50,7 @@ message ClaimRecord {
   string address   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string claimable = 2 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (cosmos_proto.scalar)  = "cosmos.Int"
   ];
   repeated uint64 completedMissions = 3;
@@ -68,7 +68,7 @@ message Mission {
   string description = 2;
   string weight      = 3 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }

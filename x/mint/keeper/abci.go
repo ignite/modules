@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"context"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -10,24 +11,33 @@ import (
 )
 
 // BeginBlocker mints new coins for the previous block.
-func (k Keeper) BeginBlocker(ctx sdk.Context) error {
+func (k Keeper) BeginBlocker(goCtx context.Context) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// fetch stored minter & params
 	minter := k.GetMinter(ctx)
 	params := k.GetParams(ctx)
 
 	// recalculate inflation rate
-	totalStakingSupply := k.StakingTokenSupply(ctx)
-	bondedRatio := k.BondedRatio(ctx)
+	totalStakingSupply, err := k.StakingTokenSupply(ctx)
+	if err != nil {
+		return err
+	}
+
+	bondedRatio, err := k.BondedRatio(ctx)
+	if err != nil {
+		return err
+	}
+
 	minter.Inflation = minter.NextInflationRate(params, bondedRatio)
 	minter.AnnualProvisions = minter.NextAnnualProvisions(params, totalStakingSupply)
 	k.SetMinter(ctx, minter)
 
 	// mint coins, update supply
 	mintedCoin := minter.BlockProvision(params)
-	err := k.MintCoin(ctx, mintedCoin)
-	if err != nil {
+	if err = k.MintCoin(ctx, mintedCoin); err != nil {
 		return err
 	}
 

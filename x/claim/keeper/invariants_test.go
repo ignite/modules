@@ -20,10 +20,10 @@ func TestClaimRecordInvariant(t *testing.T) {
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   10,
 			Description: "test mission",
-			Weight:      sdk.NewDec(100),
+			Weight:      sdkmath.LegacyNewDec(100),
 		})
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{10},
 			ClaimedMissions:   []uint64{10},
@@ -38,10 +38,10 @@ func TestClaimRecordInvariant(t *testing.T) {
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   10,
 			Description: "test mission",
-			Weight:      sdk.NewDec(100),
+			Weight:      sdkmath.LegacyNewDec(100),
 		})
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{10},
 		})
@@ -53,7 +53,7 @@ func TestClaimRecordInvariant(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{},
 			ClaimedMissions:   []uint64{10},
@@ -61,7 +61,7 @@ func TestClaimRecordInvariant(t *testing.T) {
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   10,
 			Description: "test mission",
-			Weight:      sdk.NewDec(100),
+			Weight:      sdkmath.LegacyNewDec(100),
 		})
 
 		msg, broken := keeper.ClaimRecordInvariant(*tk.ClaimKeeper)(ctx)
@@ -74,19 +74,19 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{0, 1},
 		})
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   0,
 			Description: "mission 0",
-			Weight:      sdk.ZeroDec(),
+			Weight:      sdkmath.LegacyZeroDec(),
 		})
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   1,
 			Description: "mission 1",
-			Weight:      sdk.ZeroDec(),
+			Weight:      sdkmath.LegacyZeroDec(),
 		})
 
 		msg, broken := keeper.ClaimRecordMissionInvariant(*tk.ClaimKeeper)(ctx)
@@ -96,14 +96,14 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{0, 1},
 		})
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   1,
 			Description: "mission 1",
-			Weight:      sdk.ZeroDec(),
+			Weight:      sdkmath.LegacyZeroDec(),
 		})
 
 		msg, broken := keeper.ClaimRecordMissionInvariant(*tk.ClaimKeeper)(ctx)
@@ -117,7 +117,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		tk.ClaimKeeper.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: nil,
 		})
@@ -131,19 +131,19 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		tk.ClaimKeeper.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{0, 1},
 		})
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   0,
 			Description: "",
-			Weight:      sdk.ZeroDec(),
+			Weight:      sdkmath.LegacyZeroDec(),
 		})
 		tk.ClaimKeeper.SetMission(ctx, types.Mission{
 			MissionID:   1,
 			Description: "",
-			Weight:      sdk.ZeroDec(),
+			Weight:      sdkmath.LegacyZeroDec(),
 		})
 
 		msg, broken := keeper.AirdropSupplyInvariant(*tk.ClaimKeeper)(ctx)
@@ -154,7 +154,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 		tk.ClaimKeeper.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
-		addr := sample.Address(r)
+		addr := sample.AccAddress()
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
 			Address:           addr,
 			Claimable:         sdkmath.NewInt(5),
@@ -175,7 +175,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		tk.ClaimKeeper.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(10),
 			CompletedMissions: []uint64{0, 1, 2},
 		})
@@ -189,7 +189,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		tk.ClaimKeeper.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.ClaimKeeper.SetClaimRecord(ctx, types.ClaimRecord{
-			Address:           sample.Address(r),
+			Address:           sample.AccAddress(),
 			Claimable:         sdkmath.NewInt(9),
 			CompletedMissions: nil,
 		})

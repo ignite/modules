@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -10,7 +11,6 @@ import (
 
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
-	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -18,7 +18,7 @@ func TestAirdropSupplyQuery(t *testing.T) {
 	var (
 		ctx, tk, _   = testkeeper.NewTestSetup(t)
 		wctx         = sdk.WrapSDKContext(ctx)
-		sampleSupply = sample.Coin(r)
+		sampleSupply = sdk.NewCoin("foo", sdkmath.NewInt(1000))
 	)
 	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
 

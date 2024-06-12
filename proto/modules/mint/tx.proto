@@ -1,0 +1,23 @@
+syntax = "proto3";
+package modules.mint;
+
+import "cosmos/msg/v1/msg.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "modules/mint/mint.proto";
+
+option go_package = "github.com/ignite/modules/x/mint/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  
+  string authority = 1;
+  Params params = 2;
+}
+
+message MsgUpdateParamsResponse {}

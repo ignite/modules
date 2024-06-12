@@ -51,8 +51,8 @@ func (m DecayInformation) ApplyDecayFactor(coins sdk.Coins, currentTime time.Tim
 	}
 
 	// calculate decay factor
-	timeToDec := func(t time.Time) sdk.Dec {
-		return sdk.NewDecFromInt(sdkmath.NewInt(t.Unix()))
+	timeToDec := func(t time.Time) sdkmath.LegacyDec {
+		return sdkmath.LegacyNewDecFromInt(sdkmath.NewInt(t.Unix()))
 	}
 
 	current, start, end := timeToDec(currentTime), timeToDec(m.DecayStart), timeToDec(m.DecayEnd)
@@ -63,7 +63,7 @@ func (m DecayInformation) ApplyDecayFactor(coins sdk.Coins, currentTime time.Tim
 	// apply decay factor to each denom
 	newCoins := sdk.NewCoins()
 	for _, coin := range coins {
-		amountDec := sdk.NewDecFromInt(coin.Amount)
+		amountDec := sdkmath.LegacyNewDecFromInt(coin.Amount)
 		newAmount := amountDec.Mul(decayFactor).TruncateInt()
 
 		if !newAmount.IsZero() {

@@ -14,12 +14,12 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	fiftyPercent, err := sdk.NewDecFromStr("0.5")
+	fiftyPercent, err := sdkmath.LegacyNewDecFromStr("0.5")
 	require.NoError(t, err)
 
 	claimAmts := []sdkmath.Int{
-		sample.Int(r),
-		sample.Int(r),
+		sdkmath.NewIntFromUint64(10),
+		sdkmath.NewIntFromUint64(5020),
 	}
 
 	for _, tt := range []struct {
@@ -38,11 +38,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: claimAmts[0],
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: claimAmts[1],
 					},
 				},
@@ -72,7 +72,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "0foo"),
@@ -85,11 +85,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
@@ -103,22 +103,22 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
 						MissionID: 1,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -131,12 +131,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
@@ -161,12 +161,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0, 1},
 					},
@@ -191,12 +191,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
@@ -204,11 +204,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
 						MissionID: 1,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -221,18 +221,18 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -260,7 +260,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -273,18 +273,18 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(20),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.ZeroInt(),
 					},
 				},
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -297,11 +297,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(9),
 					},
 				},
@@ -309,7 +309,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 			},
@@ -321,11 +321,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(11),
 					},
 				},
@@ -333,7 +333,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 			},
@@ -345,12 +345,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
@@ -374,19 +374,19 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:           sample.Address(r),
+						Address:           sample.AccAddress(),
 						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
 					{
 						MissionID: 1,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -401,7 +401,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 			},
@@ -435,7 +435,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						MissionID: 0,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
 			},
@@ -447,11 +447,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
-						Address:   sample.Address(r),
+						Address:   sample.AccAddress(),
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
@@ -474,7 +474,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "0foo"),

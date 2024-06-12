@@ -11,13 +11,13 @@ message Minter {
   // current annual inflation rate
   string inflation = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // current annual expected provisions
   string annual_provisions = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 }
@@ -26,7 +26,7 @@ message WeightedAddress {
   string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string weight = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 }
@@ -36,21 +36,21 @@ message DistributionProportions {
   // allocated as staking rewards.
   string staking = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // funded_addresses defines the proportion of the minted minted_denom that is
   // to the set of funded addresses.
   string funded_addresses = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // community_pool defines the proportion of the minted minted_denom that is
   // to be allocated to the community pool.
   string community_pool = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 }
@@ -64,25 +64,25 @@ message Params {
   // maximum annual change in inflation rate
   string inflation_rate_change = 2 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // maximum inflation rate
   string inflation_max = 3 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // minimum inflation rate
   string inflation_min = 4 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // goal of percent bonded coins
   string goal_bonded = 5 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
   // expected blocks per year

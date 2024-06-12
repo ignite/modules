@@ -4,25 +4,24 @@ import (
 	"fmt"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite/modules/app"
-	"github.com/ignite/modules/cmd"
 	"github.com/ignite/modules/x/mint/simulation"
 	"github.com/ignite/modules/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {
-	cdc := cmd.MakeEncodingConfig(app.ModuleBasics)
-	dec := simulation.NewDecodeStore(cdc.Marshaler)
+	cdc := moduletestutil.MakeTestEncodingConfig()
+	dec := simulation.NewDecodeStore(cdc.Codec)
 
-	minter := types.NewMinter(sdk.OneDec(), sdk.NewDec(15))
+	minter := types.NewMinter(sdkmath.LegacyOneDec(), sdkmath.LegacyNewDec(15))
 
 	kvPairs := kv.Pairs{
 		Pairs: []kv.Pair{
-			{Key: types.MinterKey, Value: cdc.Marshaler.MustMarshal(&minter)},
+			{Key: types.MinterKey, Value: cdc.Codec.MustMarshal(&minter)},
 			{Key: []byte{0x99}, Value: []byte{0x99}},
 		},
 	}

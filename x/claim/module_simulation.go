@@ -40,11 +40,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 
 	// define some decimal numbers for mission weights
-	dec1, err := sdk.NewDecFromStr("0.4")
+	dec1, err := sdkmath.LegacyNewDecFromStr("0.4")
 	if err != nil {
 		panic(err)
 	}
-	dec2, err := sdk.NewDecFromStr("0.3")
+	dec2, err := sdkmath.LegacyNewDecFromStr("0.3")
 	if err != nil {
 		panic(err)
 	}
@@ -85,14 +85,14 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.LegacyParamChange 
 }
 
 // RegisterStoreDecoder registers a decoder
-func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
+func (am AppModule) RegisterStoreDecoder(_ simtypes.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgClaim int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaim, &weightMsgClaim, nil,
+	simState.AppParams.GetOrGenerate(opWeightMsgClaim, &weightMsgClaim, nil,
 		func(_ *rand.Rand) {
 			weightMsgClaim = defaultWeightMsgClaim
 		},

@@ -1,12 +1,13 @@
 package keeper
 
 import (
+	"context"
+
+	"cosmossdk.io/log"
 	sdkmath "cosmossdk.io/math"
-	"github.com/cometbft/cometbft/libs/log"
+	storetypes "cosmossdk.io/store/types"
 	"github.com/cosmos/cosmos-sdk/codec"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/mint/types"
@@ -14,47 +15,57 @@ import (
 
 // Keeper of the mint store
 type Keeper struct {
-	cdc              codec.BinaryCodec
-	storeKey         storetypes.StoreKey
-	paramSpace       paramtypes.Subspace
-	stakingKeeper    types.StakingKeeper
-	accountKeeper    types.AccountKeeper
-	bankKeeper       types.BankKeeper
-	distrKeeper      types.DistrKeeper
+	cdc           codec.BinaryCodec
+	storeKey      storetypes.StoreKey
+	stakingKeeper types.StakingKeeper
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+	distrKeeper   types.DistrKeeper
+
+	authority        string
 	feeCollectorName string
 }
 
 // NewKeeper creates a new mint Keeper instance
-func NewKeeper(
-	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace paramtypes.Subspace,
-	sk types.StakingKeeper, ak types.AccountKeeper, bk types.BankKeeper, dk types.DistrKeeper,
-	feeCollectorName string,
-) Keeper {
+func NewKeeper(cdc codec.BinaryCodec, key storetypes.StoreKey, authority string, sk types.StakingKeeper, ak types.AccountKeeper, bk types.BankKeeper, dk types.DistrKeeper, feeCollectorName string) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
 		panic("the mint module account has not been set")
 	}
 
-	// set KeyTable if it has not already been set
-	if !paramSpace.HasKeyTable() {
-		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
-	}
-
 	return Keeper{
 		cdc:              cdc,
 		storeKey:         key,
-		paramSpace:       paramSpace,
 		stakingKeeper:    sk,
 		accountKeeper:    ak,
 		bankKeeper:       bk,
 		distrKeeper:      dk,
+		authority:        authority,
 		feeCollectorName: feeCollectorName,
 	}
 }
 
 // Logger returns a module-specific logger.
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger().With("module", "x/"+types.ModuleName)
+func (k Keeper) Logger(ctx context.Context) log.Logger {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	return sdkCtx.Logger().With("module", "x/"+types.ModuleName)
+}
+
+func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&params)
+	store.Set(types.ParamsKey, b)
+}
+
+func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
+	store := ctx.KVStore(k.storeKey)
+	b := store.Get(types.ParamsKey)
+	if b == nil {
+		panic("stored mint params should not have been nil")
+	}
+
+	k.cdc.MustUnmarshal(b, &params)
+	return
 }
 
 // GetMinter gets the minter
@@ -76,26 +87,15 @@ func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
 	store.Set(types.MinterKey, b)
 }
 
-// GetParams returns the total set of minting parameters.
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramSpace.GetParamSet(ctx, &params)
-	return params
-}
-
-// SetParams sets the total set of minting parameters.
-func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-	k.paramSpace.SetParamSet(ctx, &params)
-}
-
 // StakingTokenSupply implements an alias call to the underlying staking keeper's
 // StakingTokenSupply to be used in BeginBlocker.
-func (k Keeper) StakingTokenSupply(ctx sdk.Context) sdkmath.Int {
+func (k Keeper) StakingTokenSupply(ctx context.Context) (sdkmath.Int, error) {
 	return k.stakingKeeper.StakingTokenSupply(ctx)
 }
 
 // BondedRatio implements an alias call to the underlying staking keeper's
 // BondedRatio to be used in BeginBlocker.
-func (k Keeper) BondedRatio(ctx sdk.Context) sdk.Dec {
+func (k Keeper) BondedRatio(ctx context.Context) (sdkmath.LegacyDec, error) {
 	return k.stakingKeeper.BondedRatio(ctx)
 }
 
@@ -106,24 +106,26 @@ func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
 }
 
 // GetProportion gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
-func (k Keeper) GetProportion(_ sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
-	return sdk.NewCoin(mintedCoin.Denom, sdk.NewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
+func (k Keeper) GetProportion(mintedCoin sdk.Coin, ratio sdkmath.LegacyDec) sdk.Coin {
+	return sdk.NewCoin(mintedCoin.Denom, sdkmath.LegacyNewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
 }
 
 // DistributeMintedCoin implements distribution of minted coins from mint
 // to be used in BeginBlocker.
-func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error {
+func (k Keeper) DistributeMintedCoin(goCtx context.Context, mintedCoin sdk.Coin) error {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	params := k.GetParams(ctx)
 	proportions := params.DistributionProportions
 
 	// allocate staking rewards into fee collector account to be moved to on next begin blocker by staking module
-	stakingRewardsCoins := sdk.NewCoins(k.GetProportion(ctx, mintedCoin, proportions.Staking))
+	stakingRewardsCoins := sdk.NewCoins(k.GetProportion(mintedCoin, proportions.Staking))
 	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, stakingRewardsCoins)
 	if err != nil {
 		return err
 	}
 
-	fundedAddrsCoin := k.GetProportion(ctx, mintedCoin, proportions.FundedAddresses)
+	fundedAddrsCoin := k.GetProportion(mintedCoin, proportions.FundedAddresses)
 	fundedAddrsCoins := sdk.NewCoins(fundedAddrsCoin)
 	if len(params.FundedAddresses) == 0 {
 		// fund community pool when rewards address is empty
@@ -137,7 +139,7 @@ func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error
 	} else {
 		// allocate developer rewards to developer addresses by weight
 		for _, w := range params.FundedAddresses {
-			fundedAddrCoins := sdk.NewCoins(k.GetProportion(ctx, fundedAddrsCoin, w.Weight))
+			fundedAddrCoins := sdk.NewCoins(k.GetProportion(fundedAddrsCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
 				return errorsignite.Critical(err.Error())

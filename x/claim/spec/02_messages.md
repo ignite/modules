@@ -17,7 +17,7 @@ message MsgClaim {
 message MsgClaimResponse {
   string claimed = 1 [
     (gogoproto.nullable) = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (cosmos_proto.scalar) = "cosmos.Int"
   ];
 }

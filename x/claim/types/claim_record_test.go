@@ -4,11 +4,10 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/ignite/modules/testutil/constructor"
 	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/types"
 	claim "github.com/ignite/modules/x/claim/types"
 )
 
@@ -20,13 +19,13 @@ func TestClaimRecord_Validate(t *testing.T) {
 	}{
 		{
 			name:        "should validate claim record",
-			claimRecord: sample.ClaimRecord(r),
+			claimRecord: types.ClaimRecord{Address: sample.AccAddress(), Claimable: sdkmath.OneInt()},
 			valid:       true,
 		},
 		{
 			name: "should validate claim record with no completed mission",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{},
 			},
@@ -44,7 +43,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 		{
 			name: "should prevent zero claimable amount",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.ZeroInt(),
 				CompletedMissions: []uint64{0, 1, 2},
 			},
@@ -53,7 +52,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 		{
 			name: "should prevent negative claimable amount",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.NewInt(-1),
 				CompletedMissions: []uint64{0, 1, 2},
 			},
@@ -62,7 +61,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 		{
 			name: "should prevent duplicate completed mission IDs",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{0, 1, 2, 0},
 			},
@@ -85,7 +84,7 @@ func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 		{
 			name: "should show completed mission if in list 1",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{0, 1, 2, 3},
 			},
@@ -95,7 +94,7 @@ func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 		{
 			name: "should show completed mission if in list 2",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{0, 1, 2, 3},
 			},
@@ -105,7 +104,7 @@ func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 		{
 			name: "should prevent claimRecord with no completed missions",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{},
 			},
@@ -115,7 +114,7 @@ func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 		{
 			name: "should prevent claimRecord without requested mission",
 			claimRecord: claim.ClaimRecord{
-				Address:           sample.Address(r),
+				Address:           sample.AccAddress(),
 				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{1, 2, 3},
 			},
@@ -142,7 +141,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
-				Weight: sdk.OneDec(),
+				Weight: sdkmath.LegacyOneDec(),
 			},
 			expected: sdkmath.NewIntFromUint64(100),
 		},
@@ -152,7 +151,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
-				Weight: sdk.ZeroDec(),
+				Weight: sdkmath.LegacyZeroDec(),
 			},
 			expected: sdkmath.ZeroInt(),
 		},
@@ -162,7 +161,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
-				Weight: tc.Dec(t, "0.5"),
+				Weight: sdkmath.LegacyMustNewDecFromStr("0.5"),
 			},
 			expected: sdkmath.NewIntFromUint64(50),
 		},
@@ -172,7 +171,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(201),
 			},
 			mission: claim.Mission{
-				Weight: tc.Dec(t, "0.5"),
+				Weight: sdkmath.LegacyMustNewDecFromStr("0.5"),
 			},
 			expected: sdkmath.NewIntFromUint64(100),
 		},
@@ -182,7 +181,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(1),
 			},
 			mission: claim.Mission{
-				Weight: tc.Dec(t, "0.99"),
+				Weight: sdkmath.LegacyMustNewDecFromStr("0.99"),
 			},
 			expected: sdkmath.NewIntFromUint64(0),
 		},

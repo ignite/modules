@@ -20,22 +20,22 @@ message Params {
   string mint_denom = 1;
   string inflation_rate_change = 2 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string inflation_max = 3 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string inflation_min = 4 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string goal_bonded = 5 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   uint64 blocks_per_year = 6;
@@ -52,17 +52,17 @@ message Params {
 message DistributionProportions {
   string staking = 1 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string funded_addresses = 2 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   string community_pool = 3 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }
@@ -77,7 +77,7 @@ message WeightedAddress {
   string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string weight  = 2 [
     (gogoproto.nullable)   = false,
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }
