@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/ignite/modules/testutil/constructor"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -93,8 +93,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 			decayInfo: types.DecayInformation{
 				Enabled: false,
 			},
-			coins:         tc.Coins(t, "100foo,100bar"),
-			expectedCoins: tc.Coins(t, "100foo,100bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
 		},
 		{
 			name: "should apply no change if decay not started",
@@ -104,8 +104,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(10000, 0),
 			},
 			currentTime:   time.Unix(500, 0),
-			coins:         tc.Coins(t, "100foo,100bar"),
-			expectedCoins: tc.Coins(t, "100foo,100bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
 		},
 		{
 			name: "should return zero coins if end of decay",
@@ -115,7 +115,7 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(10000, 0),
 			},
 			currentTime:   time.Unix(10000, 0),
-			coins:         tc.Coins(t, "100foo,100bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
 			expectedCoins: sdk.NewCoins(),
 		},
 		{
@@ -126,7 +126,7 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(10000, 0),
 			},
 			currentTime:   time.Unix(10000, 0),
-			coins:         tc.Coins(t, "100foo,100bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
 			expectedCoins: sdk.NewCoins(),
 		},
 		{
@@ -137,7 +137,7 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(10000, 0),
 			},
 			currentTime:   time.Unix(10001, 0),
-			coins:         tc.Coins(t, "100foo,100bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100)), sdk.NewCoin("bar", sdkmath.NewInt(100))),
 			expectedCoins: sdk.NewCoins(),
 		},
 		{
@@ -148,8 +148,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(20000, 0),
 			},
 			currentTime:   time.Unix(15000, 0),
-			coins:         tc.Coins(t, "200000foo,2000000bar"),
-			expectedCoins: tc.Coins(t, "100000foo,1000000bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(200000)), sdk.NewCoin("bar", sdkmath.NewInt(200000))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100000)), sdk.NewCoin("bar", sdkmath.NewInt(1000000))),
 		},
 		{
 			name: "should apply 0.6 decay factor",
@@ -159,8 +159,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(20000, 0),
 			},
 			currentTime:   time.Unix(14000, 0),
-			coins:         tc.Coins(t, "100000foo,1000000bar"),
-			expectedCoins: tc.Coins(t, "60000foo,600000bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100000)), sdk.NewCoin("bar", sdkmath.NewInt(1000000))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(60000)), sdk.NewCoin("bar", sdkmath.NewInt(600000))),
 		},
 		{
 			name: "should apply 0.2 decay factor",
@@ -170,8 +170,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(20000, 0),
 			},
 			currentTime:   time.Unix(18000, 0),
-			coins:         tc.Coins(t, "100000foo,1000000bar"),
-			expectedCoins: tc.Coins(t, "20000foo,200000bar"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100000)), sdk.NewCoin("bar", sdkmath.NewInt(1000000))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(20000)), sdk.NewCoin("bar", sdkmath.NewInt(200000))),
 		},
 		{
 			name: "should apply decay factor and truncate decimals",
@@ -181,8 +181,8 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 				DecayEnd:   time.Unix(20000, 0),
 			},
 			currentTime:   time.Unix(15000, 0),
-			coins:         tc.Coins(t, "100000foo,1bar,1000000000003baz"),
-			expectedCoins: tc.Coins(t, "50000foo,500000000001baz"),
+			coins:         sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(100000)), sdk.NewCoin("baz", sdkmath.NewInt(100000000000))),
+			expectedCoins: sdk.NewCoins(sdk.NewCoin("foo", sdkmath.NewInt(50000)), sdk.NewCoin("baz", sdkmath.NewInt(500000000001))),
 		},
 		{
 			name: "should return ze coins if factor applied to zero coins",

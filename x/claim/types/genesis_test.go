@@ -8,7 +8,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/ignite/modules/testutil/constructor"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
 )
@@ -75,7 +74,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "0foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.ZeroInt()),
 			},
 			valid: true,
 		},
@@ -93,7 +92,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: true,
 		},
@@ -121,7 +120,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: true,
 		},
@@ -144,14 +143,14 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    tc.Dec(t, "0.4"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.4"),
 					},
 					{
 						MissionID: 1,
-						Weight:    tc.Dec(t, "0.6"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "10foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(10)),
 			},
 			valid: true,
 		},
@@ -174,14 +173,14 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    tc.Dec(t, "0.4"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.4"),
 					},
 					{
 						MissionID: 1,
-						Weight:    tc.Dec(t, "0.6"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "6foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(6)),
 			},
 			valid: true,
 		},
@@ -211,7 +210,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: true,
 		},
@@ -235,7 +234,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 0,
@@ -263,7 +262,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: false,
 		},
@@ -287,7 +286,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: false,
 		},
@@ -305,7 +304,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(9),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
@@ -329,7 +328,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(11),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
@@ -357,14 +356,14 @@ func TestGenesisState_Validate(t *testing.T) {
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    tc.Dec(t, "0.4"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.4"),
 					},
 					{
 						MissionID: 1,
-						Weight:    tc.Dec(t, "0.6"),
+						Weight:    sdkmath.LegacyMustNewDecFromStr("0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: false,
 		},
@@ -389,7 +388,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 			},
 			valid: false,
 		},
@@ -455,7 +454,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(20)),
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 0,
@@ -477,7 +476,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "0foo"),
+				AirdropSupply: sdk.NewCoin("foo", sdkmath.ZeroInt()),
 			},
 			valid: false,
 		},

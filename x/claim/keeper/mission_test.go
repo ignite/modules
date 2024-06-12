@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
-	tc "github.com/ignite/modules/testutil/constructor"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/testutil/sample"
@@ -254,7 +253,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			},
 			missionID:       1,
 			address:         addr[5],
-			expectedBalance: tc.Coin(t, "250foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(250)),
 		},
 		{
 			name: "should allow distributing half for mission with 0.5 weight and truncate decimal",
@@ -273,7 +272,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			},
 			missionID:       1,
 			address:         addr[6],
-			expectedBalance: tc.Coin(t, "100foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(100)),
 		},
 		{
 			name: "should prevent distributing fund for empty claim record",
@@ -297,10 +296,10 @@ func TestKeeper_ClaimMission(t *testing.T) {
 		{
 			name: "should allow distributing airdrop with other already completed missions",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "10000bar"),
+				airdropSupply: sdk.NewCoin("bar", sdkmath.NewInt(1000)),
 				mission: types.Mission{
 					MissionID: 3,
-					Weight:    tc.Dec(t, "0.3"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.3"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[8],
@@ -311,7 +310,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			},
 			missionID:       3,
 			address:         addr[8],
-			expectedBalance: tc.Coin(t, "3000bar"),
+			expectedBalance: sdk.NewCoin("bar", sdkmath.NewInt(3000)),
 		},
 		{
 			name: "should allow applying decay factor if enabled",
@@ -334,7 +333,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			},
 			missionID:       1,
 			address:         addr[9],
-			expectedBalance: tc.Coin(t, "250foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(250)),
 		},
 		{
 			name: "should allow distributing all funds if decay factor if enabled and decay not started",
@@ -357,7 +356,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			},
 			missionID:       1,
 			address:         addr[10],
-			expectedBalance: tc.Coin(t, "500foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(500)),
 		},
 		{
 			name: "should prevent distributing funds if decay ended",

@@ -3,9 +3,9 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
-	tc "github.com/ignite/modules/testutil/constructor"
 	"github.com/ignite/modules/testutil/sample"
 	claim "github.com/ignite/modules/x/claim/types"
 )
@@ -26,7 +26,7 @@ func TestMission_Validate(t *testing.T) {
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
-				Weight:      tc.Dec(t, "0"),
+				Weight:      sdkmath.LegacyMustNewDecFromStr("0"),
 			},
 			valid: true,
 		},
@@ -35,7 +35,7 @@ func TestMission_Validate(t *testing.T) {
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
-				Weight:      tc.Dec(t, "1"),
+				Weight:      sdkmath.LegacyMustNewDecFromStr("1"),
 			},
 			valid: true,
 		},
@@ -44,7 +44,7 @@ func TestMission_Validate(t *testing.T) {
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
-				Weight:      tc.Dec(t, "1.0000001"),
+				Weight:      sdkmath.LegacyMustNewDecFromStr("1.0000001"),
 			},
 			valid: false,
 		},
@@ -53,7 +53,7 @@ func TestMission_Validate(t *testing.T) {
 			mission: claim.Mission{
 				MissionID:   sample.Uint64(r),
 				Description: sample.String(r, 30),
-				Weight:      tc.Dec(t, "-0.0000001"),
+				Weight:      sdkmath.LegacyMustNewDecFromStr("-0.0000001"),
 			},
 			valid: false,
 		},

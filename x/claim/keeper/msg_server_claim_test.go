@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
-	tc "github.com/ignite/modules/testutil/constructor"
 	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/types"
@@ -17,8 +16,6 @@ import (
 
 func TestMsgClaim(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
-	ctx := sdk.WrapSDKContext(sdkCtx)
-
 	// prepare addresses
 	var addr []string
 	for i := 0; i < 20; i++ {
@@ -274,7 +271,7 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[8],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "250foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(250)),
 		},
 		{
 			name: "should allow distributing half for mission with 0.5 weight and truncate decimal",
@@ -296,7 +293,7 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[9],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "100foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(100)),
 		},
 		{
 			name: "should prevent distributing fund for empty claim record",
@@ -324,10 +321,10 @@ func TestMsgClaim(t *testing.T) {
 			name: "should allow distributing airdrop with other already completed missions",
 			inputState: inputState{
 				noInitialClaim: true,
-				airdropSupply:  tc.Coin(t, "10000bar"),
+				airdropSupply:  sdk.NewCoin("bar", sdkmath.NewInt(10000)),
 				mission: types.Mission{
 					MissionID: 3,
-					Weight:    tc.Dec(t, "0.3"),
+					Weight:    sdkmath.LegacyMustNewDecFromStr("0.3"),
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[11],
@@ -340,7 +337,7 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[11],
 				MissionID: 3,
 			},
-			expectedBalance: tc.Coin(t, "3000bar"),
+			expectedBalance: sdk.NewCoin("bar", sdkmath.NewInt(3000)),
 		},
 		{
 			name: "should allow applying decay factor if enabled",
@@ -366,7 +363,7 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[12],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "250foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(250)),
 		},
 		{
 			name: "should allow distributing all funds if decay factor if enabled and decay not started",
@@ -392,7 +389,7 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[13],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "500foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(500)),
 		},
 		{
 			name: "should prevent distributing funds if decay ended",
@@ -423,7 +420,7 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should allow to claim initial for an existing mission and claim record",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "100000foo"),
+				airdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(100000)),
 				initialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 1,
@@ -441,12 +438,12 @@ func TestMsgClaim(t *testing.T) {
 				Claimer:   addr[15],
 				MissionID: 1,
 			},
-			expectedBalance: tc.Coin(t, "100foo"),
+			expectedBalance: sdk.NewCoin("foo", sdkmath.NewInt(100)),
 		},
 		{
 			name: "should prevent claiming initial if initial claim not enabled",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "100000foo"),
+				airdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(100000)),
 				initialClaim: types.InitialClaim{
 					Enabled:   false,
 					MissionID: 1,
@@ -469,7 +466,7 @@ func TestMsgClaim(t *testing.T) {
 		{
 			name: "should prevent claiming initial already claimed",
 			inputState: inputState{
-				airdropSupply: tc.Coin(t, "100000foo"),
+				airdropSupply: sdk.NewCoin("foo", sdkmath.NewInt(100000)),
 				initialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 1,
@@ -511,10 +508,10 @@ func TestMsgClaim(t *testing.T) {
 				tk.ClaimKeeper.SetClaimRecord(sdkCtx, tt.inputState.claimRecord)
 			}
 			if !tt.inputState.blockTime.IsZero() {
-				ctx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
+				sdkCtx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			res, err := ts.ClaimSrv.Claim(ctx, &tt.msg)
+			res, err := ts.ClaimSrv.Claim(sdkCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
