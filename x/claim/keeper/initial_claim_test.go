@@ -18,7 +18,9 @@ func createTestInitialClaim(keeper *keeper.Keeper, ctx sdk.Context) types.Initia
 }
 
 func TestInitialClaimGet(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow get", func(t *testing.T) {
 		item := createTestInitialClaim(tk, ctx)
@@ -32,7 +34,9 @@ func TestInitialClaimGet(t *testing.T) {
 }
 
 func TestInitialClaimRemove(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow remove", func(t *testing.T) {
 		createTestInitialClaim(tk, ctx)

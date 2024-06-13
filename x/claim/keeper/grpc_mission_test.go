@@ -14,7 +14,9 @@ import (
 )
 
 func TestMissionQuerySingle(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	msgs := createNMission(tk, ctx, 2)
 	for _, tc := range []struct {
@@ -59,7 +61,9 @@ func TestMissionQuerySingle(t *testing.T) {
 }
 
 func TestMissionQueryPaginated(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	msgs := createNMission(tk, ctx, 5)
 

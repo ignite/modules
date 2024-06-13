@@ -14,7 +14,9 @@ import (
 
 func TestClaimRecordInvariant(t *testing.T) {
 	t.Run("should not break with a completed and claimed mission", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.SetMission(ctx, types.Mission{
 			MissionID:   10,
@@ -32,7 +34,9 @@ func TestClaimRecordInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 	t.Run("should not break with a completed but not claimed mission", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.SetMission(ctx, types.Mission{
 			MissionID:   10,
@@ -49,7 +53,9 @@ func TestClaimRecordInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 	t.Run("should break with claimed but not completed mission", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
 			Address:           sample.AccAddress(),
@@ -70,7 +76,9 @@ func TestClaimRecordInvariant(t *testing.T) {
 
 func TestClaimRecordMissionInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
 			Address:           sample.AccAddress(),
@@ -92,7 +100,9 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 	t.Run("should break with invalid state", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
 			Address:           sample.AccAddress(),
@@ -112,7 +122,9 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 
 func TestAirdropSupplyInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
@@ -126,7 +138,9 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 	})
 
 	t.Run("should not break with valid state and completed missions", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
@@ -150,7 +164,9 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 	})
 
 	t.Run("should break with duplicated address in claim record", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		addr := sample.AccAddress()
@@ -170,7 +186,9 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 	})
 
 	t.Run("should break with address completing non existing mission", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.SetClaimRecord(ctx, types.ClaimRecord{
@@ -184,7 +202,9 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 	})
 
 	t.Run("should break with airdrop supply not equal to claimable amounts", func(t *testing.T) {
-		ctx, tk := createClaimKeeper(t)
+		testSuite := createClaimKeeper(t)
+		ctx := testSuite.ctx
+		tk := testSuite.tk
 
 		tk.InitializeAirdropSupply(ctx, sdk.NewCoin("test", sdkmath.NewInt(10)))
 		tk.SetClaimRecord(ctx, types.ClaimRecord{

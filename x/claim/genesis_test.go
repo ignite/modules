@@ -4,12 +4,16 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+	storetypes "cosmossdk.io/store/types"
+	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim"
+	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
 )
 
@@ -41,7 +45,12 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	ctx, tk := createClaimKeeper(t)
+	encCfg := moduletestutil.MakeTestEncodingConfig(claim.AppModuleBasic{})
+	key := storetypes.NewKVStoreKey(types.StoreKey)
+	memKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+	ctx := testutil.DefaultContextWithKeys(map[string]*storetypes.KVStoreKey{types.ModuleName: key}, map[string]*storetypes.TransientStoreKey{types.ModuleName: storetypes.NewTransientStoreKey("transient_test")}, map[string]*storetypes.MemoryStoreKey{types.ModuleName: memKey})
+
+	tk := keeper.NewKeeper(encCfg.Codec, key, memKey, nil, nil, nil, sample.AccAddress())
 
 	t.Run("should allow import and export of genesis", func(t *testing.T) {
 		claim.InitGenesis(ctx, *tk, genesisState)

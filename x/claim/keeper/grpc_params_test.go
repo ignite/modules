@@ -9,7 +9,9 @@ import (
 )
 
 func TestParamsQuery(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow params get query", func(t *testing.T) {
 		params := types.DefaultParams()

@@ -15,7 +15,9 @@ import (
 )
 
 func TestMsgClaim(t *testing.T) {
-	sdkCtx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	sdkCtx := testSuite.ctx
+	tk := testSuite.tk
 	ts := keeper.NewMsgServerImpl(*tk)
 
 	// prepare addresses
@@ -521,7 +523,7 @@ func TestMsgClaim(t *testing.T) {
 				sdkCtx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			res, err := ts.ClaimSrv.Claim(sdkCtx, &tt.msg)
+			res, err := ts.Claim(sdkCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
@@ -533,7 +535,7 @@ func TestMsgClaim(t *testing.T) {
 
 				require.Equal(t, tt.expectedBalance.Amount, res.Claimed)
 
-				balance := tk.BankKeeper.GetBalance(sdkCtx, sdkAddr, tt.inputState.airdropSupply.Denom)
+				balance := testSuite.bankKeeper.GetBalance(sdkCtx, sdkAddr, tt.inputState.airdropSupply.Denom)
 				require.True(t, balance.IsEqual(tt.expectedBalance),
 					"expected balance after mission complete: %s, actual balance: %s",
 					tt.expectedBalance.String(),

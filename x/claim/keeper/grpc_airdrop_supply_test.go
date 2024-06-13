@@ -14,7 +14,9 @@ import (
 )
 
 func TestAirdropSupplyQuery(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 	sampleSupply := sdk.NewCoin("foo", sdkmath.NewInt(1000))
 
 	tk.SetAirdropSupply(ctx, sampleSupply)

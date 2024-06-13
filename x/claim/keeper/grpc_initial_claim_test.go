@@ -12,7 +12,9 @@ import (
 )
 
 func TestInitialClaimQuery(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 	item := createTestInitialClaim(tk, ctx)
 	for _, tc := range []struct {
 		desc     string

@@ -14,7 +14,9 @@ import (
 )
 
 func TestClaimRecordQuerySingle(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 	msgs := createNClaimRecord(tk, ctx, 2)
 
 	for _, tc := range []struct {
@@ -65,7 +67,9 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 }
 
 func TestClaimRecordQueryPaginated(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 	msgs := createNClaimRecord(tk, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllClaimRecordRequest {

@@ -26,7 +26,9 @@ func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Missi
 }
 
 func TestMissionGet(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow get", func(t *testing.T) {
 		items := createNMission(tk, ctx, 10)
@@ -42,7 +44,9 @@ func TestMissionGet(t *testing.T) {
 }
 
 func TestMissionGetAll(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow get all", func(t *testing.T) {
 		items := createNMission(tk, ctx, 10)
@@ -54,7 +58,9 @@ func TestMissionGetAll(t *testing.T) {
 }
 
 func TestMissionRemove(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow remove", func(t *testing.T) {
 		items := createNMission(tk, ctx, 10)
@@ -67,7 +73,9 @@ func TestMissionRemove(t *testing.T) {
 }
 
 func TestKeeper_ClaimMission(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	// prepare addresses
 	addr := make([]string, 20)
@@ -420,7 +428,7 @@ func TestKeeper_ClaimMission(t *testing.T) {
 
 				require.Equal(t, tt.expectedBalance.Amount, claimed)
 
-				balance := tk.BankKeeper.GetBalance(ctx, sdkAddr, tt.inputState.airdropSupply.Denom)
+				balance := testSuite.bankKeeper.GetBalance(ctx, sdkAddr, tt.inputState.airdropSupply.Denom)
 				require.True(t, balance.IsEqual(tt.expectedBalance),
 					"expected balance after mission complete: %s, actual balance: %s",
 					tt.expectedBalance.String(),
@@ -459,7 +467,9 @@ func TestKeeper_ClaimMission(t *testing.T) {
 }
 
 func TestKeeper_CompleteMission(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	addr := make([]string, 7)
 	for i := 0; i < len(addr); i++ {

@@ -25,7 +25,9 @@ func createNClaimRecord(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 }
 
 func TestClaimRecordGet(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow get", func(t *testing.T) {
 		items := createNClaimRecord(tk, ctx, 10)
@@ -43,7 +45,9 @@ func TestClaimRecordGet(t *testing.T) {
 }
 
 func TestClaimRecordRemove(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow remove", func(t *testing.T) {
 		items := createNClaimRecord(tk, ctx, 10)
@@ -60,7 +64,9 @@ func TestClaimRecordRemove(t *testing.T) {
 }
 
 func TestClaimRecordGetAll(t *testing.T) {
-	ctx, tk := createClaimKeeper(t)
+	testSuite := createClaimKeeper(t)
+	ctx := testSuite.ctx
+	tk := testSuite.tk
 
 	t.Run("should allow get all", func(t *testing.T) {
 		items := createNClaimRecord(tk, ctx, 10)
