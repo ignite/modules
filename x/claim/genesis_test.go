@@ -7,7 +7,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim"
@@ -42,11 +41,11 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow import and export of genesis", func(t *testing.T) {
-		claim.InitGenesis(ctx, *tk.ClaimKeeper, genesisState)
-		got := claim.ExportGenesis(ctx, *tk.ClaimKeeper)
+		claim.InitGenesis(ctx, *tk, genesisState)
+		got := claim.ExportGenesis(ctx, *tk)
 		require.NotNil(t, got)
 
 		nullify.Fill(&genesisState)

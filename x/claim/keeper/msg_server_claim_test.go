@@ -9,13 +9,15 @@ import (
 	"github.com/stretchr/testify/require"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestMsgClaim(t *testing.T) {
-	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
+	sdkCtx, tk := createClaimKeeper(t)
+	ts := keeper.NewMsgServerImpl(*tk)
+
 	// prepare addresses
 	var addr []string
 	for i := 0; i < 20; i++ {
@@ -70,8 +72,12 @@ func TestMsgClaim(t *testing.T) {
 				noInitialClaim: true,
 				noClaimRecord:  true,
 				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
-				mission:        sample.Mission(r),
-				params:         types.DefaultParams(),
+				mission: types.Mission{
+					MissionID:   1,
+					Description: "dummy mission",
+					Weight:      sdkmath.LegacyNewDec(r.Int63n(1_000_000)).Quo(sdkmath.LegacyNewDec(1_000_000)),
+				},
+				params: types.DefaultParams(),
 			},
 			msg: types.MsgClaim{
 				Claimer:   sample.AccAddress(),
@@ -190,7 +196,11 @@ func TestMsgClaim(t *testing.T) {
 			inputState: inputState{
 				noInitialClaim: true,
 				airdropSupply:  sdk.NewCoin("foo", sdkmath.NewInt(1000)),
-				mission:        sample.Mission(r),
+				mission: types.Mission{
+					MissionID:   1,
+					Description: "dummy mission",
+					Weight:      sdkmath.LegacyNewDec(r.Int63n(1_000_000)).Quo(sdkmath.LegacyNewDec(1_000_000)),
+				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[5],
 					Claimable: sdkmath.NewIntFromUint64(1000),
@@ -493,19 +503,19 @@ func TestMsgClaim(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// initialize input state
 			require.NoError(t, tt.inputState.params.Validate())
-			tk.ClaimKeeper.SetParams(sdkCtx, tt.inputState.params)
+			tk.SetParams(sdkCtx, tt.inputState.params)
 			if !tt.inputState.noAirdropSupply {
-				err := tk.ClaimKeeper.InitializeAirdropSupply(sdkCtx, tt.inputState.airdropSupply)
+				err := tk.InitializeAirdropSupply(sdkCtx, tt.inputState.airdropSupply)
 				require.NoError(t, err)
 			}
 			if !tt.inputState.noInitialClaim {
-				tk.ClaimKeeper.SetInitialClaim(sdkCtx, tt.inputState.initialClaim)
+				tk.SetInitialClaim(sdkCtx, tt.inputState.initialClaim)
 			}
 			if !tt.inputState.noMission {
-				tk.ClaimKeeper.SetMission(sdkCtx, tt.inputState.mission)
+				tk.SetMission(sdkCtx, tt.inputState.mission)
 			}
 			if !tt.inputState.noClaimRecord {
-				tk.ClaimKeeper.SetClaimRecord(sdkCtx, tt.inputState.claimRecord)
+				tk.SetClaimRecord(sdkCtx, tt.inputState.claimRecord)
 			}
 			if !tt.inputState.blockTime.IsZero() {
 				sdkCtx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
@@ -531,12 +541,12 @@ func TestMsgClaim(t *testing.T) {
 				)
 
 				// completed mission is added in claim record
-				claimRecord, found := tk.ClaimKeeper.GetClaimRecord(sdkCtx, tt.msg.Claimer)
+				claimRecord, found := tk.GetClaimRecord(sdkCtx, tt.msg.Claimer)
 				require.True(t, found)
 				require.True(t, claimRecord.IsMissionCompleted(tt.msg.MissionID))
 
 				// airdrop supply is updated with distributed balance
-				airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(sdkCtx)
+				airdropSupply, found := tk.GetAirdropSupply(sdkCtx)
 				require.True(t, found)
 				expectedAidropSupply := tt.inputState.airdropSupply.Sub(tt.expectedBalance)
 
@@ -549,16 +559,16 @@ func TestMsgClaim(t *testing.T) {
 
 			// clear input state
 			if !tt.inputState.noAirdropSupply {
-				tk.ClaimKeeper.RemoveAirdropSupply(sdkCtx)
+				tk.RemoveAirdropSupply(sdkCtx)
 			}
 			if !tt.inputState.noMission {
-				tk.ClaimKeeper.RemoveMission(sdkCtx, tt.inputState.mission.MissionID)
+				tk.RemoveMission(sdkCtx, tt.inputState.mission.MissionID)
 			}
 			if !tt.inputState.noClaimRecord {
-				tk.ClaimKeeper.RemoveClaimRecord(sdkCtx, tt.inputState.claimRecord.Address)
+				tk.RemoveClaimRecord(sdkCtx, tt.inputState.claimRecord.Address)
 			}
 			if !tt.inputState.noInitialClaim {
-				tk.ClaimKeeper.RemoveInitialClaim(sdkCtx)
+				tk.RemoveInitialClaim(sdkCtx)
 			}
 		})
 	}

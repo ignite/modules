@@ -7,14 +7,13 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestInitialClaimQuery(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	item := createTestInitialClaim(tk.ClaimKeeper, ctx)
+	ctx, tk := createClaimKeeper(t)
+	item := createTestInitialClaim(tk, ctx)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetInitialClaimRequest
@@ -32,7 +31,7 @@ func TestInitialClaimQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.InitialClaim(ctx, tc.request)
+			response, err := tk.InitialClaim(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

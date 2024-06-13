@@ -30,7 +30,7 @@ func SimulateMsgClaim(
 		// check the account has a claim record and initial claim has not been completed
 		cr, found := k.GetClaimRecord(ctx, simAccount.Address.String())
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account has no claim record"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, sdk.MsgTypeURL(&types.MsgClaim{}), "account has no claim record"), nil, nil
 		}
 
 		var (
@@ -47,7 +47,7 @@ func SimulateMsgClaim(
 		if !hasMission {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
-				msg.Type(),
+				sdk.MsgTypeURL(&types.MsgClaim{}),
 				fmt.Sprintf("%s don't have mission to claim", simAccount.Address.String()),
 			), nil, nil
 		}
@@ -57,12 +57,12 @@ func SimulateMsgClaim(
 		claimableAmount := cr.ClaimableFromMission(mission)
 		claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 		// calculate claimable after decay factor
-		decayInfo := k.DecayInformation(ctx)
-		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
+		params := k.GetParams(ctx)
+		claimable = params.DecayInformation.ApplyDecayFactor(claimable, ctx.BlockTime())
 
 		// check final claimable non-zero
 		if claimable.Empty() {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), types.ErrNoClaimable.Error()), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, sdk.MsgTypeURL(&types.MsgClaim{}), types.ErrNoClaimable.Error()), nil, nil
 		}
 
 		// initialize basic message

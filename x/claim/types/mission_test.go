@@ -6,7 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite/modules/testutil/sample"
+	"github.com/ignite/modules/x/claim/types"
 	claim "github.com/ignite/modules/x/claim/types"
 )
 
@@ -17,9 +17,13 @@ func TestMission_Validate(t *testing.T) {
 		valid   bool
 	}{
 		{
-			name:    "should validate valid mission",
-			mission: sample.Mission(r),
-			valid:   true,
+			name: "should validate valid mission",
+			mission: types.Mission{
+				MissionID:   1,
+				Description: "dummy mission",
+				Weight:      sdkmath.LegacyNewDec(r.Int63n(1_000_000)).Quo(sdkmath.LegacyNewDec(1_000_000)),
+			},
+			valid: true,
 		},
 		{
 			name: "should accept weigth 0",

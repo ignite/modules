@@ -1,34 +1,25 @@
 package keeper
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/ignite/modules/x/claim/types"
 )
 
-// GetParams get all parameters as types.Params
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
-	return types.NewParams(
-		k.DecayInformation(ctx),
-		k.AirdropStart(ctx),
-	)
-}
-
 // SetParams set the params
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-	k.paramstore.SetParamSet(ctx, &params)
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&params)
+	store.Set(types.ParamsKey, b)
 }
 
-// DecayInformation returns the param that defines decay information
-func (k Keeper) DecayInformation(ctx sdk.Context) (totalSupplyRange types.DecayInformation) {
-	k.paramstore.Get(ctx, types.KeyDecayInformation, &totalSupplyRange)
-	return
-}
+// GetParams get all parameters as types.Params
+func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
+	store := ctx.KVStore(k.storeKey)
+	b := store.Get(types.ParamsKey)
+	if b == nil {
+		panic("stored mint params should not have been nil")
+	}
 
-// AirdropStart returns the param that defines airdrop start
-func (k Keeper) AirdropStart(ctx sdk.Context) (airdropStart time.Time) {
-	k.paramstore.Get(ctx, types.KeyAirdropStart, &airdropStart)
+	k.cdc.MustUnmarshal(b, &params)
 	return
 }

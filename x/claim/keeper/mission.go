@@ -95,8 +95,8 @@ func (k Keeper) CompleteMission(
 	}
 
 	// try to claim the mission if airdrop start is reached
-	airdropStart := k.AirdropStart(ctx)
-	if ctx.BlockTime().After(airdropStart) {
+	params := k.GetParams(ctx)
+	if ctx.BlockTime().After(params.AirdropStart) {
 		return k.ClaimMission(ctx, claimRecord, missionID)
 	}
 
@@ -145,8 +145,8 @@ func (k Keeper) ClaimMission(
 	claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 
 	// calculate claimable after decay factor
-	decayInfo := k.DecayInformation(ctx)
-	claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
+	params := k.GetParams(ctx)
+	claimable = params.DecayInformation.ApplyDecayFactor(claimable, ctx.BlockTime())
 
 	// check final claimable non-zero
 	if claimable.Empty() {

@@ -9,17 +9,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestAirdropSupplyQuery(t *testing.T) {
-	var (
-		ctx, tk, _   = testkeeper.NewTestSetup(t)
-		sampleSupply = sdk.NewCoin("foo", sdkmath.NewInt(1000))
-	)
-	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
+	ctx, tk := createClaimKeeper(t)
+	sampleSupply := sdk.NewCoin("foo", sdkmath.NewInt(1000))
+
+	tk.SetAirdropSupply(ctx, sampleSupply)
 
 	for _, tc := range []struct {
 		name     string
@@ -38,7 +36,7 @@ func TestAirdropSupplyQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.AirdropSupply(ctx, tc.request)
+			response, err := tk.AirdropSupply(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

@@ -37,12 +37,12 @@ func (k msgServer) Claim(goCtx context.Context, msg *types.MsgClaim) (*types.Msg
 	}
 
 	// check if airdrop start time already reached
-	airdropStart := k.AirdropStart(ctx)
-	if ctx.BlockTime().Before(airdropStart) {
+	params := k.GetParams(ctx)
+	if ctx.BlockTime().Before(params.AirdropStart) {
 		return &types.MsgClaimResponse{}, errors.Wrapf(
 			types.ErrAirdropStartNotReached,
 			"airdrop start not reached: %s",
-			airdropStart.String(),
+			params.AirdropStart.String(),
 		)
 	}
 	claimed, err := k.ClaimMission(ctx, claimRecord, msg.MissionID)

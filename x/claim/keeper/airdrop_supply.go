@@ -70,8 +70,8 @@ func (k Keeper) EndAirdrop(goCtx context.Context) error {
 		return nil
 	}
 
-	decayInfo := k.DecayInformation(ctx)
-	if decayInfo.Enabled && ctx.BlockTime().After(decayInfo.DecayEnd) {
+	params := k.GetParams(ctx)
+	if params.DecayInformation.Enabled && ctx.BlockTime().After(params.DecayInformation.DecayEnd) {
 		err := k.distrKeeper.FundCommunityPool(
 			ctx,
 			sdk.NewCoins(airdropSupply),

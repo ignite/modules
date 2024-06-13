@@ -9,15 +9,14 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/ignite/modules/pkg/errors"
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/x/claim/types"
 )
 
 func TestMissionQuerySingle(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
-	msgs := createNMission(tk.ClaimKeeper, ctx, 2)
+	msgs := createNMission(tk, ctx, 2)
 	for _, tc := range []struct {
 		name     string
 		request  *types.QueryGetMissionRequest
@@ -45,7 +44,7 @@ func TestMissionQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.Mission(ctx, tc.request)
+			response, err := tk.Mission(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -60,9 +59,9 @@ func TestMissionQuerySingle(t *testing.T) {
 }
 
 func TestMissionQueryPaginated(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
-	msgs := createNMission(tk.ClaimKeeper, ctx, 5)
+	msgs := createNMission(tk, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMissionRequest {
 		return &types.QueryAllMissionRequest{
@@ -77,7 +76,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 	t.Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ClaimKeeper.MissionAll(ctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.MissionAll(ctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -90,7 +89,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ClaimKeeper.MissionAll(ctx, request(next, 0, uint64(step), false))
+			resp, err := tk.MissionAll(ctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -101,7 +100,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("should paginate all", func(t *testing.T) {
-		resp, err := tk.ClaimKeeper.MissionAll(ctx, request(nil, 0, 0, true))
+		resp, err := tk.MissionAll(ctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -110,7 +109,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("should return InvalidRequest", func(t *testing.T) {
-		_, err := tk.ClaimKeeper.MissionAll(ctx, nil)
+		_, err := tk.MissionAll(ctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

@@ -8,19 +8,18 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	claim "github.com/ignite/modules/x/claim/types"
 )
 
 func TestAirdropSupplyGet(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow get", func(t *testing.T) {
 		sampleSupply := sdk.NewCoin("foo", sdkmath.NewInt(1000))
-		tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
+		tk.SetAirdropSupply(ctx, sampleSupply)
 
-		rst, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+		rst, found := tk.GetAirdropSupply(ctx)
 		require.True(t, found)
 		require.Equal(t,
 			nullify.Fill(&sampleSupply),
@@ -30,14 +29,14 @@ func TestAirdropSupplyGet(t *testing.T) {
 }
 
 func TestAirdropSupplyRemove(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow remove", func(t *testing.T) {
-		tk.ClaimKeeper.SetAirdropSupply(ctx, sdk.NewCoin("foo", sdkmath.NewInt(1000)))
-		_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+		tk.SetAirdropSupply(ctx, sdk.NewCoin("foo", sdkmath.NewInt(1000)))
+		_, found := tk.GetAirdropSupply(ctx)
 		require.True(t, found)
-		tk.ClaimKeeper.RemoveAirdropSupply(ctx)
-		_, found = tk.ClaimKeeper.GetAirdropSupply(ctx)
+		tk.RemoveAirdropSupply(ctx)
+		_, found = tk.GetAirdropSupply(ctx)
 		require.False(t, found)
 	})
 }
@@ -45,7 +44,7 @@ func TestAirdropSupplyRemove(t *testing.T) {
 func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 	// TODO: use mock for bank module to test critical errors
 	// https://github.com/ignite/modules/issues/13
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	tests := []struct {
 		name          string
@@ -70,10 +69,10 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.airdropSupply)
+			err := tk.InitializeAirdropSupply(ctx, tt.airdropSupply)
 			require.NoError(t, err)
 
-			airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+			airdropSupply, found := tk.GetAirdropSupply(ctx)
 			require.True(t, found)
 			require.True(t, airdropSupply.IsEqual(tt.airdropSupply))
 
@@ -88,7 +87,7 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 }
 
 func TestEndAirdrop(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	tests := []struct {
 		name                     string
@@ -131,14 +130,14 @@ func TestEndAirdrop(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.airdropSupply)
+			err := tk.InitializeAirdropSupply(ctx, tt.airdropSupply)
 			require.NoError(t, err)
 
-			params := tk.ClaimKeeper.GetParams(ctx)
+			params := tk.GetParams(ctx)
 			params.DecayInformation = tt.decayInfo
-			tk.ClaimKeeper.SetParams(ctx, params)
+			tk.SetParams(ctx, params)
 
-			err = tk.ClaimKeeper.EndAirdrop(ctx)
+			err = tk.EndAirdrop(ctx)
 			require.NoError(t, err)
 			if tt.wantDistribute {
 				feePool := tk.DistrKeeper.GetFeePool(ctx)
@@ -148,7 +147,7 @@ func TestEndAirdrop(t *testing.T) {
 				}
 			}
 
-			airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+			airdropSupply, found := tk.GetAirdropSupply(ctx)
 			require.True(t, found)
 			require.Equal(t, tt.expectedSupply, airdropSupply)
 		})

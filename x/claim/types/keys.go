@@ -7,9 +7,6 @@ const (
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 
-	// RouterKey is the message route for slashing
-	RouterKey = ModuleName
-
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_claim"
 )
@@ -19,13 +16,9 @@ func KeyPrefix(p string) []byte {
 }
 
 const (
-	MissionKey = "Mission-value-"
-)
-
-const (
+	MissionKey       = "Mission-value-"
 	AirdropSupplyKey = "AirdropSupply-value-"
+	InitialClaimKey  = "InitialClaim-value-"
 )
 
-const (
-	InitialClaimKey = "InitialClaim-value-"
-)
+var ParamsKey = []byte{0x02}

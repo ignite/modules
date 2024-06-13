@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	errorsignite "github.com/ignite/modules/pkg/errors"
-	testkeeper "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	"github.com/ignite/modules/testutil/sample"
 	"github.com/ignite/modules/x/claim/keeper"
@@ -27,12 +26,12 @@ func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Missi
 }
 
 func TestMissionGet(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow get", func(t *testing.T) {
-		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		items := createNMission(tk, ctx, 10)
 		for _, item := range items {
-			got, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
+			got, found := tk.GetMission(ctx, item.MissionID)
 			require.True(t, found)
 			require.Equal(t,
 				nullify.Fill(&item),
@@ -43,32 +42,32 @@ func TestMissionGet(t *testing.T) {
 }
 
 func TestMissionGetAll(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow get all", func(t *testing.T) {
-		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		items := createNMission(tk, ctx, 10)
 		require.ElementsMatch(t,
 			nullify.Fill(items),
-			nullify.Fill(tk.ClaimKeeper.GetAllMission(ctx)),
+			nullify.Fill(tk.GetAllMission(ctx)),
 		)
 	})
 }
 
 func TestMissionRemove(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	t.Run("should allow remove", func(t *testing.T) {
-		items := createNMission(tk.ClaimKeeper, ctx, 10)
+		items := createNMission(tk, ctx, 10)
 		for _, item := range items {
-			tk.ClaimKeeper.RemoveMission(ctx, item.MissionID)
-			_, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
+			tk.RemoveMission(ctx, item.MissionID)
+			_, found := tk.GetMission(ctx, item.MissionID)
 			require.False(t, found)
 		}
 	})
 }
 
 func TestKeeper_ClaimMission(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	// prepare addresses
 	addr := make([]string, 20)
@@ -98,9 +97,17 @@ func TestKeeper_ClaimMission(t *testing.T) {
 			name: "should fail if no airdrop supply",
 			inputState: inputState{
 				noAirdropSupply: true,
-				claimRecord:     sample.ClaimRecord(r),
-				mission:         sample.Mission(r),
-				params:          types.DefaultParams(),
+				claimRecord: types.ClaimRecord{
+					Address:           addr[0],
+					Claimable:         sdkmath.NewInt(r.Int63n(100000)),
+					CompletedMissions: []uint64{1, 2, 3},
+				},
+				mission: types.Mission{
+					MissionID:   1,
+					Description: "dummy mission",
+					Weight:      sdkmath.LegacyNewDec(r.Int63n(1_000_000)).Quo(sdkmath.LegacyNewDec(1_000_000)),
+				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   sample.AccAddress(),
@@ -386,22 +393,22 @@ func TestKeeper_ClaimMission(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// initialize input state
 			require.NoError(t, tt.inputState.params.Validate())
-			tk.ClaimKeeper.SetParams(ctx, tt.inputState.params)
+			tk.SetParams(ctx, tt.inputState.params)
 			if !tt.inputState.noAirdropSupply {
-				err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
+				err := tk.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
 				require.NoError(t, err)
 			}
 			if !tt.inputState.noMission {
-				tk.ClaimKeeper.SetMission(ctx, tt.inputState.mission)
+				tk.SetMission(ctx, tt.inputState.mission)
 			}
 			if !tt.inputState.noClaimRecord {
-				tk.ClaimKeeper.SetClaimRecord(ctx, tt.inputState.claimRecord)
+				tk.SetClaimRecord(ctx, tt.inputState.claimRecord)
 			}
 			if !tt.inputState.blockTime.IsZero() {
 				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			claimed, err := tk.ClaimKeeper.ClaimMission(ctx, tt.inputState.claimRecord, tt.missionID)
+			claimed, err := tk.ClaimMission(ctx, tt.inputState.claimRecord, tt.missionID)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
@@ -421,12 +428,12 @@ func TestKeeper_ClaimMission(t *testing.T) {
 				)
 
 				// completed mission is added in claim record
-				claimRecord, found := tk.ClaimKeeper.GetClaimRecord(ctx, tt.address)
+				claimRecord, found := tk.GetClaimRecord(ctx, tt.address)
 				require.True(t, found)
 				require.True(t, claimRecord.IsMissionCompleted(tt.missionID))
 
 				// airdrop supply is updated with distributed balance
-				airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+				airdropSupply, found := tk.GetAirdropSupply(ctx)
 				require.True(t, found)
 				expectedAidropSupply := tt.inputState.airdropSupply.Sub(tt.expectedBalance)
 
@@ -439,20 +446,20 @@ func TestKeeper_ClaimMission(t *testing.T) {
 
 			// clear input state
 			if !tt.inputState.noAirdropSupply {
-				tk.ClaimKeeper.RemoveAirdropSupply(ctx)
+				tk.RemoveAirdropSupply(ctx)
 			}
 			if !tt.inputState.noMission {
-				tk.ClaimKeeper.RemoveMission(ctx, tt.inputState.mission.MissionID)
+				tk.RemoveMission(ctx, tt.inputState.mission.MissionID)
 			}
 			if !tt.inputState.noClaimRecord {
-				tk.ClaimKeeper.RemoveClaimRecord(ctx, tt.inputState.claimRecord.Address)
+				tk.RemoveClaimRecord(ctx, tt.inputState.claimRecord.Address)
 			}
 		})
 	}
 }
 
 func TestKeeper_CompleteMission(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	ctx, tk := createClaimKeeper(t)
 
 	addr := make([]string, 7)
 	for i := 0; i < len(addr); i++ {
@@ -518,7 +525,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				blockTime: time.Unix(0, 0),
 			},
 			missionID: 1,
-			address:   sample.Address(sample.Rand()),
+			address:   sample.AccAddress(),
 			err:       types.ErrClaimRecordNotFound,
 		},
 		{
@@ -607,17 +614,17 @@ func TestKeeper_CompleteMission(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			require.NoError(t, tt.inputState.params.Validate())
 			if !tt.inputState.airdropSupply.IsNil() && !tt.inputState.airdropSupply.IsZero() {
-				err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
+				err := tk.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
 				require.NoError(t, err)
 			}
-			tk.ClaimKeeper.SetParams(ctx, tt.inputState.params)
-			tk.ClaimKeeper.SetMission(ctx, tt.inputState.mission)
-			tk.ClaimKeeper.SetClaimRecord(ctx, tt.inputState.claimRecord)
+			tk.SetParams(ctx, tt.inputState.params)
+			tk.SetMission(ctx, tt.inputState.mission)
+			tk.SetClaimRecord(ctx, tt.inputState.claimRecord)
 			if !tt.inputState.blockTime.IsZero() {
 				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
-			claimed, err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)
+			claimed, err := tk.CompleteMission(ctx, tt.missionID, tt.address)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -625,7 +632,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, tt.expectedClaimed, claimed)
 
-			claimRecord, found := tk.ClaimKeeper.GetClaimRecord(ctx, tt.address)
+			claimRecord, found := tk.GetClaimRecord(ctx, tt.address)
 			require.True(t, found)
 			require.True(t, claimRecord.IsMissionCompleted(tt.missionID))
 		})
