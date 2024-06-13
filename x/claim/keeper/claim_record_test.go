@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -17,7 +18,7 @@ func createNClaimRecord(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 	items := make([]types.ClaimRecord, n)
 	for i := range items {
 		items[i].Address = sample.AccAddress()
-		items[i].Claimable = sample.Int(r)
+		items[i].Claimable = sdkmath.NewInt(r.Int63())
 
 		keeper.SetClaimRecord(ctx, items[i])
 	}

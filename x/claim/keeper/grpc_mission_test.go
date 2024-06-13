@@ -3,7 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -18,7 +17,6 @@ import (
 func TestMissionQuerySingle(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNMission(tk.ClaimKeeper, ctx, 2)
 	for _, tc := range []struct {
 		name     string
@@ -47,7 +45,7 @@ func TestMissionQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.Mission(wctx, tc.request)
+			response, err := tk.ClaimKeeper.Mission(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -64,7 +62,6 @@ func TestMissionQuerySingle(t *testing.T) {
 func TestMissionQueryPaginated(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNMission(tk.ClaimKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMissionRequest {
@@ -80,7 +77,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 	t.Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ClaimKeeper.MissionAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.ClaimKeeper.MissionAll(ctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -93,7 +90,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ClaimKeeper.MissionAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.ClaimKeeper.MissionAll(ctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -104,7 +101,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("should paginate all", func(t *testing.T) {
-		resp, err := tk.ClaimKeeper.MissionAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.ClaimKeeper.MissionAll(ctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -113,7 +110,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("should return InvalidRequest", func(t *testing.T) {
-		_, err := tk.ClaimKeeper.MissionAll(wctx, nil)
+		_, err := tk.ClaimKeeper.MissionAll(ctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

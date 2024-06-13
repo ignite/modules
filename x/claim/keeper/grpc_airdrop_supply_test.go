@@ -17,7 +17,6 @@ import (
 func TestAirdropSupplyQuery(t *testing.T) {
 	var (
 		ctx, tk, _   = testkeeper.NewTestSetup(t)
-		wctx         = sdk.WrapSDKContext(ctx)
 		sampleSupply = sdk.NewCoin("foo", sdkmath.NewInt(1000))
 	)
 	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
@@ -39,7 +38,7 @@ func TestAirdropSupplyQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.AirdropSupply(wctx, tc.request)
+			response, err := tk.ClaimKeeper.AirdropSupply(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

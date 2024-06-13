@@ -3,7 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,7 +14,6 @@ import (
 
 func TestInitialClaimQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	wctx := sdk.WrapSDKContext(ctx)
 	item := createTestInitialClaim(tk.ClaimKeeper, ctx)
 	for _, tc := range []struct {
 		desc     string
@@ -34,7 +32,7 @@ func TestInitialClaimQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.ClaimKeeper.InitialClaim(wctx, tc.request)
+			response, err := tk.ClaimKeeper.InitialClaim(ctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

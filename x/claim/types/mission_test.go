@@ -24,8 +24,8 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should accept weigth 0",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
-				Description: sample.String(r, 30),
+				MissionID:   uint64(r.Intn(10000)),
+				Description: "dummy description",
 				Weight:      sdkmath.LegacyMustNewDecFromStr("0"),
 			},
 			valid: true,
@@ -33,8 +33,8 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should accept weight 1",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
-				Description: sample.String(r, 30),
+				MissionID:   uint64(r.Intn(10000)),
+				Description: "dummy description",
 				Weight:      sdkmath.LegacyMustNewDecFromStr("1"),
 			},
 			valid: true,
@@ -42,8 +42,8 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should prevent weight greater than 1",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
-				Description: sample.String(r, 30),
+				MissionID:   uint64(r.Intn(10000)),
+				Description: "dummy description",
 				Weight:      sdkmath.LegacyMustNewDecFromStr("1.0000001"),
 			},
 			valid: false,
@@ -51,8 +51,8 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should prevent weight less than 0",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
-				Description: sample.String(r, 30),
+				MissionID:   uint64(r.Intn(10000)),
+				Description: "dummy description",
 				Weight:      sdkmath.LegacyMustNewDecFromStr("-0.0000001"),
 			},
 			valid: false,

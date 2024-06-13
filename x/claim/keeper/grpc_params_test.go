@@ -3,7 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/ignite/modules/testutil/keeper"
@@ -14,11 +13,10 @@ func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	t.Run("should allow params get query", func(t *testing.T) {
-		wctx := sdk.WrapSDKContext(ctx)
 		params := types.DefaultParams()
 		tk.ClaimKeeper.SetParams(ctx, params)
 
-		response, err := tk.ClaimKeeper.Params(wctx, &types.QueryParamsRequest{})
+		response, err := tk.ClaimKeeper.Params(ctx, &types.QueryParamsRequest{})
 		require.NoError(t, err)
 		require.EqualValues(t, params.DecayInformation, response.Params.DecayInformation)
 		require.Equal(t, params.AirdropStart.Unix(), response.Params.AirdropStart.Unix())
