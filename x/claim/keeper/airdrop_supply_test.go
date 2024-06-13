@@ -42,8 +42,6 @@ func TestAirdropSupplyRemove(t *testing.T) {
 }
 
 func TestKeeper_InitializeAirdropSupply(t *testing.T) {
-	// TODO: use mock for bank module to test critical errors
-	// https://github.com/ignite/modules/issues/13
 	ctx, tk := createClaimKeeper(t)
 
 	tests := []struct {

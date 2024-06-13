@@ -60,3 +60,11 @@ lint-fix:
 	@$(golangci_lint_cmd) run ./... --fix --timeout 15m
 
 .PHONY: lint lint-fix
+
+###############
+###  Mocks  ###
+###############
+
+mocks:
+	@echo "--> Generating mocks"
+	sh ./scripts/mockgen.sh
