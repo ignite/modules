@@ -1,32 +1,46 @@
 package keeper
 
 import (
+	"context"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/ignite/modules/x/mint/types"
 )
 
 // BeginBlocker mints new coins for the previous block.
-func (k Keeper) BeginBlocker(ctx sdk.Context) error {
+func (k Keeper) BeginBlocker(ctx context.Context) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
 	// fetch stored minter & params
-	minter := k.GetMinter(ctx)
-	params := k.GetParams(ctx)
+	minter, err := k.Minter.Get(ctx)
+	if err != nil {
+		return err
+	}
+	params, err := k.Params.Get(ctx)
+	if err != nil {
+		return err
+	}
 
 	// recalculate inflation rate
-	totalStakingSupply := k.StakingTokenSupply(ctx)
-	bondedRatio := k.BondedRatio(ctx)
+	totalStakingSupply, err := k.StakingTokenSupply(ctx)
+	if err != nil {
+		return err
+	}
+	bondedRatio, err := k.BondedRatio(ctx)
+	if err != nil {
+		return err
+	}
 	minter.Inflation = minter.NextInflationRate(params, bondedRatio)
 	minter.AnnualProvisions = minter.NextAnnualProvisions(params, totalStakingSupply)
-	k.SetMinter(ctx, minter)
+
+	if err := k.Minter.Set(ctx, minter); err != nil {
+		return err
+	}
 
 	// mint coins, update supply
 	mintedCoin := minter.BlockProvision(params)
-	err := k.MintCoin(ctx, mintedCoin)
+	err = k.MintCoin(ctx, mintedCoin)
 	if err != nil {
 		return err
 	}
@@ -41,10 +55,5 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) error {
 		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), "minted_tokens")
 	}
 
-	return ctx.EventManager().EmitTypedEvent(&types.EventMint{
-		BondedRatio:      bondedRatio,
-		Inflation:        minter.Inflation,
-		AnnualProvisions: minter.AnnualProvisions,
-		Amount:           mintedCoin.Amount,
-	})
+	return nil
 }

@@ -5,48 +5,32 @@ import (
 	"fmt"
 	"strings"
 
-	yaml "gopkg.in/yaml.v2"
-
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
-// Parameter store keys
 var (
-	KeyMintDenom               = []byte("MintDenom")
-	KeyInflationRateChange     = []byte("InflationRateChange")
-	KeyInflationMax            = []byte("InflationMax")
-	KeyInflationMin            = []byte("InflationMin")
-	KeyGoalBonded              = []byte("GoalBonded")
-	KeyBlocksPerYear           = []byte("BlocksPerYear")
-	KeyDistributionProportions = []byte("DistributionProportions")
-	KeyFundedAddresses         = []byte("FundedAddresses")
-
 	DefaultMintDenom               = sdk.DefaultBondDenom
-	DefaultInflationRateChange     = sdk.NewDecWithPrec(13, 2)
-	DefaultInflationMax            = sdk.NewDecWithPrec(20, 2)
-	DefaultInflationMin            = sdk.NewDecWithPrec(7, 2)
-	DefaultGoalBonded              = sdk.NewDecWithPrec(67, 2)
+	DefaultInflationRateChange     = math.LegacyNewDecWithPrec(13, 2)
+	DefaultInflationMax            = math.LegacyNewDecWithPrec(20, 2)
+	DefaultInflationMin            = math.LegacyNewDecWithPrec(7, 2)
+	DefaultGoalBonded              = math.LegacyNewDecWithPrec(67, 2)
 	DefaultBlocksPerYear           = uint64(60 * 60 * 8766 / 5) // assuming 5 seconds block times
 	DefaultDistributionProportions = DistributionProportions{
-		Staking:         sdk.NewDecWithPrec(3, 1), // 0.3
-		FundedAddresses: sdk.NewDecWithPrec(4, 1), // 0.4
-		CommunityPool:   sdk.NewDecWithPrec(3, 1), // 0.3
+		Staking:         math.LegacyNewDecWithPrec(3, 1), // 0.3
+		FundedAddresses: math.LegacyNewDecWithPrec(4, 1), // 0.4
+		CommunityPool:   math.LegacyNewDecWithPrec(3, 1), // 0.3
 	}
 	DefaultFundedAddresses []WeightedAddress
 )
 
-// ParamTable for minting module.
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
-
+// NewParams creates a new Params instance.
 func NewParams(
 	mintDenom string,
 	inflationRateChange,
 	inflationMax,
 	inflationMin,
-	goalBonded sdk.Dec,
+	goalBonded math.LegacyDec,
 	blocksPerYear uint64,
 	proportions DistributionProportions,
 	fundedAddrs []WeightedAddress,
@@ -77,7 +61,7 @@ func DefaultParams() Params {
 	)
 }
 
-// Validate validates all params
+// Validate validates the set of params.
 func (p Params) Validate() error {
 	if err := validateMintDenom(p.MintDenom); err != nil {
 		return err
@@ -109,26 +93,6 @@ func (p Params) Validate() error {
 	return validateWeightedAddresses(p.FundedAddresses)
 }
 
-// String implements the Stringer interface.
-func (p Params) String() string {
-	out, _ := yaml.Marshal(p)
-	return string(out)
-}
-
-// ParamSetPairs implements params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyInflationRateChange, &p.InflationRateChange, validateDec),
-		paramtypes.NewParamSetPair(KeyInflationMax, &p.InflationMax, validateDec),
-		paramtypes.NewParamSetPair(KeyInflationMin, &p.InflationMin, validateDec),
-		paramtypes.NewParamSetPair(KeyGoalBonded, &p.GoalBonded, validateDec),
-		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
-		paramtypes.NewParamSetPair(KeyDistributionProportions, &p.DistributionProportions, validateDistributionProportions),
-		paramtypes.NewParamSetPair(KeyFundedAddresses, &p.FundedAddresses, validateWeightedAddresses),
-	}
-}
-
 func validateMintDenom(i interface{}) error {
 	v, ok := i.(string)
 	if !ok {
@@ -143,7 +107,7 @@ func validateMintDenom(i interface{}) error {
 }
 
 func validateDec(i interface{}) error {
-	v, ok := i.(sdk.Dec)
+	v, ok := i.(math.LegacyDec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
@@ -151,7 +115,7 @@ func validateDec(i interface{}) error {
 	if v.IsNegative() {
 		return fmt.Errorf("cannot be negative: %s", v)
 	}
-	if v.GT(sdk.OneDec()) {
+	if v.GT(math.LegacyOneDec()) {
 		return fmt.Errorf("dec too large: %s", v)
 	}
 
@@ -191,7 +155,7 @@ func validateDistributionProportions(i interface{}) error {
 
 	totalProportions := v.Staking.Add(v.FundedAddresses).Add(v.CommunityPool)
 
-	if !totalProportions.Equal(sdk.NewDec(1)) {
+	if !totalProportions.Equal(math.LegacyNewDec(1)) {
 		return errors.New("total distributions ratio should be 1")
 	}
 
@@ -208,7 +172,7 @@ func validateWeightedAddresses(i interface{}) error {
 		return nil
 	}
 
-	weightSum := sdk.NewDec(0)
+	weightSum := math.LegacyNewDec(0)
 	for i, w := range v {
 		_, err := sdk.AccAddressFromBech32(w.Address)
 		if err != nil {
@@ -217,13 +181,13 @@ func validateWeightedAddresses(i interface{}) error {
 		if !w.Weight.IsPositive() {
 			return fmt.Errorf("non-positive weight at index %d", i)
 		}
-		if w.Weight.GT(sdk.NewDec(1)) {
+		if w.Weight.GT(math.LegacyNewDec(1)) {
 			return fmt.Errorf("more than 1 weight at index %d", i)
 		}
 		weightSum = weightSum.Add(w.Weight)
 	}
 
-	if !weightSum.Equal(sdk.NewDec(1)) {
+	if !weightSum.Equal(math.LegacyNewDec(1)) {
 		return fmt.Errorf("invalid weight sum: %s", weightSum.String())
 	}
 

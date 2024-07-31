@@ -1,12 +1,26 @@
 package types
 
-// MinterKey is the key to use for the keeper store.
-var MinterKey = []byte{0x00}
+import "cosmossdk.io/collections"
 
 const (
-	// module name
+	// ModuleName defines the module name
 	ModuleName = "mint"
 
-	// StoreKey is the default store key for mint
+	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
+
+	// MemStoreKey defines the in-memory store key
+	MemStoreKey = "mem_mint"
+)
+
+var (
+	ParamsKey = collections.NewPrefix("p_mint")
+)
+
+func KeyPrefix(p string) []byte {
+	return []byte(p)
+}
+
+var (
+	MinterKey = collections.NewPrefix("minter/value/")
 )

@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package modules.claim.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "modules/claim/v1/params.proto";
+import "modules/claim/v1/claim_record.proto";
+import "modules/claim/v1/mission.proto";
+import "modules/claim/v1/initial_claim.proto";
+import "modules/claim/v1/airdrop_supply.proto";
+
+option go_package = "github.com/ignite/modules/x/claim/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  
+  // Parameters queries the parameters of the module.
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/v1/params";
+  
+  }
+  
+  // Queries a list of ClaimRecord items.
+  rpc GetClaimRecord  (QueryGetClaimRecordRequest) returns (QueryGetClaimRecordResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/claim_record/{address}";
+  
+  }
+  rpc ListClaimRecord (QueryAllClaimRecordRequest) returns (QueryAllClaimRecordResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/claim_record";
+  
+  }
+  
+  // Queries a list of Mission items.
+  rpc GetMission  (QueryGetMissionRequest) returns (QueryGetMissionResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/mission/{id}";
+  
+  }
+  rpc ListMission (QueryAllMissionRequest) returns (QueryAllMissionResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/mission";
+  
+  }
+  
+  // Queries a InitialClaim by index.
+  rpc GetInitialClaim (QueryGetInitialClaimRequest) returns (QueryGetInitialClaimResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/initial_claim";
+  
+  }
+  
+  // Queries a AirdropSupply by index.
+  rpc GetAirdropSupply (QueryGetAirdropSupplyRequest) returns (QueryGetAirdropSupplyResponse) {
+    option (google.api.http).get = "/ignite/modules/claim/airdrop_supply";
+  
+  }
+}
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+}
+
+message QueryGetClaimRecordRequest {
+  string address = 1;
+}
+
+message QueryGetClaimRecordResponse {
+  ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllClaimRecordRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllClaimRecordResponse {
+  repeated ClaimRecord                            claimRecord = 1 [(gogoproto.nullable) = false];
+           cosmos.base.query.v1beta1.PageResponse pagination  = 2;
+}
+
+message QueryGetMissionRequest {
+  uint64 id = 1;
+}
+
+message QueryGetMissionResponse {
+  Mission Mission = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMissionRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMissionResponse {
+  repeated Mission                                Mission    = 1 [(gogoproto.nullable) = false];
+           cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetInitialClaimRequest {}
+
+message QueryGetInitialClaimResponse {
+  InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetAirdropSupplyRequest {}
+
+message QueryGetAirdropSupplyResponse {
+  AirdropSupply AirdropSupply = 1 [(gogoproto.nullable) = false];
+}
+

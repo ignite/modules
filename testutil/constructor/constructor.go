@@ -1,6 +1,7 @@
 package constructor
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,8 +23,8 @@ func Coins(t testing.TB, str string) sdk.Coins {
 }
 
 // Dec returns a sdk.Dec from a string
-func Dec(t testing.TB, str string) sdk.Dec {
-	dec, err := sdk.NewDecFromStr(str)
+func Dec(t testing.TB, str string) sdkmath.LegacyDec {
+	dec, err := sdkmath.LegacyNewDecFromStr(str)
 	require.NoError(t, err)
 	return dec
 }

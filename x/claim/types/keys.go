@@ -1,5 +1,7 @@
 package types
 
+import "cosmossdk.io/collections"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "claim"
@@ -14,18 +16,23 @@ const (
 	MemStoreKey = "mem_claim"
 )
 
+var (
+	ParamsKey = collections.NewPrefix("p_claim")
+)
+
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
 
-const (
-	MissionKey = "Mission-value-"
+var (
+	MissionKey      = collections.NewPrefix("mission/value/")
+	MissionCountKey = collections.NewPrefix("mission/count/")
 )
 
-const (
-	AirdropSupplyKey = "AirdropSupply-value-"
+var (
+	InitialClaimKey = collections.NewPrefix("initialClaim/value/")
 )
 
-const (
-	InitialClaimKey = "InitialClaim-value-"
+var (
+	AirdropSupplyKey = collections.NewPrefix("airdropSupply/value/")
 )

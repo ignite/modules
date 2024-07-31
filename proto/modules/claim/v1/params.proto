@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package modules.claim.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "modules/claim/v1/decay_information.proto";
+
+option go_package = "github.com/ignite/modules/x/claim/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "modules/x/claim/Params";
+  option (gogoproto.equal) = true;
+
+  DecayInformation decayInformation = 1 [(gogoproto.nullable) = false];
+  google.protobuf.Timestamp airdropStart = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}

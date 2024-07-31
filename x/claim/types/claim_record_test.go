@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/ignite/modules/testutil/constructor"
@@ -142,7 +141,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
-				Weight: sdk.OneDec(),
+				Weight: sdkmath.LegacyOneDec(),
 			},
 			expected: sdkmath.NewIntFromUint64(100),
 		},
@@ -152,7 +151,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
-				Weight: sdk.ZeroDec(),
+				Weight: sdkmath.LegacyZeroDec(),
 			},
 			expected: sdkmath.ZeroInt(),
 		},

@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -8,35 +9,47 @@ import (
 	"github.com/ignite/modules/x/mint/types"
 )
 
-func TestValidateGenesis(t *testing.T) {
+func TestGenesisState_Validate(t *testing.T) {
 	invalid := types.DefaultGenesis()
 	// set inflation min to larger than inflation max
 	invalid.Params.InflationMin = invalid.Params.InflationMax.Add(invalid.Params.InflationMax)
 
 	tests := []struct {
-		name    string
-		genesis *types.GenesisState
-		isValid bool
+		desc     string
+		genState *types.GenesisState
+		valid    bool
 	}{
 		{
-			name:    "should validate valid genesis",
-			genesis: types.DefaultGenesis(),
-			isValid: true,
+			desc:     "default is valid",
+			genState: types.DefaultGenesis(),
+			valid:    true,
 		},
 		{
-			name:    "should prevent invalid params",
-			genesis: invalid,
-			isValid: false,
+			desc:     "should prevent invalid params",
+			genState: invalid,
+			valid:    false,
 		},
+		{
+			desc: "valid genesis state",
+			genState: &types.GenesisState{
+				Minter: types.Minter{
+					Inflation:        sdkmath.LegacyNewDec(80),
+					AnnualProvisions: sdkmath.LegacyNewDec(22),
+				},
+				// this line is used by starport scaffolding # types/genesis/validField
+			},
+			valid: true,
+		},
+		// this line is used by starport scaffolding # types/genesis/testcase
 	}
 	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			err := tc.genesis.Validate()
-			if !tc.isValid {
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.valid {
+				require.NoError(t, err)
+			} else {
 				require.Error(t, err)
-				return
 			}
-			require.NoError(t, err)
 		})
 	}
 }

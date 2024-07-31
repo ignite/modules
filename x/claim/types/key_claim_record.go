@@ -1,23 +1,6 @@
 package types
 
-import "encoding/binary"
+import "cosmossdk.io/collections"
 
-var _ binary.ByteOrder
-
-const (
-	// ClaimRecordKeyPrefix is the prefix to retrieve all ClaimRecord
-	ClaimRecordKeyPrefix = "ClaimRecord/value/"
-)
-
-// ClaimRecordKey returns the store key to retrieve a ClaimRecord from the index fields
-func ClaimRecordKey(
-	index string,
-) []byte {
-	var key []byte
-
-	indexBytes := []byte(index)
-	key = append(key, indexBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
-}
+// ClaimRecordKey is the prefix to retrieve all ClaimRecord
+var ClaimRecordKey = collections.NewPrefix("ClaimRecord/value/")

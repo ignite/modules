@@ -4,9 +4,9 @@ import (
 	"math/rand"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/ignite/modules/testutil/sample"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -41,7 +41,7 @@ func TestParamsValidate(t *testing.T) {
 				MintDenom:               DefaultMintDenom,
 				InflationRateChange:     DefaultInflationRateChange,
 				InflationMax:            DefaultInflationMax,
-				InflationMin:            sdk.NewDec(-1),
+				InflationMin:            sdkmath.LegacyNewDec(-1),
 				GoalBonded:              DefaultGoalBonded,
 				BlocksPerYear:           DefaultBlocksPerYear,
 				DistributionProportions: DefaultDistributionProportions,
@@ -54,7 +54,7 @@ func TestParamsValidate(t *testing.T) {
 			params: Params{
 				MintDenom:               DefaultMintDenom,
 				InflationRateChange:     DefaultInflationRateChange,
-				InflationMax:            sdk.NewDec(-1),
+				InflationMax:            sdkmath.LegacyNewDec(-1),
 				InflationMin:            DefaultInflationMin,
 				GoalBonded:              DefaultGoalBonded,
 				BlocksPerYear:           DefaultBlocksPerYear,
@@ -70,7 +70,7 @@ func TestParamsValidate(t *testing.T) {
 				InflationRateChange:     DefaultInflationRateChange,
 				InflationMax:            DefaultInflationMax,
 				InflationMin:            DefaultInflationMin,
-				GoalBonded:              sdk.NewDec(-1),
+				GoalBonded:              sdkmath.LegacyNewDec(-1),
 				BlocksPerYear:           DefaultBlocksPerYear,
 				DistributionProportions: DefaultDistributionProportions,
 				FundedAddresses:         DefaultFundedAddresses,
@@ -115,9 +115,9 @@ func TestParamsValidate(t *testing.T) {
 				GoalBonded:          DefaultGoalBonded,
 				BlocksPerYear:       DefaultBlocksPerYear,
 				DistributionProportions: DistributionProportions{
-					Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
-					FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
-					CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+					Staking:         sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
+					FundedAddresses: sdkmath.LegacyNewDecWithPrec(-4, 1), // -0.4
+					CommunityPool:   sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
 				},
 				FundedAddresses: DefaultFundedAddresses,
 			},
@@ -136,7 +136,7 @@ func TestParamsValidate(t *testing.T) {
 				FundedAddresses: []WeightedAddress{
 					{
 						Address: "invalid",
-						Weight:  sdk.OneDec(),
+						Weight:  sdkmath.LegacyOneDec(),
 					},
 				},
 			},
@@ -212,12 +212,12 @@ func TestValidateDec(t *testing.T) {
 		},
 		{
 			name:    "should prevent validate dec with negative value",
-			value:   sdk.NewDec(-1),
+			value:   sdkmath.LegacyNewDec(-1),
 			isValid: false,
 		},
 		{
 			name:    "should prevent validate dec too large a value",
-			value:   sdk.NewDec(2),
+			value:   sdkmath.LegacyNewDec(2),
 			isValid: false,
 		},
 	}
@@ -286,36 +286,36 @@ func TestValidateDistributionProportions(t *testing.T) {
 		{
 			name: "should prevent validate distribution proportions with negative staking ratio",
 			distrProportions: DistributionProportions{
-				Staking:         sdk.NewDecWithPrec(-3, 1), // -0.3
-				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
-				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+				Staking:         sdkmath.LegacyNewDecWithPrec(-3, 1), // -0.3
+				FundedAddresses: sdkmath.LegacyNewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
 			},
 			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative funded addresses ratio",
 			distrProportions: DistributionProportions{
-				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
-				FundedAddresses: sdk.NewDecWithPrec(-4, 1), // -0.4
-				CommunityPool:   sdk.NewDecWithPrec(3, 1),  // 0.3
+				Staking:         sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdkmath.LegacyNewDecWithPrec(-4, 1), // -0.4
+				CommunityPool:   sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
 			},
 			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative community pool ratio",
 			distrProportions: DistributionProportions{
-				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
-				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
-				CommunityPool:   sdk.NewDecWithPrec(-3, 1), // -0.3
+				Staking:         sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdkmath.LegacyNewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdkmath.LegacyNewDecWithPrec(-3, 1), // -0.3
 			},
 			isValid: false,
 		},
 		{
 			name: "should prevent validate distribution proportions total ratio not equal to 1",
 			distrProportions: DistributionProportions{
-				Staking:         sdk.NewDecWithPrec(3, 1),  // 0.3
-				FundedAddresses: sdk.NewDecWithPrec(4, 1),  // 0.4
-				CommunityPool:   sdk.NewDecWithPrec(31, 2), // 0.31
+				Staking:         sdkmath.LegacyNewDecWithPrec(3, 1),  // 0.3
+				FundedAddresses: sdkmath.LegacyNewDecWithPrec(4, 1),  // 0.4
+				CommunityPool:   sdkmath.LegacyNewDecWithPrec(31, 2), // 0.31
 			},
 			isValid: false,
 		},
@@ -346,11 +346,11 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			weightedAddresses: []WeightedAddress{
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(5, 1),
+					Weight:  sdkmath.LegacyNewDecWithPrec(5, 1),
 				},
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(5, 1),
+					Weight:  sdkmath.LegacyNewDecWithPrec(5, 1),
 				},
 			},
 			isValid: true,
@@ -370,7 +370,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			weightedAddresses: []WeightedAddress{
 				{
 					Address: "invalid",
-					Weight:  sdk.OneDec(),
+					Weight:  sdkmath.LegacyOneDec(),
 				},
 			},
 			isValid: false,
@@ -380,7 +380,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			weightedAddresses: []WeightedAddress{
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDec(-1),
+					Weight:  sdkmath.LegacyNewDec(-1),
 				},
 			},
 			isValid: false,
@@ -390,7 +390,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			weightedAddresses: []WeightedAddress{
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDec(2),
+					Weight:  sdkmath.LegacyNewDec(2),
 				},
 			},
 			isValid: false,
@@ -400,11 +400,11 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			weightedAddresses: []WeightedAddress{
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(6, 1),
+					Weight:  sdkmath.LegacyNewDecWithPrec(6, 1),
 				},
 				{
 					Address: sample.Address(r),
-					Weight:  sdk.NewDecWithPrec(5, 1),
+					Weight:  sdkmath.LegacyNewDecWithPrec(5, 1),
 				},
 			},
 			isValid: false,
