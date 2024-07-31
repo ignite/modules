@@ -6,8 +6,6 @@ import (
 	"github.com/ignite/modules/pkg/errors"
 )
 
-const TypeMsgClaim = "claim"
-
 var _ sdk.Msg = &MsgClaim{}
 
 func NewMsgClaim(claimer string, missionID uint64) *MsgClaim {
@@ -22,7 +20,15 @@ func (msg *MsgClaim) Route() string {
 }
 
 func (msg *MsgClaim) Type() string {
-	return TypeMsgClaim
+	return sdk.MsgTypeURL(&MsgClaim{})
+}
+
+func (msg *MsgClaim) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Claimer)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgClaim) ValidateBasic() error {

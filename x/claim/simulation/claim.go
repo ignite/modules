@@ -17,8 +17,6 @@ import (
 	"github.com/ignite/modules/x/claim/types"
 )
 
-var TypeMsgClaim = sdk.MsgTypeURL(&types.MsgClaim{})
-
 func SimulateMsgClaim(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
@@ -37,7 +35,7 @@ func SimulateMsgClaim(
 		if err != nil {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
-				TypeMsgClaim,
+				msg.Type(),
 				fmt.Sprintf("account has no claim record: %s", err.Error()),
 			), nil, nil
 		}
@@ -63,7 +61,7 @@ func SimulateMsgClaim(
 		if !hasMission {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
-				TypeMsgClaim,
+				msg.Type(),
 				fmt.Sprintf("%s don't have mission to claim", simAccount.Address.String()),
 			), nil, nil
 		}
@@ -73,7 +71,7 @@ func SimulateMsgClaim(
 		if err != nil {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
-				TypeMsgClaim,
+				msg.Type(),
 				"don't have airdrop supply",
 			), nil, nil
 		}
@@ -85,7 +83,7 @@ func SimulateMsgClaim(
 		if err != nil {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
-				TypeMsgClaim,
+				msg.Type(),
 				"don't have params",
 			), nil, nil
 		}
@@ -94,7 +92,7 @@ func SimulateMsgClaim(
 
 		// check final claimable non-zero
 		if claimable.Empty() {
-			return simtypes.NoOpMsg(types.ModuleName, TypeMsgClaim, types.ErrNoClaimable.Error()), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), types.ErrNoClaimable.Error()), nil, nil
 		}
 
 		// initialize basic message

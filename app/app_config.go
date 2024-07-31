@@ -129,6 +129,7 @@ var (
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
+		minttypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		genutiltypes.ModuleName,

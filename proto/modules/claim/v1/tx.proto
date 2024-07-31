@@ -44,6 +44,8 @@ message MsgUpdateParams {
 message MsgUpdateParamsResponse {}
 
 message MsgClaim {
+  option (cosmos.msg.v1.signer) = "claimer";
+
   string claimer = 1;
   uint64 missionID = 2;
 }
