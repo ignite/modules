@@ -20,13 +20,14 @@ func TestAirdropSupplyGet(t *testing.T) {
 
 	t.Run("should allow get", func(t *testing.T) {
 		sampleSupply := sample.Coin(r)
-		err := tk.ClaimKeeper.AirdropSupply.Set(ctx, claim.AirdropSupply{Supply: sampleSupply})
+		supply := claim.AirdropSupply{Supply: sampleSupply}
+		err := tk.ClaimKeeper.AirdropSupply.Set(ctx, supply)
 		require.NoError(t, err)
 
 		rst, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
 		require.NoError(t, err)
 		require.Equal(t,
-			nullify.Fill(&sampleSupply),
+			nullify.Fill(&supply),
 			nullify.Fill(&rst),
 		)
 	})
@@ -161,7 +162,8 @@ func TestEndAirdrop(t *testing.T) {
 
 			airdropSupply, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
 			require.NoError(t, err)
-			require.Equal(t, tt.expectedSupply, airdropSupply)
+			expectedSupply := claim.AirdropSupply{Supply: tt.expectedSupply}
+			require.Equal(t, expectedSupply, airdropSupply)
 		})
 	}
 }
