@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -23,7 +24,7 @@ func createNClaimRecord(keeper keeper.Keeper, ctx context.Context, n int) []type
 	items := make([]types.ClaimRecord, n)
 	for i := range items {
 		items[i].Address = strconv.Itoa(i)
-
+		items[i].Claimable = sdkmath.ZeroInt()
 		_ = keeper.ClaimRecord.Set(ctx, items[i].Address, items[i])
 	}
 	return items
