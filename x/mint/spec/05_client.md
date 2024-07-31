@@ -11,7 +11,7 @@ order: 5
 The `query` commands allow users to query `mint` state.
 
 ```sh
-testappd q mint
+modulesd q mint
 ```
 
 #### `params`
@@ -19,7 +19,7 @@ testappd q mint
 Shows the params of the module.
 
 ```sh
-testappd q mint params
+modulesd q mint params
 ```
 
 Example output:
@@ -49,7 +49,7 @@ mint_denom: stake
 Shows the current minting annual provisions valu
 
 ```sh
-testappd q mint annual-provisions
+modulesd q mint annual-provisions
 ```
 
 Example output:
@@ -63,7 +63,7 @@ Example output:
 Shows the current minting inflation value
 
 ```sh
-testappd q mint inflation
+modulesd q mint inflation
 ```
 
 Example output:

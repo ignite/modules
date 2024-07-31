@@ -13,7 +13,7 @@ A user can query and interact with the `claim` module using the chain CLI.
 The `query` commands allow users to query `claim` state.
 
 ```sh
-testappd q claim
+modulesd q claim
 ```
 
 #### `params`
@@ -21,7 +21,7 @@ testappd q claim
 Shows the params of the module.
 
 ```sh
-testappd q claim params
+modulesd q claim params
 ```
 
 Example output:
@@ -39,7 +39,7 @@ params:
 Shows the current airdrop supply.
 
 ```sh
-testappd q claim show-airdrop-supply
+modulesd q claim show-airdrop-supply
 ```
 
 Example output:
@@ -55,7 +55,7 @@ AirdropSupply:
 Shows the information about the initial claim for airdrops.
 
 ```sh
-testappd q claim show-initial-claim
+modulesd q claim show-initial-claim
 ```
 
 Example output:
@@ -71,7 +71,7 @@ InitialClaim:
 Lists the claim records for eligible addresses for the aidrops.
 
 ```sh
-testappd q claim list-claim-record
+modulesd q claim list-claim-record
 ```
 
 Example output:
@@ -97,7 +97,7 @@ pagination:
 Shows the claim record associated to an eligible address.
 
 ```sh
-testappd q claim show-claim-record [address]
+modulesd q claim show-claim-record [address]
 ```
 
 Example output:
@@ -114,7 +114,7 @@ claimRecord:
 Lists the missions to complete to claim aidrop.
 
 ```sh
-testappd q claim list-mission
+modulesd q claim list-mission
 ```
 
 Example output:
@@ -140,7 +140,7 @@ pagination:
 Shows information about a specific mission to claim a claimable amount of the airdrop.
 
 ```sh
-testappd q claim show-mission [mission-id]
+modulesd q claim show-mission [mission-id]
 ```
 
 Example output:
@@ -157,7 +157,7 @@ Mission:
 The `tx` commands allow users to interact with the `claim` module.
 
 ```sh
-testappd tx claim
+modulesd tx claim
 ```
 
 #### `claim-initial`
@@ -165,13 +165,13 @@ testappd tx claim
 Claim the initial airdrop allocation for the user.
 
 ```sh
-testappd tx claim claim-initial
+modulesd tx claim claim-initial
 ```
 
 Example:
 
 ```sh
-testappd tx claim claim-initial --from alice
+modulesd tx claim claim-initial --from alice
 ```
 
 #### `claim`
@@ -179,11 +179,11 @@ testappd tx claim claim-initial --from alice
 Claim the airdrop allocation for the user and mission.
 
 ```sh
-testappd tx claim claim 2
+modulesd tx claim claim 2
 ```
 
 Example:
 
 ```sh
-testappd tx claim claim 3 --from alice
+modulesd tx claim claim 3 --from alice
 ```

@@ -50,10 +50,10 @@ In order to launch a test app instance and interact with the modules, install [I
 ignite chain serve
 ```
 
-You can interact with the modules with the native chain CLI `testappd`:
+You can interact with the modules with the native chain CLI `modulesd`:
 
 ```
-testappd q mint params
+modulesd q mint params
 ```
 
 ## Contributing
