@@ -14,7 +14,7 @@ func NewParams(decayInformation DecayInformation, airdropStart time.Time) Params
 func DefaultParams() Params {
 	return NewParams(
 		NewDisabledDecay(),
-		time.Unix(0, 0),
+		time.Unix(0, 0).UTC(),
 	)
 }
 
