@@ -7,7 +7,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/ignite/modules/api
+    default: cosmossdk.io/api
     except:
       - buf.build/googleapis/googleapis
       - buf.build/cosmos/gogo-proto
