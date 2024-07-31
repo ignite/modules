@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const DefaultIndex uint64 = 1
@@ -12,10 +13,10 @@ const DefaultIndex uint64 = 1
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
+		AirdropSupply:   AirdropSupply{Supply: sdk.NewCoin("utest", sdkmath.ZeroInt())},
 		ClaimRecordList: []ClaimRecord{},
 		MissionList:     []Mission{},
 		InitialClaim:    InitialClaim{},
-		AirdropSupply:   AirdropSupply{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
