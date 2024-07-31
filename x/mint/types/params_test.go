@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	"github.com/ignite/modules/testutil/sample"
-
 	"github.com/stretchr/testify/require"
+
+	"github.com/ignite/modules/testutil/sample"
 )
 
 func TestParamsValidate(t *testing.T) {

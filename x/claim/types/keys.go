@@ -16,9 +16,7 @@ const (
 	MemStoreKey = "mem_claim"
 )
 
-var (
-	ParamsKey = collections.NewPrefix("p_claim")
-)
+var ParamsKey = collections.NewPrefix("p_claim")
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
@@ -29,10 +27,6 @@ var (
 	MissionCountKey = collections.NewPrefix("mission/count/")
 )
 
-var (
-	InitialClaimKey = collections.NewPrefix("initialClaim/value/")
-)
+var InitialClaimKey = collections.NewPrefix("initialClaim/value/")
 
-var (
-	AirdropSupplyKey = collections.NewPrefix("airdropSupply/value/")
-)
+var AirdropSupplyKey = collections.NewPrefix("airdropSupply/value/")

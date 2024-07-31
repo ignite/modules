@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
+
 	"github.com/ignite/modules/x/mint/types"
 )
 

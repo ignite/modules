@@ -1,15 +1,16 @@
 package claim_test
 
 import (
+	"testing"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"testing"
+	"github.com/stretchr/testify/require"
 
 	keepertest "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	claim "github.com/ignite/modules/x/claim/module"
 	"github.com/ignite/modules/x/claim/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
@@ -21,6 +22,7 @@ func createNMission(keeper keeper.Keeper, ctx context.Context, n int) []types.Mi
 	for i := range items {
 		iu := uint64(i)
 		items[i].MissionID = iu
+		items[i].Weight = sdkmath.LegacyZeroDec()
 		_ = keeper.Mission.Set(ctx, iu, items[i])
 		_ = keeper.MissionSeq.Set(ctx, iu)
 	}

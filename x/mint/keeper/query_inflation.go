@@ -3,9 +3,10 @@ package keeper
 import (
 	"context"
 
-	"github.com/ignite/modules/x/mint/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/ignite/modules/x/mint/types"
 )
 
 func (q queryServer) Inflation(ctx context.Context, req *types.QueryInflationRequest) (*types.QueryInflationResponse, error) {

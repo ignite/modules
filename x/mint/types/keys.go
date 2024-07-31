@@ -13,14 +13,10 @@ const (
 	MemStoreKey = "mem_mint"
 )
 
-var (
-	ParamsKey = collections.NewPrefix("p_mint")
-)
+var ParamsKey = collections.NewPrefix("p_mint")
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
 
-var (
-	MinterKey = collections.NewPrefix("minter/value/")
-)
+var MinterKey = collections.NewPrefix("minter/value/")

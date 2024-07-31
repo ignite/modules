@@ -3,9 +3,10 @@ package keeper
 import (
 	"context"
 
-	"github.com/ignite/modules/x/mint/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/ignite/modules/x/mint/types"
 )
 
 func (q queryServer) AnnualProvisions(ctx context.Context, req *types.QueryAnnualProvisionsRequest) (*types.QueryAnnualProvisionsResponse, error) {

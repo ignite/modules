@@ -1,9 +1,9 @@
 package types_test
 
 import (
-	sdkmath "cosmossdk.io/math"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/x/mint/types"
@@ -32,6 +32,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				Minter: types.Minter{
 					Inflation:        sdkmath.LegacyNewDec(80),
 					AnnualProvisions: sdkmath.LegacyNewDec(22),

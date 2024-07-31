@@ -52,17 +52,21 @@ func (x *EventMint) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_EventMint_messageType fastReflection_EventMint_messageType
-var _ protoreflect.MessageType = fastReflection_EventMint_messageType{}
+var (
+	_fastReflection_EventMint_messageType fastReflection_EventMint_messageType
+	_                                     protoreflect.MessageType = fastReflection_EventMint_messageType{}
+)
 
 type fastReflection_EventMint_messageType struct{}
 
 func (x fastReflection_EventMint_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_EventMint)(nil)
 }
+
 func (x fastReflection_EventMint_messageType) New() protoreflect.Message {
 	return new(fastReflection_EventMint)
 }
+
 func (x fastReflection_EventMint_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_EventMint
 }
@@ -757,10 +761,13 @@ func file_modules_mint_v1_events_proto_rawDescGZIP() []byte {
 	return file_modules_mint_v1_events_proto_rawDescData
 }
 
-var file_modules_mint_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_modules_mint_v1_events_proto_goTypes = []interface{}{
-	(*EventMint)(nil), // 0: modules.mint.v1.EventMint
-}
+var (
+	file_modules_mint_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+	file_modules_mint_v1_events_proto_goTypes  = []interface{}{
+		(*EventMint)(nil), // 0: modules.mint.v1.EventMint
+	}
+)
+
 var file_modules_mint_v1_events_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

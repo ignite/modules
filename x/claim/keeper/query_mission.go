@@ -7,9 +7,10 @@ import (
 	"cosmossdk.io/collections"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/ignite/modules/x/claim/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (q queryServer) ListMission(ctx context.Context, req *types.QueryAllMissionRequest) (*types.QueryAllMissionResponse, error) {
@@ -25,7 +26,6 @@ func (q queryServer) ListMission(ctx context.Context, req *types.QueryAllMission
 			return value, nil
 		},
 	)
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

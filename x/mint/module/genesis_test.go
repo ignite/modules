@@ -4,11 +4,12 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/ignite/modules/testutil/keeper"
 	"github.com/ignite/modules/testutil/nullify"
 	mint "github.com/ignite/modules/x/mint/module"
 	"github.com/ignite/modules/x/mint/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

@@ -25,6 +25,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
+
 	"github.com/ignite/modules/testutil/sample"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 

@@ -2,8 +2,8 @@ package types
 
 import (
 	"context"
-	"cosmossdk.io/math"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 

@@ -6,9 +6,10 @@ import (
 
 	"cosmossdk.io/collections"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/ignite/modules/x/claim/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (q queryServer) ListClaimRecord(ctx context.Context, req *types.QueryAllClaimRecordRequest) (*types.QueryAllClaimRecordResponse, error) {

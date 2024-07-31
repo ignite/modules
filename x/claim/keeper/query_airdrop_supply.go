@@ -5,10 +5,10 @@ import (
 	"errors"
 
 	"cosmossdk.io/collections"
-
-	"github.com/ignite/modules/x/claim/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/ignite/modules/x/claim/types"
 )
 
 func (q queryServer) GetAirdropSupply(ctx context.Context, req *types.QueryGetAirdropSupplyRequest) (*types.QueryGetAirdropSupplyResponse, error) {

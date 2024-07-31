@@ -11,8 +11,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/ignite/modules/testutil/simulation"
 
+	"github.com/ignite/modules/testutil/simulation"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
 )

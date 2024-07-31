@@ -3,11 +3,11 @@ package simulation
 // DONTCOVER
 
 import (
-	sdkmath "cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"

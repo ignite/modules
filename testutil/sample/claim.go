@@ -4,6 +4,7 @@ import (
 	"math/rand"
 
 	sdkmath "cosmossdk.io/math"
+
 	claim "github.com/ignite/modules/x/claim/types"
 )
 
