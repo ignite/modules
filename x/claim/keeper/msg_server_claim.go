@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/pkg/errors"
@@ -23,7 +24,9 @@ func (k msgServer) Claim(ctx context.Context, msg *types.MsgClaim) (*types.MsgCl
 
 	// check if the claim is an initial claim
 	initialClaim, err := k.InitialClaim.Get(ctx)
-	if err == nil {
+	if err != nil && errors.IsOf(err, collections.ErrNotFound) {
+		return nil, err
+	} else if err == nil {
 		if initialClaim.MissionID == msg.MissionID {
 			if !initialClaim.Enabled {
 				return nil, types.ErrInitialClaimNotEnabled
