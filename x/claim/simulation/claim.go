@@ -52,6 +52,14 @@ func SimulateMsgClaim(
 				return value, nil
 			},
 		)
+		if err != nil {
+			return simtypes.NoOpMsg(
+				types.ModuleName,
+				msg.Type(),
+				fmt.Sprintf("chain has no missions: %s", err.Error()),
+			), nil, nil
+		}
+
 		for _, m := range missions {
 			if cr.IsMissionCompleted(m.MissionID) && !cr.IsMissionClaimed(m.MissionID) {
 				hasMission = true

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -36,10 +37,10 @@ func (k Keeper) InitializeAirdropSupply(ctx context.Context, airdropSupply sdk.C
 
 func (k Keeper) EndAirdrop(ctx context.Context) error {
 	airdropSupply, err := k.AirdropSupply.Get(ctx)
-	if err != nil {
+	if err != nil && !errors.IsOf(err, collections.ErrNotFound) {
 		return err
 	}
-	if !airdropSupply.Supply.IsPositive() {
+	if errors.IsOf(err, collections.ErrNotFound) || !airdropSupply.Supply.IsPositive() {
 		return nil
 	}
 
@@ -48,8 +49,8 @@ func (k Keeper) EndAirdrop(ctx context.Context) error {
 		return err
 	}
 
-	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
 	decayInfo := params.DecayInformation
+	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
 	if decayInfo.Enabled && blockTime.After(decayInfo.DecayEnd) {
 		err := k.distrKeeper.FundCommunityPool(
 			ctx,
