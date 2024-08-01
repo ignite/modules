@@ -59,7 +59,10 @@ func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 				return value, nil
 			},
 		)
-		airdropSupply, _ := k.AirdropSupply.Get(ctx)
+		airdropSupply, err := k.AirdropSupply.Get(ctx)
+		if err != nil {
+			return "", false
+		}
 
 		missionMap := make(map[uint64]types.Mission)
 		for _, mission := range missions {
