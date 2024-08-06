@@ -25,10 +25,10 @@ func SimulateMsgClaim(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		msg := &types.MsgClaim{}
-
-		// find an account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgClaim{
+			Claimer: simAccount.Address.String(),
+		}
 
 		// check the account has a claim record and initial claim has not been completed
 		cr, err := k.ClaimRecord.Get(ctx, simAccount.Address.String())
