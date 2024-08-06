@@ -1,22 +1,74 @@
 version: 1
 validation: sovereign
-accounts: 
-- name: alice
-  coins:
-  - 20000token
-  - 200000000stake
-- name: bob
-  coins:
-  - 10000token
-  - 100000000stake
-client:
-  openapi:
-    path: docs/static/openapi.yml
+accounts:
+  - name: alice
+    coins:
+      - 20000000token
+      - 200000000stake
+    mnemonic: slide moment original seven milk crawl help text kick fluid boring awkward
+      doll wonder sure fragile plate grid hard next casual expire okay body
+  - name: bob
+    coins:
+      - 10000000token
+      - 100000000stake
+    mnemonic: trap possible liquid elite embody host segment fantasy swim cable digital
+      eager tiny broom burden diary earn hen grow engine pigeon fringe claim program
+  - name: carol
+    coins:
+      - 10000000token
+      - 100000000stake
+    mnemonic: great immense still pill defense fetch pencil slow purchase symptom speed
+      arm shoot fence have divorce cigar rapid hen vehicle pear evolve correct nerve
 faucet:
   name: bob
   coins:
-  - 5token
-  - 100000stake
+    - 5token
+    - 100000stake
+client:
+  openapi:
+    path: docs/static/openapi.yml
+genesis:
+  app_state:
+    claim:
+      airdropSupply:
+        amount: "1000"
+        denom: drop
+      claimRecords:
+        - address: cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9
+          claimable: "400"
+        - address: cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er
+          claimable: "500"
+        - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
+          claimable: "100"
+      initialClaim:
+        enabled: true
+        missionID: "0"
+      missions:
+        - description: initial claim
+          missionID: "0"
+          weight: "0.2"
+        - description: staking
+          missionID: "1"
+          weight: "0.5"
+        - description: voting
+          missionID: "2"
+          weight: "0.3"
+    mint:
+      params:
+        distribution_proportions:
+          community_pool: "0.300000000000000000"
+          funded_addresses: "0.400000000000000000"
+          staking: "0.300000000000000000"
+        funded_addresses:
+          - address: cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9
+            weight: "0.400000000000000000"
+          - address: cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er
+            weight: "0.300000000000000000"
+          - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
+            weight: "0.300000000000000000"
+        mint_denom: stake
+  chain_id: testapp-0
 validators:
-- name: alice
-  bonded: 100000000stake
+  - name: alice
+    bonded: 100000000stake
+    home: $HOME/.testapp

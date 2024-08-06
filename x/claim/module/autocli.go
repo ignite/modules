@@ -68,7 +68,7 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod:      "Claim",
 					Use:            "claim [mission-id]",
-					Short:          "Send a Claim tx",
+					Short:          "Claim the airdrop allocation by mission id",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "missionID"}},
 				},
 				// this line is used by ignite scaffolding # autocli/tx
