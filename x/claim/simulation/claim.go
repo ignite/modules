@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"math/rand"
 
+	"cosmossdk.io/collections"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/testutil/simulation"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
@@ -26,6 +27,7 @@ func SimulateMsgClaim(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// initialize basic message
 		msg := &types.MsgClaim{
 			Claimer: simAccount.Address.String(),
 		}
@@ -44,14 +46,8 @@ func SimulateMsgClaim(
 			mission    types.Mission
 			hasMission = false
 		)
-		missions, _, err := query.CollectionPaginate(
-			ctx,
-			k.Mission,
-			nil,
-			func(_ uint64, value types.Mission) (types.Mission, error) {
-				return value, nil
-			},
-		)
+
+		missions, err := k.Missions(ctx)
 		if err != nil {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
@@ -76,7 +72,7 @@ func SimulateMsgClaim(
 
 		// verify that there is claimable amount
 		airdropSupply, err := k.AirdropSupply.Get(ctx)
-		if err != nil {
+		if err != nil && !errors.IsOf(err, collections.ErrNotFound) {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
 				msg.Type(),
@@ -101,11 +97,6 @@ func SimulateMsgClaim(
 		// check final claimable non-zero
 		if claimable.Empty() {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), types.ErrNoClaimable.Error()), nil, nil
-		}
-
-		// initialize basic message
-		msg = &types.MsgClaim{
-			Claimer: simAccount.Address.String(),
 		}
 
 		txCtx := sdksimulation.OperationInput{

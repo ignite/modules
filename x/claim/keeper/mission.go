@@ -139,3 +139,39 @@ func (k Keeper) ClaimMission(
 
 	return claimed, nil
 }
+
+func (k Keeper) Missions(ctx context.Context) ([]types.Mission, error) {
+	missions := make([]types.Mission, 0)
+	err := k.IterateMissions(ctx, func(_ uint64, mission types.Mission) (bool, error) {
+		missions = append(missions, mission)
+		return false, nil
+	})
+	return missions, err
+}
+
+func (k Keeper) ClaimRecords(ctx context.Context) ([]types.ClaimRecord, error) {
+	claimRecords := make([]types.ClaimRecord, 0)
+	err := k.IterateClaimRecords(ctx, func(_ string, claimRecord types.ClaimRecord) (bool, error) {
+		claimRecords = append(claimRecords, claimRecord)
+		return false, nil
+	})
+	return claimRecords, err
+}
+
+// IterateClaimRecords iterates over all the ClaimRecord and performs a callback function
+func (k Keeper) IterateClaimRecords(ctx context.Context, cb func(address string, claimRecord types.ClaimRecord) (bool, error)) error {
+	err := k.ClaimRecord.Walk(ctx, nil, cb)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// IterateMissions iterates over all the Missions and performs a callback function
+func (k Keeper) IterateMissions(ctx context.Context, cb func(missionID uint64, mission types.Mission) (bool, error)) error {
+	err := k.Mission.Walk(ctx, nil, cb)
+	if err != nil {
+		return err
+	}
+	return nil
+}

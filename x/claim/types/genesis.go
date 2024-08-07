@@ -8,8 +8,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const DefaultIndex uint64 = 1
-
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
@@ -26,14 +24,12 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	// check airdrop supply
-	err := gs.AirdropSupply.Supply.Validate()
-	if err != nil {
+	if err := gs.AirdropSupply.Supply.Validate(); err != nil {
 		return err
 	}
 
 	// Check for duplicated index in claimRecord
 	claimRecordIndexMap := make(map[string]struct{})
-
 	for _, elem := range gs.ClaimRecordList {
 		index := fmt.Sprint(elem.Address)
 		if _, ok := claimRecordIndexMap[index]; ok {
@@ -42,25 +38,24 @@ func (gs GenesisState) Validate() error {
 		claimRecordIndexMap[index] = struct{}{}
 	}
 
-	// Check for duplicated ID in mission
-	missionMap := make(map[uint64]Mission)
-	missionCount := gs.GetMissionCount()
+	// check missions
 	weightSum := sdkmath.LegacyZeroDec()
-	for _, elem := range gs.MissionList {
-		err := elem.Validate()
+	missionCount := gs.GetMissionCount()
+	missionMap := make(map[uint64]Mission)
+	for _, mission := range gs.MissionList {
+		err := mission.Validate()
 		if err != nil {
 			return err
 		}
 
-		weightSum = weightSum.Add(elem.Weight)
-
-		if _, ok := missionMap[elem.MissionID]; ok {
-			return fmt.Errorf("duplicated id for mission")
+		weightSum = weightSum.Add(mission.Weight)
+		if _, ok := missionMap[mission.MissionID]; ok {
+			return errors.New("duplicated id for mission")
 		}
-		if elem.MissionID >= missionCount {
+		if mission.MissionID >= missionCount {
 			return fmt.Errorf("mission id should be lower or equal than the last id")
 		}
-		missionMap[elem.MissionID] = elem
+		missionMap[mission.MissionID] = mission
 	}
 
 	// ensure mission weight sum is 1
@@ -78,14 +73,12 @@ func (gs GenesisState) Validate() error {
 	}
 
 	for _, claimRecord := range gs.ClaimRecordList {
-		err := claimRecord.Validate()
-		if err != nil {
+		if err := claimRecord.Validate(); err != nil {
 			return err
 		}
-
 	}
 
-	if err := CheckAirdropSupply(gs.AirdropSupply.Supply, missionMap, gs.ClaimRecordList); err != nil {
+	if err := CheckAirdropSupply(gs.AirdropSupply, missionMap, gs.ClaimRecordList); err != nil {
 		return err
 	}
 
