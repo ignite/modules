@@ -13,6 +13,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		AirdropSupply:   AirdropSupply{Supply: sdk.NewCoin("utest", sdkmath.ZeroInt())},
 		ClaimRecordList: []ClaimRecord{},
+		MissionCount:    0,
 		MissionList:     []Mission{},
 		InitialClaim:    InitialClaim{},
 		// this line is used by starport scaffolding # genesis/types/default

@@ -140,6 +140,17 @@ func (k Keeper) ClaimMission(
 	return claimed, nil
 }
 
+// SetMission add a mission id and store the Mission.
+func (k Keeper) SetMission(ctx context.Context, mission types.Mission) (uint64, error) {
+	missionID, err := k.MissionSeq.Next(ctx)
+	if err != nil {
+		return 0, err
+	}
+	mission.MissionID = missionID
+	return missionID, k.Mission.Set(ctx, missionID, mission)
+}
+
+// Missions returns all missions.
 func (k Keeper) Missions(ctx context.Context) ([]types.Mission, error) {
 	missions := make([]types.Mission, 0)
 	err := k.IterateMissions(ctx, func(_ uint64, mission types.Mission) (bool, error) {
@@ -149,6 +160,7 @@ func (k Keeper) Missions(ctx context.Context) ([]types.Mission, error) {
 	return missions, err
 }
 
+// ClaimRecords returns all claim records.
 func (k Keeper) ClaimRecords(ctx context.Context) ([]types.ClaimRecord, error) {
 	claimRecords := make([]types.ClaimRecord, 0)
 	err := k.IterateClaimRecords(ctx, func(_ string, claimRecord types.ClaimRecord) (bool, error) {
