@@ -2,23 +2,23 @@
 package claimv1
 
 import (
+	fmt "fmt"
+	io "io"
+	reflect "reflect"
+	sync "sync"
+
 	_ "cosmossdk.io/api/amino"
 	v1beta1 "cosmossdk.io/api/cosmos/base/query/v1beta1"
-	fmt "fmt"
+
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	io "io"
-	reflect "reflect"
-	sync "sync"
 )
 
-var (
-	md_QueryParamsRequest protoreflect.MessageDescriptor
-)
+var md_QueryParamsRequest protoreflect.MessageDescriptor
 
 func init() {
 	file_modules_claim_v1_query_proto_init()
@@ -45,17 +45,21 @@ func (x *QueryParamsRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryParamsRequest_messageType fastReflection_QueryParamsRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryParamsRequest_messageType{}
+var (
+	_fastReflection_QueryParamsRequest_messageType fastReflection_QueryParamsRequest_messageType
+	_                                              protoreflect.MessageType = fastReflection_QueryParamsRequest_messageType{}
+)
 
 type fastReflection_QueryParamsRequest_messageType struct{}
 
 func (x fastReflection_QueryParamsRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryParamsRequest)(nil)
 }
+
 func (x fastReflection_QueryParamsRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryParamsRequest)
 }
+
 func (x fastReflection_QueryParamsRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryParamsRequest
 }
@@ -403,17 +407,21 @@ func (x *QueryParamsResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryParamsResponse_messageType fastReflection_QueryParamsResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryParamsResponse_messageType{}
+var (
+	_fastReflection_QueryParamsResponse_messageType fastReflection_QueryParamsResponse_messageType
+	_                                               protoreflect.MessageType = fastReflection_QueryParamsResponse_messageType{}
+)
 
 type fastReflection_QueryParamsResponse_messageType struct{}
 
 func (x fastReflection_QueryParamsResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryParamsResponse)(nil)
 }
+
 func (x fastReflection_QueryParamsResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryParamsResponse)
 }
+
 func (x fastReflection_QueryParamsResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryParamsResponse
 }
@@ -838,17 +846,21 @@ func (x *QueryGetClaimRecordRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetClaimRecordRequest_messageType fastReflection_QueryGetClaimRecordRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetClaimRecordRequest_messageType{}
+var (
+	_fastReflection_QueryGetClaimRecordRequest_messageType fastReflection_QueryGetClaimRecordRequest_messageType
+	_                                                      protoreflect.MessageType = fastReflection_QueryGetClaimRecordRequest_messageType{}
+)
 
 type fastReflection_QueryGetClaimRecordRequest_messageType struct{}
 
 func (x fastReflection_QueryGetClaimRecordRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetClaimRecordRequest)(nil)
 }
+
 func (x fastReflection_QueryGetClaimRecordRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetClaimRecordRequest)
 }
+
 func (x fastReflection_QueryGetClaimRecordRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetClaimRecordRequest
 }
@@ -1258,17 +1270,21 @@ func (x *QueryGetClaimRecordResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetClaimRecordResponse_messageType fastReflection_QueryGetClaimRecordResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetClaimRecordResponse_messageType{}
+var (
+	_fastReflection_QueryGetClaimRecordResponse_messageType fastReflection_QueryGetClaimRecordResponse_messageType
+	_                                                       protoreflect.MessageType = fastReflection_QueryGetClaimRecordResponse_messageType{}
+)
 
 type fastReflection_QueryGetClaimRecordResponse_messageType struct{}
 
 func (x fastReflection_QueryGetClaimRecordResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetClaimRecordResponse)(nil)
 }
+
 func (x fastReflection_QueryGetClaimRecordResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetClaimRecordResponse)
 }
+
 func (x fastReflection_QueryGetClaimRecordResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetClaimRecordResponse
 }
@@ -1693,17 +1709,21 @@ func (x *QueryAllClaimRecordRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryAllClaimRecordRequest_messageType fastReflection_QueryAllClaimRecordRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryAllClaimRecordRequest_messageType{}
+var (
+	_fastReflection_QueryAllClaimRecordRequest_messageType fastReflection_QueryAllClaimRecordRequest_messageType
+	_                                                      protoreflect.MessageType = fastReflection_QueryAllClaimRecordRequest_messageType{}
+)
 
 type fastReflection_QueryAllClaimRecordRequest_messageType struct{}
 
 func (x fastReflection_QueryAllClaimRecordRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryAllClaimRecordRequest)(nil)
 }
+
 func (x fastReflection_QueryAllClaimRecordRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryAllClaimRecordRequest)
 }
+
 func (x fastReflection_QueryAllClaimRecordRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryAllClaimRecordRequest
 }
@@ -2181,17 +2201,21 @@ func (x *QueryAllClaimRecordResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryAllClaimRecordResponse_messageType fastReflection_QueryAllClaimRecordResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryAllClaimRecordResponse_messageType{}
+var (
+	_fastReflection_QueryAllClaimRecordResponse_messageType fastReflection_QueryAllClaimRecordResponse_messageType
+	_                                                       protoreflect.MessageType = fastReflection_QueryAllClaimRecordResponse_messageType{}
+)
 
 type fastReflection_QueryAllClaimRecordResponse_messageType struct{}
 
 func (x fastReflection_QueryAllClaimRecordResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryAllClaimRecordResponse)(nil)
 }
+
 func (x fastReflection_QueryAllClaimRecordResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryAllClaimRecordResponse)
 }
+
 func (x fastReflection_QueryAllClaimRecordResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryAllClaimRecordResponse
 }
@@ -2701,17 +2725,21 @@ func (x *QueryGetMissionRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetMissionRequest_messageType fastReflection_QueryGetMissionRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetMissionRequest_messageType{}
+var (
+	_fastReflection_QueryGetMissionRequest_messageType fastReflection_QueryGetMissionRequest_messageType
+	_                                                  protoreflect.MessageType = fastReflection_QueryGetMissionRequest_messageType{}
+)
 
 type fastReflection_QueryGetMissionRequest_messageType struct{}
 
 func (x fastReflection_QueryGetMissionRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetMissionRequest)(nil)
 }
+
 func (x fastReflection_QueryGetMissionRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetMissionRequest)
 }
+
 func (x fastReflection_QueryGetMissionRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetMissionRequest
 }
@@ -3105,17 +3133,21 @@ func (x *QueryGetMissionResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetMissionResponse_messageType fastReflection_QueryGetMissionResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetMissionResponse_messageType{}
+var (
+	_fastReflection_QueryGetMissionResponse_messageType fastReflection_QueryGetMissionResponse_messageType
+	_                                                   protoreflect.MessageType = fastReflection_QueryGetMissionResponse_messageType{}
+)
 
 type fastReflection_QueryGetMissionResponse_messageType struct{}
 
 func (x fastReflection_QueryGetMissionResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetMissionResponse)(nil)
 }
+
 func (x fastReflection_QueryGetMissionResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetMissionResponse)
 }
+
 func (x fastReflection_QueryGetMissionResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetMissionResponse
 }
@@ -3540,17 +3572,21 @@ func (x *QueryAllMissionRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryAllMissionRequest_messageType fastReflection_QueryAllMissionRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryAllMissionRequest_messageType{}
+var (
+	_fastReflection_QueryAllMissionRequest_messageType fastReflection_QueryAllMissionRequest_messageType
+	_                                                  protoreflect.MessageType = fastReflection_QueryAllMissionRequest_messageType{}
+)
 
 type fastReflection_QueryAllMissionRequest_messageType struct{}
 
 func (x fastReflection_QueryAllMissionRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryAllMissionRequest)(nil)
 }
+
 func (x fastReflection_QueryAllMissionRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryAllMissionRequest)
 }
+
 func (x fastReflection_QueryAllMissionRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryAllMissionRequest
 }
@@ -4028,17 +4064,21 @@ func (x *QueryAllMissionResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryAllMissionResponse_messageType fastReflection_QueryAllMissionResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryAllMissionResponse_messageType{}
+var (
+	_fastReflection_QueryAllMissionResponse_messageType fastReflection_QueryAllMissionResponse_messageType
+	_                                                   protoreflect.MessageType = fastReflection_QueryAllMissionResponse_messageType{}
+)
 
 type fastReflection_QueryAllMissionResponse_messageType struct{}
 
 func (x fastReflection_QueryAllMissionResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryAllMissionResponse)(nil)
 }
+
 func (x fastReflection_QueryAllMissionResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryAllMissionResponse)
 }
+
 func (x fastReflection_QueryAllMissionResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryAllMissionResponse
 }
@@ -4517,9 +4557,7 @@ func (x *fastReflection_QueryAllMissionResponse) ProtoMethods() *protoiface.Meth
 	}
 }
 
-var (
-	md_QueryGetInitialClaimRequest protoreflect.MessageDescriptor
-)
+var md_QueryGetInitialClaimRequest protoreflect.MessageDescriptor
 
 func init() {
 	file_modules_claim_v1_query_proto_init()
@@ -4546,17 +4584,21 @@ func (x *QueryGetInitialClaimRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetInitialClaimRequest_messageType fastReflection_QueryGetInitialClaimRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetInitialClaimRequest_messageType{}
+var (
+	_fastReflection_QueryGetInitialClaimRequest_messageType fastReflection_QueryGetInitialClaimRequest_messageType
+	_                                                       protoreflect.MessageType = fastReflection_QueryGetInitialClaimRequest_messageType{}
+)
 
 type fastReflection_QueryGetInitialClaimRequest_messageType struct{}
 
 func (x fastReflection_QueryGetInitialClaimRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetInitialClaimRequest)(nil)
 }
+
 func (x fastReflection_QueryGetInitialClaimRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetInitialClaimRequest)
 }
+
 func (x fastReflection_QueryGetInitialClaimRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetInitialClaimRequest
 }
@@ -4904,17 +4946,21 @@ func (x *QueryGetInitialClaimResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetInitialClaimResponse_messageType fastReflection_QueryGetInitialClaimResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetInitialClaimResponse_messageType{}
+var (
+	_fastReflection_QueryGetInitialClaimResponse_messageType fastReflection_QueryGetInitialClaimResponse_messageType
+	_                                                        protoreflect.MessageType = fastReflection_QueryGetInitialClaimResponse_messageType{}
+)
 
 type fastReflection_QueryGetInitialClaimResponse_messageType struct{}
 
 func (x fastReflection_QueryGetInitialClaimResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetInitialClaimResponse)(nil)
 }
+
 func (x fastReflection_QueryGetInitialClaimResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetInitialClaimResponse)
 }
+
 func (x fastReflection_QueryGetInitialClaimResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetInitialClaimResponse
 }
@@ -5308,9 +5354,7 @@ func (x *fastReflection_QueryGetInitialClaimResponse) ProtoMethods() *protoiface
 	}
 }
 
-var (
-	md_QueryGetAirdropSupplyRequest protoreflect.MessageDescriptor
-)
+var md_QueryGetAirdropSupplyRequest protoreflect.MessageDescriptor
 
 func init() {
 	file_modules_claim_v1_query_proto_init()
@@ -5337,17 +5381,21 @@ func (x *QueryGetAirdropSupplyRequest) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetAirdropSupplyRequest_messageType fastReflection_QueryGetAirdropSupplyRequest_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetAirdropSupplyRequest_messageType{}
+var (
+	_fastReflection_QueryGetAirdropSupplyRequest_messageType fastReflection_QueryGetAirdropSupplyRequest_messageType
+	_                                                        protoreflect.MessageType = fastReflection_QueryGetAirdropSupplyRequest_messageType{}
+)
 
 type fastReflection_QueryGetAirdropSupplyRequest_messageType struct{}
 
 func (x fastReflection_QueryGetAirdropSupplyRequest_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetAirdropSupplyRequest)(nil)
 }
+
 func (x fastReflection_QueryGetAirdropSupplyRequest_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetAirdropSupplyRequest)
 }
+
 func (x fastReflection_QueryGetAirdropSupplyRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetAirdropSupplyRequest
 }
@@ -5695,17 +5743,21 @@ func (x *QueryGetAirdropSupplyResponse) slowProtoReflect() protoreflect.Message 
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryGetAirdropSupplyResponse_messageType fastReflection_QueryGetAirdropSupplyResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QueryGetAirdropSupplyResponse_messageType{}
+var (
+	_fastReflection_QueryGetAirdropSupplyResponse_messageType fastReflection_QueryGetAirdropSupplyResponse_messageType
+	_                                                         protoreflect.MessageType = fastReflection_QueryGetAirdropSupplyResponse_messageType{}
+)
 
 type fastReflection_QueryGetAirdropSupplyResponse_messageType struct{}
 
 func (x fastReflection_QueryGetAirdropSupplyResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_QueryGetAirdropSupplyResponse)(nil)
 }
+
 func (x fastReflection_QueryGetAirdropSupplyResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_QueryGetAirdropSupplyResponse)
 }
+
 func (x fastReflection_QueryGetAirdropSupplyResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_QueryGetAirdropSupplyResponse
 }
@@ -6787,30 +6839,32 @@ func file_modules_claim_v1_query_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_query_proto_rawDescData
 }
 
-var file_modules_claim_v1_query_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-var file_modules_claim_v1_query_proto_goTypes = []interface{}{
-	(*QueryParamsRequest)(nil),            // 0: modules.claim.v1.QueryParamsRequest
-	(*QueryParamsResponse)(nil),           // 1: modules.claim.v1.QueryParamsResponse
-	(*QueryGetClaimRecordRequest)(nil),    // 2: modules.claim.v1.QueryGetClaimRecordRequest
-	(*QueryGetClaimRecordResponse)(nil),   // 3: modules.claim.v1.QueryGetClaimRecordResponse
-	(*QueryAllClaimRecordRequest)(nil),    // 4: modules.claim.v1.QueryAllClaimRecordRequest
-	(*QueryAllClaimRecordResponse)(nil),   // 5: modules.claim.v1.QueryAllClaimRecordResponse
-	(*QueryGetMissionRequest)(nil),        // 6: modules.claim.v1.QueryGetMissionRequest
-	(*QueryGetMissionResponse)(nil),       // 7: modules.claim.v1.QueryGetMissionResponse
-	(*QueryAllMissionRequest)(nil),        // 8: modules.claim.v1.QueryAllMissionRequest
-	(*QueryAllMissionResponse)(nil),       // 9: modules.claim.v1.QueryAllMissionResponse
-	(*QueryGetInitialClaimRequest)(nil),   // 10: modules.claim.v1.QueryGetInitialClaimRequest
-	(*QueryGetInitialClaimResponse)(nil),  // 11: modules.claim.v1.QueryGetInitialClaimResponse
-	(*QueryGetAirdropSupplyRequest)(nil),  // 12: modules.claim.v1.QueryGetAirdropSupplyRequest
-	(*QueryGetAirdropSupplyResponse)(nil), // 13: modules.claim.v1.QueryGetAirdropSupplyResponse
-	(*Params)(nil),                        // 14: modules.claim.v1.Params
-	(*ClaimRecord)(nil),                   // 15: modules.claim.v1.ClaimRecord
-	(*v1beta1.PageRequest)(nil),           // 16: cosmos.base.query.v1beta1.PageRequest
-	(*v1beta1.PageResponse)(nil),          // 17: cosmos.base.query.v1beta1.PageResponse
-	(*Mission)(nil),                       // 18: modules.claim.v1.Mission
-	(*InitialClaim)(nil),                  // 19: modules.claim.v1.InitialClaim
-	(*AirdropSupply)(nil),                 // 20: modules.claim.v1.AirdropSupply
-}
+var (
+	file_modules_claim_v1_query_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+	file_modules_claim_v1_query_proto_goTypes  = []interface{}{
+		(*QueryParamsRequest)(nil),            // 0: modules.claim.v1.QueryParamsRequest
+		(*QueryParamsResponse)(nil),           // 1: modules.claim.v1.QueryParamsResponse
+		(*QueryGetClaimRecordRequest)(nil),    // 2: modules.claim.v1.QueryGetClaimRecordRequest
+		(*QueryGetClaimRecordResponse)(nil),   // 3: modules.claim.v1.QueryGetClaimRecordResponse
+		(*QueryAllClaimRecordRequest)(nil),    // 4: modules.claim.v1.QueryAllClaimRecordRequest
+		(*QueryAllClaimRecordResponse)(nil),   // 5: modules.claim.v1.QueryAllClaimRecordResponse
+		(*QueryGetMissionRequest)(nil),        // 6: modules.claim.v1.QueryGetMissionRequest
+		(*QueryGetMissionResponse)(nil),       // 7: modules.claim.v1.QueryGetMissionResponse
+		(*QueryAllMissionRequest)(nil),        // 8: modules.claim.v1.QueryAllMissionRequest
+		(*QueryAllMissionResponse)(nil),       // 9: modules.claim.v1.QueryAllMissionResponse
+		(*QueryGetInitialClaimRequest)(nil),   // 10: modules.claim.v1.QueryGetInitialClaimRequest
+		(*QueryGetInitialClaimResponse)(nil),  // 11: modules.claim.v1.QueryGetInitialClaimResponse
+		(*QueryGetAirdropSupplyRequest)(nil),  // 12: modules.claim.v1.QueryGetAirdropSupplyRequest
+		(*QueryGetAirdropSupplyResponse)(nil), // 13: modules.claim.v1.QueryGetAirdropSupplyResponse
+		(*Params)(nil),                        // 14: modules.claim.v1.Params
+		(*ClaimRecord)(nil),                   // 15: modules.claim.v1.ClaimRecord
+		(*v1beta1.PageRequest)(nil),           // 16: cosmos.base.query.v1beta1.PageRequest
+		(*v1beta1.PageResponse)(nil),          // 17: cosmos.base.query.v1beta1.PageResponse
+		(*Mission)(nil),                       // 18: modules.claim.v1.Mission
+		(*InitialClaim)(nil),                  // 19: modules.claim.v1.InitialClaim
+		(*AirdropSupply)(nil),                 // 20: modules.claim.v1.AirdropSupply
+	}
+)
 var file_modules_claim_v1_query_proto_depIdxs = []int32{
 	14, // 0: modules.claim.v1.QueryParamsResponse.params:type_name -> modules.claim.v1.Params
 	15, // 1: modules.claim.v1.QueryGetClaimRecordResponse.claimRecord:type_name -> modules.claim.v1.ClaimRecord

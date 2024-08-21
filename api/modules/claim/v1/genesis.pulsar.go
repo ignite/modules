@@ -2,17 +2,19 @@
 package claimv1
 
 import (
+	fmt "fmt"
+	io "io"
+	reflect "reflect"
+	sync "sync"
+
 	_ "cosmossdk.io/api/amino"
 	_ "cosmossdk.io/api/cosmos/base/v1beta1"
-	fmt "fmt"
+
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	io "io"
-	reflect "reflect"
-	sync "sync"
 )
 
 var _ protoreflect.List = (*_GenesisState_2_list)(nil)
@@ -158,17 +160,21 @@ func (x *GenesisState) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_GenesisState_messageType fastReflection_GenesisState_messageType
-var _ protoreflect.MessageType = fastReflection_GenesisState_messageType{}
+var (
+	_fastReflection_GenesisState_messageType fastReflection_GenesisState_messageType
+	_                                        protoreflect.MessageType = fastReflection_GenesisState_messageType{}
+)
 
 type fastReflection_GenesisState_messageType struct{}
 
 func (x fastReflection_GenesisState_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_GenesisState)(nil)
 }
+
 func (x fastReflection_GenesisState_messageType) New() protoreflect.Message {
 	return new(fastReflection_GenesisState)
 }
+
 func (x fastReflection_GenesisState_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_GenesisState
 }
@@ -1096,15 +1102,17 @@ func file_modules_claim_v1_genesis_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_genesis_proto_rawDescData
 }
 
-var file_modules_claim_v1_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_modules_claim_v1_genesis_proto_goTypes = []interface{}{
-	(*GenesisState)(nil),  // 0: modules.claim.v1.GenesisState
-	(*AirdropSupply)(nil), // 1: modules.claim.v1.AirdropSupply
-	(*ClaimRecord)(nil),   // 2: modules.claim.v1.ClaimRecord
-	(*Mission)(nil),       // 3: modules.claim.v1.Mission
-	(*InitialClaim)(nil),  // 4: modules.claim.v1.InitialClaim
-	(*Params)(nil),        // 5: modules.claim.v1.Params
-}
+var (
+	file_modules_claim_v1_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+	file_modules_claim_v1_genesis_proto_goTypes  = []interface{}{
+		(*GenesisState)(nil),  // 0: modules.claim.v1.GenesisState
+		(*AirdropSupply)(nil), // 1: modules.claim.v1.AirdropSupply
+		(*ClaimRecord)(nil),   // 2: modules.claim.v1.ClaimRecord
+		(*Mission)(nil),       // 3: modules.claim.v1.Mission
+		(*InitialClaim)(nil),  // 4: modules.claim.v1.InitialClaim
+		(*Params)(nil),        // 5: modules.claim.v1.Params
+	}
+)
 var file_modules_claim_v1_genesis_proto_depIdxs = []int32{
 	1, // 0: modules.claim.v1.GenesisState.airdropSupply:type_name -> modules.claim.v1.AirdropSupply
 	2, // 1: modules.claim.v1.GenesisState.claimRecordList:type_name -> modules.claim.v1.ClaimRecord
