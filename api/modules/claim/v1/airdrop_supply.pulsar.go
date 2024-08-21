@@ -2,20 +2,18 @@
 package claimv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
 	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -49,21 +47,17 @@ func (x *AirdropSupply) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_AirdropSupply_messageType fastReflection_AirdropSupply_messageType
-	_                                         protoreflect.MessageType = fastReflection_AirdropSupply_messageType{}
-)
+var _fastReflection_AirdropSupply_messageType fastReflection_AirdropSupply_messageType
+var _ protoreflect.MessageType = fastReflection_AirdropSupply_messageType{}
 
 type fastReflection_AirdropSupply_messageType struct{}
 
 func (x fastReflection_AirdropSupply_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_AirdropSupply)(nil)
 }
-
 func (x fastReflection_AirdropSupply_messageType) New() protoreflect.Message {
 	return new(fastReflection_AirdropSupply)
 }
-
 func (x fastReflection_AirdropSupply_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_AirdropSupply
 }
@@ -553,13 +547,11 @@ func file_modules_claim_v1_airdrop_supply_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_airdrop_supply_proto_rawDescData
 }
 
-var (
-	file_modules_claim_v1_airdrop_supply_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_modules_claim_v1_airdrop_supply_proto_goTypes  = []interface{}{
-		(*AirdropSupply)(nil), // 0: modules.claim.v1.AirdropSupply
-		(*v1beta1.Coin)(nil),  // 1: cosmos.base.v1beta1.Coin
-	}
-)
+var file_modules_claim_v1_airdrop_supply_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_modules_claim_v1_airdrop_supply_proto_goTypes = []interface{}{
+	(*AirdropSupply)(nil), // 0: modules.claim.v1.AirdropSupply
+	(*v1beta1.Coin)(nil),  // 1: cosmos.base.v1beta1.Coin
+}
 var file_modules_claim_v1_airdrop_supply_proto_depIdxs = []int32{
 	1, // 0: modules.claim.v1.AirdropSupply.supply:type_name -> cosmos.base.v1beta1.Coin
 	1, // [1:1] is the sub-list for method output_type
