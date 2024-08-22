@@ -3,6 +3,7 @@ syntax = "proto3";
 package modules.mint.v1;
 
 import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "modules/mint/v1/minter.proto";
 import "modules/mint/v1/params.proto";

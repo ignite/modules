@@ -44,8 +44,17 @@ func (k Keeper) CompleteMission(
 		return claimed, err
 	}
 
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	err = sdkCtx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
+		MissionID: missionID,
+		Address:   address,
+	})
+	if err != nil {
+		return claimed, err
+	}
+
 	// try to claim the mission if airdrop start is reached
-	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
+	blockTime := sdkCtx.BlockTime()
 	params, err := k.Params.Get(ctx)
 	if err != nil {
 		return claimed, err
@@ -105,7 +114,8 @@ func (k Keeper) ClaimMission(
 		return claimed, err
 	}
 	decayInfo := params.DecayInformation
-	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	blockTime := sdkCtx.BlockTime()
 	claimable = decayInfo.ApplyDecayFactor(claimable, blockTime)
 
 	// check final claimable non-zero
@@ -137,7 +147,10 @@ func (k Keeper) ClaimMission(
 		return claimed, err
 	}
 
-	return claimed, nil
+	return claimed, sdkCtx.EventManager().EmitTypedEvent(&types.EventMissionClaimed{
+		MissionID: missionID,
+		Claimer:   claimRecord.Address,
+	})
 }
 
 // SetMission add a mission id and store the Mission.

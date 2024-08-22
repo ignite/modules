@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/x/mint/types"
 )
@@ -56,5 +57,11 @@ func (k Keeper) BeginBlocker(ctx context.Context) error {
 		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), "minted_tokens")
 	}
 
-	return nil
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	return sdkCtx.EventManager().EmitTypedEvent(&types.EventMint{
+		BondedRatio:      bondedRatio,
+		Inflation:        minter.Inflation,
+		AnnualProvisions: minter.AnnualProvisions,
+		Amount:           mintedCoin.Amount,
+	})
 }
