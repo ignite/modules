@@ -16,17 +16,25 @@ const (
 	MemStoreKey = "mem_claim"
 )
 
-var ParamsKey = collections.NewPrefix("p_claim")
-
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
 
 var (
-	MissionKey      = collections.NewPrefix("mission/value/")
+	// ParamsKey is the prefix to retrieve all Params
+	ParamsKey = collections.NewPrefix("p_claim")
+
+	// MissionKey is the prefix to retrieve all Mission
+	MissionKey = collections.NewPrefix("mission/value/")
+	// MissionCountKey is the prefix to retrieve all MissionCount
 	MissionCountKey = collections.NewPrefix("mission/count/")
+
+	// ClaimRecordKey is the prefix to retrieve all ClaimRecord
+	ClaimRecordKey = collections.NewPrefix("ClaimRecord/value/")
+
+	// InitialClaimKey is the prefix to retrieve all InitialClaim
+	InitialClaimKey = collections.NewPrefix("initialClaim/value/")
+
+	// AirdropSupplyKey is the prefix to retrieve all AirdropSupply
+	AirdropSupplyKey = collections.NewPrefix("airdropSupply/value/")
 )
-
-var InitialClaimKey = collections.NewPrefix("initialClaim/value/")
-
-var AirdropSupplyKey = collections.NewPrefix("airdropSupply/value/")
