@@ -63,8 +63,11 @@ import (
 	minttypes "github.com/ignite/modules/x/mint/types"
 
 	// cosmos-sdk/ibc modules
+	fundraisingmodulev1 "github.com/ignite/modules/api/modules/fundraising/module/v1"
 	_ "github.com/ignite/modules/x/claim/module"
 	claimtypes "github.com/ignite/modules/x/claim/types"
+	_ "github.com/ignite/modules/x/fundraising/module"
+	fundraisingmoduletypes "github.com/ignite/modules/x/fundraising/types"
 )
 
 var (
@@ -94,6 +97,7 @@ var (
 		group.ModuleName,
 		consensustypes.ModuleName,
 		circuittypes.ModuleName,
+		fundraisingmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -116,6 +120,7 @@ var (
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		fundraisingmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -133,6 +138,7 @@ var (
 		capabilitytypes.ModuleName,
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		fundraisingmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -155,6 +161,7 @@ var (
 		{Account: icatypes.ModuleName},
 		{Account: claimtypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 
+		{Account: fundraisingmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -293,6 +300,10 @@ var (
 			{
 				Name:   claimtypes.ModuleName,
 				Config: appconfig.WrapAny(&claimmodulev1.Module{}),
+			},
+			{
+				Name:   fundraisingmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&fundraisingmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
