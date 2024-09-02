@@ -5,7 +5,6 @@ import (
 	"math/rand"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -43,7 +42,7 @@ func (nts *NetworkTestSuite) SetupSuite() {
 }
 
 func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {
-	claimState.AirdropSupply = sample.Coin(r)
+	claimState.AirdropSupply = claim.AirdropSupply{Supply: sample.Coin(r)}
 	totalSupply := sdkmath.ZeroInt()
 	for i := 0; i < 5; i++ {
 		// fill claim records
@@ -54,18 +53,18 @@ func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisSta
 		}
 		totalSupply = totalSupply.Add(accSupply)
 		nullify.Fill(&claimRecord)
-		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
+		claimState.ClaimRecordList = append(claimState.ClaimRecordList, claimRecord)
 	}
-	claimState.AirdropSupply.Amount = totalSupply
+	claimState.AirdropSupply.Supply.Amount = totalSupply
 
 	// add missions
 	for i := 0; i < 5; i++ {
 		mission := claim.Mission{
 			MissionID: uint64(i),
-			Weight:    sdk.NewDec(r.Int63()),
+			Weight:    sdkmath.LegacyNewDec(r.Int63()),
 		}
 		nullify.Fill(&mission)
-		claimState.Missions = append(claimState.Missions, mission)
+		claimState.MissionList = append(claimState.MissionList, mission)
 	}
 
 	return claimState

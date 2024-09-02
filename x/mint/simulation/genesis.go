@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -27,28 +28,28 @@ const (
 )
 
 // GenInflation randomized Inflation
-func GenInflation(r *rand.Rand) sdk.Dec {
-	return sdk.NewDecWithPrec(int64(r.Intn(99)), 2)
+func GenInflation(r *rand.Rand) sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(int64(r.Intn(99)), 2)
 }
 
 // GenInflationRateChange randomized InflationRateChange
-func GenInflationRateChange(r *rand.Rand) sdk.Dec {
-	return sdk.NewDecWithPrec(int64(r.Intn(99)), 2)
+func GenInflationRateChange(r *rand.Rand) sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(int64(r.Intn(99)), 2)
 }
 
 // GenInflationMax randomized InflationMax
-func GenInflationMax() sdk.Dec {
-	return sdk.NewDecWithPrec(20, 2)
+func GenInflationMax() sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(20, 2)
 }
 
 // GenInflationMin randomized InflationMin
-func GenInflationMin() sdk.Dec {
-	return sdk.NewDecWithPrec(7, 2)
+func GenInflationMin() sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(7, 2)
 }
 
 // GenGoalBonded randomized GoalBonded
-func GenGoalBonded() sdk.Dec {
-	return sdk.NewDecWithPrec(67, 2)
+func GenGoalBonded() sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(67, 2)
 }
 
 // GenDistributionProportions randomized DistributionProportions
@@ -59,9 +60,9 @@ func GenDistributionProportions(r *rand.Rand) types.DistributionProportions {
 	communityPool := left - funded
 
 	return types.DistributionProportions{
-		Staking:         sdk.NewDecWithPrec(staking, 2),
-		FundedAddresses: sdk.NewDecWithPrec(funded, 2),
-		CommunityPool:   sdk.NewDecWithPrec(communityPool, 2),
+		Staking:         sdkmath.LegacyNewDecWithPrec(staking, 2),
+		FundedAddresses: sdkmath.LegacyNewDecWithPrec(funded, 2),
+		CommunityPool:   sdkmath.LegacyNewDecWithPrec(communityPool, 2),
 	}
 }
 
@@ -69,9 +70,9 @@ func GenFundedAddresses(r *rand.Rand) []types.WeightedAddress {
 	var (
 		addrs         = make([]types.WeightedAddress, 0)
 		numAddrs      = r.Intn(51)
-		remainWeight  = sdk.NewDec(1)
-		maxRandWeight = sdk.NewDecWithPrec(15, 3)
-		minRandWeight = sdk.NewDecWithPrec(5, 3)
+		remainWeight  = sdkmath.LegacyNewDec(1)
+		maxRandWeight = sdkmath.LegacyNewDecWithPrec(15, 3)
+		minRandWeight = sdkmath.LegacyNewDecWithPrec(5, 3)
 	)
 	for i := 0; i < numAddrs; i++ {
 		// each address except the last can have a max of 2% weight and a min of 0.5%
@@ -94,46 +95,46 @@ func GenFundedAddresses(r *rand.Rand) []types.WeightedAddress {
 // RandomizedGenState generates a random GenesisState for mint
 func RandomizedGenState(simState *module.SimulationState) {
 	// minter
-	var inflation sdk.Dec
+	var inflation sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, Inflation, &inflation, simState.Rand,
+		Inflation, &inflation, simState.Rand,
 		func(r *rand.Rand) { inflation = GenInflation(r) },
 	)
 
 	// params
-	var inflationRateChange sdk.Dec
+	var inflationRateChange sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, InflationRateChange, &inflationRateChange, simState.Rand,
+		InflationRateChange, &inflationRateChange, simState.Rand,
 		func(r *rand.Rand) { inflationRateChange = GenInflationRateChange(r) },
 	)
 
-	var inflationMax sdk.Dec
+	var inflationMax sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, InflationMax, &inflationMax, simState.Rand,
+		InflationMax, &inflationMax, simState.Rand,
 		func(r *rand.Rand) { inflationMax = GenInflationMax() },
 	)
 
-	var inflationMin sdk.Dec
+	var inflationMin sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, InflationMin, &inflationMin, simState.Rand,
+		InflationMin, &inflationMin, simState.Rand,
 		func(r *rand.Rand) { inflationMin = GenInflationMin() },
 	)
 
-	var goalBonded sdk.Dec
+	var goalBonded sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, GoalBonded, &goalBonded, simState.Rand,
+		GoalBonded, &goalBonded, simState.Rand,
 		func(r *rand.Rand) { goalBonded = GenGoalBonded() },
 	)
 
 	var distributionProportions types.DistributionProportions
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, DistributionProportions, &distributionProportions, simState.Rand,
+		DistributionProportions, &distributionProportions, simState.Rand,
 		func(r *rand.Rand) { distributionProportions = GenDistributionProportions(r) },
 	)
 
 	var developmentFundRecipients []types.WeightedAddress
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, FundedAddresses, &developmentFundRecipients, simState.Rand,
+		FundedAddresses, &developmentFundRecipients, simState.Rand,
 		func(r *rand.Rand) { developmentFundRecipients = GenFundedAddresses(r) },
 	)
 

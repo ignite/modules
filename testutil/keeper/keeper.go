@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cometbft/cometbft/libs/log"
+	"cosmossdk.io/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
@@ -48,12 +48,11 @@ type TestMsgServers struct {
 func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
-	paramKeeper := initializer.Param()
 	authKeeper := initializer.Auth()
 	bankKeeper := initializer.Bank(authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, authKeeper, distrKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(authKeeper, distrKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -63,16 +62,18 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	}, false, log.NewNopLogger())
 
 	// Initialize community pool
-	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
+	err := distrKeeper.FeePool.Set(ctx, distrtypes.InitialFeePool())
+	require.NoError(t, err)
 
 	// Initialize params
-	err := distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	err = distrKeeper.Params.Set(ctx, distrtypes.DefaultParams())
 	require.NoError(t, err)
 	err = stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	require.NoError(t, err)
-	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
+	err = claimKeeper.Params.Set(ctx, claimtypes.DefaultParams())
+	require.NoError(t, err)
 
-	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
+	claimSrv := claimkeeper.NewMsgServerImpl(claimKeeper)
 
 	return ctx, TestKeepers{
 			T:             t,
@@ -80,7 +81,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			BankKeeper:    bankKeeper,
 			DistrKeeper:   distrKeeper,
 			StakingKeeper: stakingKeeper,
-			ClaimKeeper:   claimKeeper,
+			ClaimKeeper:   &claimKeeper,
 		}, TestMsgServers{
 			T:        t,
 			ClaimSrv: claimSrv,

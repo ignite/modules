@@ -28,7 +28,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -46,7 +46,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -69,7 +69,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -87,7 +87,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 				0: {
 					MissionID:   0,
 					Description: "",
-					Weight:      sdk.ZeroDec(),
+					Weight:      sdkmath.LegacyZeroDec(),
 				},
 			},
 			claimRecords: []types.ClaimRecord{
@@ -102,7 +102,7 @@ func TestCheckAirdropSupply(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			err := types.CheckAirdropSupply(
-				tc.airdropSupply,
+				types.AirdropSupply{Supply: tc.airdropSupply},
 				tc.missionMap,
 				tc.claimRecords,
 			)

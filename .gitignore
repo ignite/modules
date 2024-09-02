@@ -4,7 +4,9 @@ vue/dist
 ts-client/
 build/
 release/
-build/
 .idea/
 .vscode/
 .DS_Store
+*.dot
+*.log
+*.ign

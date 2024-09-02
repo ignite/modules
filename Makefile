@@ -53,8 +53,8 @@ build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=testappd \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=testappd \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=modulesd \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=modulesd \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
@@ -115,22 +115,22 @@ help: Makefile
 
 build: go.sum
 ifeq ($(OS),Windows_NT)
-	go build $(BUILD_FLAGS) -o build/testappd.exe ./cmd/testappd
+	go build $(BUILD_FLAGS) -o build/modulesd.exe ./cmd/modulesd
 else
-	go build $(BUILD_FLAGS) -o build/testappd ./cmd/testappd
+	go build $(BUILD_FLAGS) -o build/modulesd ./cmd/modulesd
 endif
 
 build-linux: go.sum
 	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build
 
 install: go.sum
-	go install $(BUILD_FLAGS) ./cmd/testappd
+	go install $(BUILD_FLAGS) ./cmd/modulesd
 
 build-reproducible: go.sum
 	$(DOCKER) rm latest-build || true
 	$(DOCKER) run --volume=$(CURDIR):/sources:ro \
         --env TARGET_PLATFORMS='linux/amd64 darwin/amd64 linux/arm64' \
-        --env APP=testappd \
+        --env APP=modulesd \
         --env VERSION=$(VERSION) \
         --env COMMIT=$(COMMIT) \
         --name latest-build cosmossdk/rbuilder:latest

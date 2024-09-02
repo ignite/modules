@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package modules.claim.v1;
+
+option go_package = "github.com/ignite/modules/x/claim/types";
+
+message EventMissionCompleted {
+  uint64 missionID = 1;
+  string address = 2;
+}
+
+message EventMissionClaimed {
+  uint64 missionID = 1;
+  string claimer = 2;
+}

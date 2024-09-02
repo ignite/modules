@@ -2,20 +2,22 @@ package types
 
 import (
 	"errors"
+	"fmt"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// DefaultGenesis returns the default claim genesis state
+// DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		AirdropSupply: sdk.NewCoin("utest", sdkmath.ZeroInt()),
-		ClaimRecords:  []ClaimRecord{},
-		Missions:      []Mission{},
-		InitialClaim:  InitialClaim{},
-		Params:        DefaultParams(),
+		AirdropSupply:   AirdropSupply{Supply: sdk.NewCoin("utest", sdkmath.ZeroInt())},
+		ClaimRecordList: []ClaimRecord{},
+		MissionCount:    0,
+		MissionList:     []Mission{},
+		InitialClaim:    InitialClaim{},
 		// this line is used by starport scaffolding # genesis/types/default
+		Params: DefaultParams(),
 	}
 }
 
@@ -23,15 +25,25 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	// check airdrop supply
-	err := gs.AirdropSupply.Validate()
-	if err != nil {
+	if err := gs.AirdropSupply.Supply.Validate(); err != nil {
 		return err
 	}
 
+	// Check for duplicated index in claimRecord
+	claimRecordIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ClaimRecordList {
+		index := fmt.Sprint(elem.Address)
+		if _, ok := claimRecordIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for claimRecord")
+		}
+		claimRecordIndexMap[index] = struct{}{}
+	}
+
 	// check missions
-	weightSum := sdk.ZeroDec()
+	weightSum := sdkmath.LegacyZeroDec()
+	missionCount := gs.GetMissionCount()
 	missionMap := make(map[uint64]Mission)
-	for _, mission := range gs.Missions {
+	for _, mission := range gs.MissionList {
 		err := mission.Validate()
 		if err != nil {
 			return err
@@ -41,12 +53,15 @@ func (gs GenesisState) Validate() error {
 		if _, ok := missionMap[mission.MissionID]; ok {
 			return errors.New("duplicated id for mission")
 		}
+		if mission.MissionID >= missionCount {
+			return fmt.Errorf("mission id should be lower or equal than the last id")
+		}
 		missionMap[mission.MissionID] = mission
 	}
 
 	// ensure mission weight sum is 1
-	if len(gs.Missions) > 0 {
-		if !weightSum.Equal(sdk.OneDec()) {
+	if len(gs.MissionList) > 0 {
+		if !weightSum.Equal(sdkmath.LegacyOneDec()) {
 			return errors.New("sum of mission weights must be 1")
 		}
 	}
@@ -58,16 +73,13 @@ func (gs GenesisState) Validate() error {
 		}
 	}
 
-	for _, claimRecord := range gs.ClaimRecords {
-		err = claimRecord.Validate()
-		if err != nil {
+	for _, claimRecord := range gs.ClaimRecordList {
+		if err := claimRecord.Validate(); err != nil {
 			return err
 		}
-
 	}
 
-	err = CheckAirdropSupply(gs.AirdropSupply, missionMap, gs.ClaimRecords)
-	if err != nil {
+	if err := CheckAirdropSupply(gs.AirdropSupply, missionMap, gs.ClaimRecordList); err != nil {
 		return err
 	}
 

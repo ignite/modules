@@ -43,17 +43,27 @@ func AllInvariants(k Keeper) sdk.Invariant {
 // amounts in claim records
 func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		missions := k.GetAllMission(ctx)
-		claimRecords := k.GetAllClaimRecord(ctx)
-		airdropSupply, _ := k.GetAirdropSupply(ctx)
+		missions, err := k.Missions(ctx)
+		if err != nil {
+			return "", false
+		}
+
+		claimRecords, err := k.ClaimRecords(ctx)
+		if err != nil {
+			return "", false
+		}
+
+		airdropSupply, err := k.AirdropSupply.Get(ctx)
+		if err != nil {
+			return "", false
+		}
 
 		missionMap := make(map[uint64]types.Mission)
 		for _, mission := range missions {
 			missionMap[mission.MissionID] = mission
 		}
 
-		err := types.CheckAirdropSupply(airdropSupply, missionMap, claimRecords)
-		if err != nil {
+		if err := types.CheckAirdropSupply(airdropSupply, missionMap, claimRecords); err != nil {
 			return err.Error(), true
 		}
 
@@ -64,8 +74,15 @@ func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 // ClaimRecordInvariant invariant checks that claim record was claimed but not completed
 func ClaimRecordInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		missions := k.GetAllMission(ctx)
-		claimRecords := k.GetAllClaimRecord(ctx)
+		missions, err := k.Missions(ctx)
+		if err != nil {
+			return "", false
+		}
+
+		claimRecords, err := k.ClaimRecords(ctx)
+		if err != nil {
+			return "", false
+		}
 
 		for _, claimRecord := range claimRecords {
 			for _, mission := range missions {
@@ -82,8 +99,15 @@ func ClaimRecordInvariant(k Keeper) sdk.Invariant {
 // ClaimRecordMissionInvariant invariant checks that claim record completed missions exist
 func ClaimRecordMissionInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		missions := k.GetAllMission(ctx)
-		claimRecords := k.GetAllClaimRecord(ctx)
+		missions, err := k.Missions(ctx)
+		if err != nil {
+			return "", false
+		}
+
+		claimRecords, err := k.ClaimRecords(ctx)
+		if err != nil {
+			return "", false
+		}
 
 		missionMap := make(map[uint64]struct{})
 		for _, mission := range missions {

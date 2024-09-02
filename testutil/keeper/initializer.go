@@ -1,17 +1,21 @@
 package keeper
 
 import (
-	tmdb "github.com/cometbft/cometbft-db"
+	"cosmossdk.io/log"
+	"cosmossdk.io/store"
+	"cosmossdk.io/store/metrics"
+	storetypes "cosmossdk.io/store/types"
+	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
+	upgradetypes "cosmossdk.io/x/upgrade/types"
+	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	addresscodec "github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
@@ -19,11 +23,12 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 
 	"github.com/ignite/modules/testutil/sample"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
+
 	claimtypes "github.com/ignite/modules/x/claim/types"
 	minttypes "github.com/ignite/modules/x/mint/types"
 )
@@ -40,14 +45,14 @@ var moduleAccountPerms = map[string][]string{
 // initializer allows to initialize each module keeper
 type initializer struct {
 	Codec      codec.Codec
-	DB         *tmdb.MemDB
+	DB         *dbm.MemDB
 	StateStore store.CommitMultiStore
 }
 
 func newInitializer() initializer {
 	cdc := sample.Codec()
-	db := tmdb.NewMemDB()
-	stateStore := store.NewCommitMultiStore(db)
+	db := dbm.NewMemDB()
+	stateStore := store.NewCommitMultiStore(db, log.NewNopLogger(), metrics.NewNoOpMetrics())
 
 	return initializer{
 		Codec:      cdc,
@@ -67,8 +72,8 @@ func ModuleAccountAddrs(maccPerms map[string][]string) map[string]bool {
 }
 
 func (i initializer) Param() paramskeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(paramstypes.StoreKey)
-	tkeys := sdk.NewTransientStoreKey(paramstypes.TStoreKey)
+	storeKey := storetypes.NewKVStoreKey(paramstypes.StoreKey)
+	tkeys := storetypes.NewTransientStoreKey(paramstypes.TStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(tkeys, storetypes.StoreTypeTransient, i.DB)
@@ -82,35 +87,37 @@ func (i initializer) Param() paramskeeper.Keeper {
 }
 
 func (i initializer) Auth() authkeeper.AccountKeeper {
-	storeKey := sdk.NewKVStoreKey(authtypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(authtypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 
 	return authkeeper.NewAccountKeeper(
 		i.Codec,
-		storeKey,
+		runtime.NewKVStoreService(storeKey),
 		authtypes.ProtoBaseAccount,
 		moduleAccountPerms,
+		addresscodec.NewBech32Codec(sdk.Bech32PrefixAccAddr),
 		sdk.Bech32PrefixAccAddr,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 }
 
 func (i initializer) Bank(authKeeper authkeeper.AccountKeeper) bankkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(banktypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(banktypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
 
 	return bankkeeper.NewBaseKeeper(
 		i.Codec,
-		storeKey,
+		runtime.NewKVStoreService(storeKey),
 		authKeeper,
 		modAccAddrs,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		log.NewNopLogger(),
 	)
 }
 
 func (i initializer) Capability() *capabilitykeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(capabilitytypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(capabilitytypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(capabilitytypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
@@ -126,7 +133,7 @@ type ProtocolVersionSetter struct{}
 func (vs ProtocolVersionSetter) SetProtocolVersion(uint64) {}
 
 func (i initializer) Upgrade() *upgradekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(upgradetypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(upgradetypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 
 	skipUpgradeHeights := make(map[int64]bool)
@@ -134,7 +141,7 @@ func (i initializer) Upgrade() *upgradekeeper.Keeper {
 
 	return upgradekeeper.NewKeeper(
 		skipUpgradeHeights,
-		storeKey,
+		runtime.NewKVStoreService(storeKey),
 		i.Codec,
 		"",
 		vs,
@@ -146,15 +153,17 @@ func (i initializer) Staking(
 	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 ) *stakingkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(stakingtypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(stakingtypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 
 	return stakingkeeper.NewKeeper(
 		i.Codec,
-		storeKey,
+		runtime.NewKVStoreService(storeKey),
 		authKeeper,
 		bankKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		addresscodec.NewBech32Codec(sdk.Bech32PrefixValAddr),
+		addresscodec.NewBech32Codec(sdk.Bech32PrefixConsAddr),
 	)
 }
 
@@ -163,12 +172,12 @@ func (i initializer) Distribution(
 	bankKeeper bankkeeper.Keeper,
 	stakingKeeper *stakingkeeper.Keeper,
 ) distrkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(distrtypes.StoreKey)
+	storeKey := storetypes.NewKVStoreKey(distrtypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 
 	return distrkeeper.NewKeeper(
 		i.Codec,
-		storeKey,
+		runtime.NewKVStoreService(storeKey),
 		authKeeper,
 		bankKeeper,
 		stakingKeeper,
@@ -178,27 +187,24 @@ func (i initializer) Distribution(
 }
 
 func (i initializer) Claim(
-	paramKeeper paramskeeper.Keeper,
 	accountKeeper authkeeper.AccountKeeper,
 	distrKeeper distrkeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
-) *claimkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(claimtypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(claimtypes.MemStoreKey)
-
+) claimkeeper.Keeper {
+	storeKey := storetypes.NewKVStoreKey(claimtypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
-	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(claimtypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(claimtypes.ModuleName)
+	addressCodec := addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix())
+	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
 
 	return claimkeeper.NewKeeper(
 		i.Codec,
-		storeKey,
-		memStoreKey,
-		subspace,
+		addressCodec,
+		runtime.NewKVStoreService(storeKey),
+		log.NewNopLogger(),
+		authority.String(),
 		accountKeeper,
-		distrKeeper,
 		bankKeeper,
+		distrKeeper,
 	)
 }

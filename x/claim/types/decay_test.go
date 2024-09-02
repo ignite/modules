@@ -200,7 +200,7 @@ func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			newCoins := tt.decayInfo.ApplyDecayFactor(tt.coins, tt.currentTime)
 
-			require.True(t, newCoins.IsEqual(tt.expectedCoins),
+			require.True(t, newCoins.Equal(tt.expectedCoins),
 				"new coins are not equal to expected coins, %s != %s",
 				newCoins.String(),
 				tt.expectedCoins.String(),

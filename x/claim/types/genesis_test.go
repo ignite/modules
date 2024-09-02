@@ -14,7 +14,7 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	fiftyPercent, err := sdk.NewDecFromStr("0.5")
+	fiftyPercent, err := sdkmath.LegacyNewDecFromStr("0.5")
 	require.NoError(t, err)
 
 	claimAmts := []sdkmath.Int{
@@ -36,7 +36,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should validate airdrop supply sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: claimAmts[0],
@@ -46,7 +46,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: claimAmts[1],
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    fiftyPercent,
@@ -56,7 +56,8 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    fiftyPercent,
 					},
 				},
-				AirdropSupply: sdk.NewCoin("foo", claimAmts[0].Add(claimAmts[1])),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: sdk.NewCoin("foo", claimAmts[0].Add(claimAmts[1]))},
 				InitialClaim: types.InitialClaim{
 					Enabled:   false,
 					MissionID: 21,
@@ -69,13 +70,14 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should allow genesis state with no airdrop supply",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "0foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "0foo")},
 			},
 			valid: true,
 		},
@@ -83,7 +85,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should allow genesis state with no mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -93,7 +95,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: true,
 		},
@@ -101,7 +103,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should allow mission with 0 weight",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -111,25 +113,26 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
 						MissionID: 1,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: true,
 		},
 		{
-			name: "should allow claim record with completed missions",
+			name: "should allow claim record with completed MissionList",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
 						Claimable:         sdkmath.NewIntFromUint64(10),
@@ -141,7 +144,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						CompletedMissions: []uint64{1},
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    tc.Dec(t, "0.4"),
@@ -151,15 +154,16 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "10foo"),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "10foo")},
 			},
 			valid: true,
 		},
 		{
-			name: "should allow claim record with missions all completed",
+			name: "should allow claim record with MissionList all completed",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
 						Claimable:         sdkmath.NewIntFromUint64(10),
@@ -171,7 +175,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						CompletedMissions: []uint64{0, 1},
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    tc.Dec(t, "0.4"),
@@ -181,7 +185,8 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "6foo"),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "6foo")},
 			},
 			valid: true,
 		},
@@ -189,7 +194,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should allow claim record with zero weight mission completed",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
 						Claimable:         sdkmath.NewIntFromUint64(10),
@@ -201,17 +206,18 @@ func TestGenesisState_Validate(t *testing.T) {
 						CompletedMissions: []uint64{1},
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
 						MissionID: 1,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: true,
 		},
@@ -219,7 +225,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should validate genesis state with initial claim enabled",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -229,13 +235,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 0,
@@ -247,7 +254,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate duplicated claimRecord",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   "duplicate",
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -257,13 +264,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: false,
 		},
@@ -271,7 +279,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate claim record with non positive allocation",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(20),
@@ -281,13 +289,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.ZeroInt(),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: false,
 		},
@@ -295,7 +304,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate airdrop supply higher than sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -305,13 +314,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(9),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
-				Missions: []types.Mission{
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
+				MissionCount: 1,
 			},
 			valid: false,
 		},
@@ -319,7 +329,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate airdrop supply lower than sum of claim amounts",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -329,21 +339,22 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(11),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
-				Missions: []types.Mission{
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
+				MissionCount: 1,
 			},
 			valid: false,
 		},
 		{
-			name: "should prevent validate invalid airdrop supply with records with completed missions",
+			name: "should prevent validate invalid airdrop supply with records with completed MissionList",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
 						Claimable:         sdkmath.NewIntFromUint64(10),
@@ -354,7 +365,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    tc.Dec(t, "0.4"),
@@ -364,7 +375,8 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  2,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: false,
 		},
@@ -372,7 +384,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate claim record with non existing mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
 						Claimable:         sdkmath.NewIntFromUint64(10),
@@ -383,13 +395,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 1,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 			},
 			valid: false,
 		},
@@ -397,13 +410,14 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate invalid genesis supply coin",
 			genState: &types.GenesisState{
 				Params:        types.DefaultParams(),
-				AirdropSupply: sdk.Coin{},
-				Missions: []types.Mission{
+				AirdropSupply: types.AirdropSupply{Supply: sdk.Coin{}},
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
+				MissionCount: 1,
 			},
 			valid: false,
 		},
@@ -411,7 +425,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate duplicated mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    fiftyPercent,
@@ -421,6 +435,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    fiftyPercent,
 					},
 				},
+				MissionCount: 2,
 			},
 			valid: false,
 		},
@@ -428,16 +443,17 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate mission list weights are not equal to 1",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
 						Weight:    fiftyPercent,
 					},
 					{
 						MissionID: 0,
-						Weight:    sdk.ZeroDec(),
+						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
+				MissionCount: 2,
 			},
 			valid: false,
 		},
@@ -445,7 +461,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should prevent validate initial claim enabled with non existing mission",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
-				ClaimRecords: []types.ClaimRecord{
+				ClaimRecordList: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: sdkmath.NewIntFromUint64(10),
@@ -455,7 +471,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "20foo"),
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
 					MissionID: 0,
@@ -471,13 +487,14 @@ func TestGenesisState_Validate(t *testing.T) {
 					DecayStart: time.UnixMilli(1001),
 					DecayEnd:   time.UnixMilli(1000),
 				}, time.Unix(0, 0)),
-				Missions: []types.Mission{
+				MissionList: []types.Mission{
 					{
 						MissionID: 0,
-						Weight:    sdk.OneDec(),
+						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
-				AirdropSupply: tc.Coin(t, "0foo"),
+				MissionCount:  1,
+				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "0foo")},
 			},
 			valid: false,
 		},

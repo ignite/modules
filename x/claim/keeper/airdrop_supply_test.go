@@ -20,12 +20,14 @@ func TestAirdropSupplyGet(t *testing.T) {
 
 	t.Run("should allow get", func(t *testing.T) {
 		sampleSupply := sample.Coin(r)
-		tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
+		supply := claim.AirdropSupply{Supply: sampleSupply}
+		err := tk.ClaimKeeper.AirdropSupply.Set(ctx, supply)
+		require.NoError(t, err)
 
-		rst, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-		require.True(t, found)
+		rst, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
+		require.NoError(t, err)
 		require.Equal(t,
-			nullify.Fill(&sampleSupply),
+			nullify.Fill(&supply),
 			nullify.Fill(&rst),
 		)
 	})
@@ -35,12 +37,16 @@ func TestAirdropSupplyRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	t.Run("should allow remove", func(t *testing.T) {
-		tk.ClaimKeeper.SetAirdropSupply(ctx, sample.Coin(r))
-		_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-		require.True(t, found)
-		tk.ClaimKeeper.RemoveAirdropSupply(ctx)
-		_, found = tk.ClaimKeeper.GetAirdropSupply(ctx)
-		require.False(t, found)
+		want := claim.AirdropSupply{Supply: sample.Coin(r)}
+		err := tk.ClaimKeeper.AirdropSupply.Set(ctx, want)
+		require.NoError(t, err)
+		got, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
+		require.NoError(t, err)
+		require.Equal(t, want, got)
+		err = tk.ClaimKeeper.AirdropSupply.Remove(ctx)
+		require.NoError(t, err)
+		_, err = tk.ClaimKeeper.AirdropSupply.Get(ctx)
+		require.Error(t, err)
 	})
 }
 
@@ -75,14 +81,14 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 			err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.airdropSupply)
 			require.NoError(t, err)
 
-			airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-			require.True(t, found)
-			require.True(t, airdropSupply.IsEqual(tt.airdropSupply))
+			airdropSupply, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
+			require.NoError(t, err)
+			require.True(t, airdropSupply.Supply.Equal(tt.airdropSupply))
 
 			moduleBalance := tk.BankKeeper.GetBalance(
 				ctx,
 				tk.AccountKeeper.GetModuleAddress(claim.ModuleName),
-				airdropSupply.Denom,
+				airdropSupply.Supply.Denom,
 			)
 			require.True(t, moduleBalance.IsEqual(tt.airdropSupply))
 		})
@@ -91,6 +97,7 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 
 func TestEndAirdrop(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
 
 	tests := []struct {
 		name                     string
@@ -103,7 +110,7 @@ func TestEndAirdrop(t *testing.T) {
 		{
 			name:           "should do nothing if airdrop supply is zero",
 			airdropSupply:  sdk.NewCoin("test", sdkmath.ZeroInt()),
-			decayInfo:      claim.NewEnabledDecay(ctx.BlockTime(), ctx.BlockTime()),
+			decayInfo:      claim.NewEnabledDecay(blockTime, blockTime),
 			expectedSupply: sdk.NewCoin("test", sdkmath.ZeroInt()),
 			wantDistribute: false,
 		},
@@ -117,7 +124,7 @@ func TestEndAirdrop(t *testing.T) {
 		{
 			name:           "should do nothing if decayEnd is after current time",
 			airdropSupply:  sdk.NewCoin("test", sdkmath.NewInt(1000)),
-			decayInfo:      claim.NewEnabledDecay(ctx.BlockTime(), ctx.BlockTime().Add(time.Hour)),
+			decayInfo:      claim.NewEnabledDecay(blockTime, blockTime.Add(time.Hour)),
 			expectedSupply: sdk.NewCoin("test", sdkmath.NewInt(1000)),
 			wantDistribute: false,
 		},
@@ -136,23 +143,27 @@ func TestEndAirdrop(t *testing.T) {
 			err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.airdropSupply)
 			require.NoError(t, err)
 
-			params := tk.ClaimKeeper.GetParams(ctx)
+			params, err := tk.ClaimKeeper.Params.Get(ctx)
+			require.NoError(t, err)
 			params.DecayInformation = tt.decayInfo
-			tk.ClaimKeeper.SetParams(ctx, params)
+			err = tk.ClaimKeeper.Params.Set(ctx, params)
+			require.NoError(t, err)
 
 			err = tk.ClaimKeeper.EndAirdrop(ctx)
 			require.NoError(t, err)
 			if tt.wantDistribute {
-				feePool := tk.DistrKeeper.GetFeePool(ctx)
+				feePool, err := tk.DistrKeeper.FeePool.Get(ctx)
+				require.NoError(t, err)
 				for _, decCoin := range feePool.CommunityPool {
 					coin := sdk.NewCoin(decCoin.Denom, decCoin.Amount.TruncateInt())
 					require.Equal(t, tt.expectedCommunityPoolAmt, coin)
 				}
 			}
 
-			airdropSupply, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
-			require.True(t, found)
-			require.Equal(t, tt.expectedSupply, airdropSupply)
+			airdropSupply, err := tk.ClaimKeeper.AirdropSupply.Get(ctx)
+			require.NoError(t, err)
+			expectedSupply := claim.AirdropSupply{Supply: tt.expectedSupply}
+			require.Equal(t, expectedSupply, airdropSupply)
 		})
 	}
 }

@@ -8,6 +8,7 @@ import (
 
 // x/claim module sentinel errors
 var (
+	ErrInvalidSigner          = errors.Register(ModuleName, 1100, "expected gov account as only signer for proposal message")
 	ErrMissionNotFound        = errors.Register(ModuleName, 2, "mission not found")
 	ErrClaimRecordNotFound    = errors.Register(ModuleName, 3, "claim record not found")
 	ErrMissionCompleted       = errors.Register(ModuleName, 4, "mission already completed")

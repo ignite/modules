@@ -1,124 +1,134 @@
 package keeper
 
 import (
-	sdkmath "cosmossdk.io/math"
-	"github.com/cometbft/cometbft/libs/log"
-	"github.com/cosmos/cosmos-sdk/codec"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"context"
+	"fmt"
 
-	errorsignite "github.com/ignite/modules/pkg/errors"
+	"cosmossdk.io/collections"
+	"cosmossdk.io/core/address"
+	"cosmossdk.io/core/store"
+	"cosmossdk.io/log"
+	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/mint/types"
 )
 
-// Keeper of the mint store
-type Keeper struct {
-	cdc              codec.BinaryCodec
-	storeKey         storetypes.StoreKey
-	paramSpace       paramtypes.Subspace
-	stakingKeeper    types.StakingKeeper
-	accountKeeper    types.AccountKeeper
-	bankKeeper       types.BankKeeper
-	distrKeeper      types.DistrKeeper
-	feeCollectorName string
-}
+type (
+	Keeper struct {
+		cdc              codec.BinaryCodec
+		addressCodec     address.Codec
+		storeService     store.KVStoreService
+		logger           log.Logger
+		feeCollectorName string
 
-// NewKeeper creates a new mint Keeper instance
+		// the address capable of executing a MsgUpdateParams message.
+		// Typically, this should be the x/gov module account.
+		authority string
+
+		Schema collections.Schema
+		Params collections.Item[types.Params]
+		Minter collections.Item[types.Minter]
+		// this line is used by starport scaffolding # collection/type
+
+		accountKeeper types.AccountKeeper
+		bankKeeper    types.BankKeeper
+		stakingKeeper types.StakingKeeper
+		distrKeeper   types.DistrKeeper
+	}
+)
+
 func NewKeeper(
-	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace paramtypes.Subspace,
-	sk types.StakingKeeper, ak types.AccountKeeper, bk types.BankKeeper, dk types.DistrKeeper,
+	cdc codec.BinaryCodec,
+	addressCodec address.Codec,
+	storeService store.KVStoreService,
+	logger log.Logger,
+	authority string,
+	accountKeeper types.AccountKeeper,
+	bankKeeper types.BankKeeper,
+	stakingKeeper types.StakingKeeper,
+	distrKeeper types.DistrKeeper,
 	feeCollectorName string,
 ) Keeper {
-	// ensure mint module account is set
-	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
-		panic("the mint module account has not been set")
+	if _, err := addressCodec.StringToBytes(authority); err != nil {
+		panic(fmt.Sprintf("invalid authority address %s: %s", authority, err))
 	}
 
-	// set KeyTable if it has not already been set
-	if !paramSpace.HasKeyTable() {
-		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
-	}
+	sb := collections.NewSchemaBuilder(storeService)
 
-	return Keeper{
-		cdc:              cdc,
-		storeKey:         key,
-		paramSpace:       paramSpace,
-		stakingKeeper:    sk,
-		accountKeeper:    ak,
-		bankKeeper:       bk,
-		distrKeeper:      dk,
+	k := Keeper{
+		cdc:          cdc,
+		addressCodec: addressCodec,
+		storeService: storeService,
+		authority:    authority,
+		logger:       logger,
+
+		accountKeeper:    accountKeeper,
+		bankKeeper:       bankKeeper,
+		stakingKeeper:    stakingKeeper,
+		distrKeeper:      distrKeeper,
+		Params:           collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
+		Minter:           collections.NewItem(sb, types.MinterKey, "minter", codec.CollValue[types.Minter](cdc)),
 		feeCollectorName: feeCollectorName,
+		// this line is used by starport scaffolding # collection/instantiate
 	}
+
+	schema, err := sb.Build()
+	if err != nil {
+		panic(err)
+	}
+	k.Schema = schema
+
+	return k
+}
+
+// GetAuthority returns the module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }
 
 // Logger returns a module-specific logger.
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger().With("module", "x/"+types.ModuleName)
-}
-
-// GetMinter gets the minter
-func (k Keeper) GetMinter(ctx sdk.Context) (minter types.Minter) {
-	store := ctx.KVStore(k.storeKey)
-	b := store.Get(types.MinterKey)
-	if b == nil {
-		panic("stored minter should not have been nil")
-	}
-
-	k.cdc.MustUnmarshal(b, &minter)
-	return
-}
-
-// SetMinter sets the minter
-func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
-	store := ctx.KVStore(k.storeKey)
-	b := k.cdc.MustMarshal(&minter)
-	store.Set(types.MinterKey, b)
-}
-
-// GetParams returns the total set of minting parameters.
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramSpace.GetParamSet(ctx, &params)
-	return params
-}
-
-// SetParams sets the total set of minting parameters.
-func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
-	k.paramSpace.SetParamSet(ctx, &params)
+func (k Keeper) Logger() log.Logger {
+	return k.logger.With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
 // StakingTokenSupply implements an alias call to the underlying staking keeper's
 // StakingTokenSupply to be used in BeginBlocker.
-func (k Keeper) StakingTokenSupply(ctx sdk.Context) sdkmath.Int {
+func (k Keeper) StakingTokenSupply(ctx context.Context) (math.Int, error) {
 	return k.stakingKeeper.StakingTokenSupply(ctx)
 }
 
 // BondedRatio implements an alias call to the underlying staking keeper's
 // BondedRatio to be used in BeginBlocker.
-func (k Keeper) BondedRatio(ctx sdk.Context) sdk.Dec {
+func (k Keeper) BondedRatio(ctx context.Context) (math.LegacyDec, error) {
 	return k.stakingKeeper.BondedRatio(ctx)
 }
 
 // MintCoin implements an alias call to the underlying supply keeper's
 // MintCoin to be used in BeginBlocker.
-func (k Keeper) MintCoin(ctx sdk.Context, coin sdk.Coin) error {
+func (k Keeper) MintCoin(ctx context.Context, coin sdk.Coin) error {
 	return k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
 }
 
 // GetProportion gets the balance of the `MintedDenom` from minted coins and returns coins according to the `AllocationRatio`.
-func (k Keeper) GetProportion(_ sdk.Context, mintedCoin sdk.Coin, ratio sdk.Dec) sdk.Coin {
-	return sdk.NewCoin(mintedCoin.Denom, sdk.NewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
+func (k Keeper) GetProportion(_ context.Context, mintedCoin sdk.Coin, ratio math.LegacyDec) sdk.Coin {
+	return sdk.NewCoin(mintedCoin.Denom, math.LegacyNewDecFromInt(mintedCoin.Amount).Mul(ratio).TruncateInt())
 }
 
 // DistributeMintedCoin implements distribution of minted coins from mint
 // to be used in BeginBlocker.
-func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error {
-	params := k.GetParams(ctx)
+func (k Keeper) DistributeMintedCoin(ctx context.Context, mintedCoin sdk.Coin) error {
+	params, err := k.Params.Get(ctx)
+	if err != nil {
+		return err
+	}
 	proportions := params.DistributionProportions
 
 	// allocate staking rewards into fee collector account to be moved to on next begin blocker by staking module
 	stakingRewardsCoins := sdk.NewCoins(k.GetProportion(ctx, mintedCoin, proportions.Staking))
-	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, stakingRewardsCoins)
+	err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, stakingRewardsCoins)
 	if err != nil {
 		return err
 	}
@@ -140,7 +150,7 @@ func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error
 			fundedAddrCoins := sdk.NewCoins(k.GetProportion(ctx, fundedAddrsCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
-				return errorsignite.Critical(err.Error())
+				return errors.Critical(err.Error())
 			}
 			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, devAddr, fundedAddrCoins)
 			if err != nil {

@@ -1,41 +1,18 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
+	"context"
+
+	"cosmossdk.io/collections"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/x/claim/types"
 )
 
-// SetAirdropSupply set airdropSupply in the store
-func (k Keeper) SetAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AirdropSupplyKey))
-	b := k.cdc.MustMarshal(&airdropSupply)
-	store.Set([]byte{0}, b)
-}
-
-// GetAirdropSupply returns airdropSupply
-func (k Keeper) GetAirdropSupply(ctx sdk.Context) (val sdk.Coin, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AirdropSupplyKey))
-
-	b := store.Get([]byte{0})
-	if b == nil {
-		return val, false
-	}
-
-	k.cdc.MustUnmarshal(b, &val)
-	return val, true
-}
-
-// RemoveAirdropSupply removes the AirdropSupply from the store
-func (k Keeper) RemoveAirdropSupply(ctx sdk.Context) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AirdropSupplyKey))
-	store.Delete([]byte{0})
-}
-
 // InitializeAirdropSupply set the airdrop supply in the store and set the module balance
-func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin) error {
+func (k Keeper) InitializeAirdropSupply(ctx context.Context, airdropSupply sdk.Coin) error {
 	// get the eventual existing balance of the module for the airdrop supply
 	moduleBalance := k.bankKeeper.GetBalance(
 		ctx,
@@ -55,28 +32,38 @@ func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin)
 		return errors.Criticalf("can't mint airdrop supply into module balance %s", err.Error())
 	}
 
-	k.SetAirdropSupply(ctx, airdropSupply)
-	return nil
+	return k.AirdropSupply.Set(ctx, types.AirdropSupply{Supply: airdropSupply})
 }
 
-func (k Keeper) EndAirdrop(ctx sdk.Context) error {
-	airdropSupply, found := k.GetAirdropSupply(ctx)
-	if !found || !airdropSupply.IsPositive() {
+func (k Keeper) EndAirdrop(ctx context.Context) error {
+	airdropSupply, err := k.AirdropSupply.Get(ctx)
+	if err != nil && !errors.IsOf(err, collections.ErrNotFound) {
+		return err
+	}
+	if errors.IsOf(err, collections.ErrNotFound) || !airdropSupply.Supply.IsPositive() {
 		return nil
 	}
 
-	decayInfo := k.DecayInformation(ctx)
-	if decayInfo.Enabled && ctx.BlockTime().After(decayInfo.DecayEnd) {
+	params, err := k.Params.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	decayInfo := params.DecayInformation
+	blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
+	if decayInfo.Enabled && blockTime.After(decayInfo.DecayEnd) {
 		err := k.distrKeeper.FundCommunityPool(
 			ctx,
-			sdk.NewCoins(airdropSupply),
+			sdk.NewCoins(airdropSupply.Supply),
 			k.accountKeeper.GetModuleAddress(types.ModuleName))
 		if err != nil {
 			return err
 		}
 
-		airdropSupply.Amount = sdk.ZeroInt()
-		k.SetAirdropSupply(ctx, airdropSupply)
+		airdropSupply.Supply.Amount = sdkmath.ZeroInt()
+		if err := k.AirdropSupply.Set(ctx, airdropSupply); err != nil {
+			return err
+		}
 	}
 
 	// TODO

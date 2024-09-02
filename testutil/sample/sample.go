@@ -110,7 +110,7 @@ func OperatorAddress(r *rand.Rand) string {
 func Validator(t testing.TB, r *rand.Rand) stakingtypes.Validator {
 	seed := []byte(strconv.Itoa(r.Int()))
 	val, err := stakingtypes.NewValidator(
-		ValAddress(r),
+		ValAddress(r).String(),
 		cosmosed25519.GenPrivKeyFromSecret(seed).PubKey(),
 		stakingtypes.Description{})
 	require.NoError(t, err)
@@ -123,9 +123,9 @@ func Delegation(t testing.TB, r *rand.Rand, addr string) stakingtypes.Delegation
 	require.NoError(t, err)
 
 	return stakingtypes.NewDelegation(
-		delAcc,
-		ValAddress(r),
-		sdk.NewDec(int64(r.Intn(10000))),
+		delAcc.String(),
+		ValAddress(r).String(),
+		sdkmath.LegacyNewDec(int64(r.Intn(10000))),
 	)
 }
 

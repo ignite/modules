@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package modules.mint.v1;
+
+import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "modules/mint/v1/minter.proto";
+import "modules/mint/v1/params.proto";
+
+option go_package = "github.com/ignite/modules/x/mint/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ignite/modules/mint/v1/params";
+  }
+
+  // Queries a list of Inflation items.
+  rpc Inflation(QueryInflationRequest) returns (QueryInflationResponse) {
+    option (google.api.http).get = "/ignite/modules/mint/inflation";
+  }
+
+  // Queries a list of AnnualProvisions items.
+  rpc AnnualProvisions(QueryAnnualProvisionsRequest) returns (QueryAnnualProvisionsResponse) {
+    option (google.api.http).get = "/ignite/modules/mint/annual_provisions";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// QueryInflationRequest is the request type for the Query/Inflation RPC method.
+message QueryInflationRequest {}
+
+// QueryInflationResponse is the response type for the Query/Inflation RPC
+// method.
+message QueryInflationResponse {
+  // inflation is the current minting inflation value.
+  bytes inflation = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (cosmos_proto.scalar) = "cosmos.Dec"
+  ];
+}
+
+// QueryAnnualProvisionsRequest is the current minting annual provisions request.
+message QueryAnnualProvisionsRequest {}
+
+// QueryAnnualProvisionsResponse is the current minting annual provisions value.
+message QueryAnnualProvisionsResponse {
+  bytes annual_provisions = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (cosmos_proto.scalar) = "cosmos.Dec"
+  ];
+}

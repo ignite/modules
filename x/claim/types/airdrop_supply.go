@@ -5,10 +5,9 @@ import (
 	"fmt"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func CheckAirdropSupply(airdropSupply sdk.Coin, missionMap map[uint64]Mission, claimRecords []ClaimRecord) error {
+func CheckAirdropSupply(airdropSupply AirdropSupply, missionMap map[uint64]Mission, claimRecords []ClaimRecord) error {
 	claimSum := sdkmath.ZeroInt()
 	claimRecordMap := make(map[string]struct{})
 
@@ -37,9 +36,9 @@ func CheckAirdropSupply(airdropSupply sdk.Coin, missionMap map[uint64]Mission, c
 	}
 
 	// verify airdropSupply == sum of claimRecords
-	if !airdropSupply.Amount.Equal(claimSum) {
+	if !airdropSupply.Supply.Amount.Equal(claimSum) {
 		return fmt.Errorf("airdrop supply amount %v not equal to sum of claimable amounts %v",
-			airdropSupply.Amount,
+			airdropSupply.Supply.Amount,
 			claimSum,
 		)
 	}
