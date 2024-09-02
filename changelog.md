@@ -9,6 +9,10 @@
 - [#98](https://github.com/ignite/modules/pull/98): Cosmos-sdk to `v0.50.8`
 - [#99](https://github.com/ignite/modules/pull/99): Move fundraising module to monorepo
 
+### Changes
+
+- [#100](https://github.com/ignite/modules/pull/100): Add changelog and fundraising docs
+
 ## `v0.0.2`
 
 ### Changes
