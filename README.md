@@ -40,6 +40,8 @@ Modules are under active development and should not be currently considered for 
 
 - [`mint`](x/mint): this module is an enhanced version of [Cosmos SDK `mint` module](https://docs.cosmos.network/master/modules/mint/) where developers can use the minted coins from inflations for specific purposes other than staking rewards.
 
+- [`fundraising`](x/fundraising): This module is a Cosmos SDK module that serves the fundraising feature that provides an opportunity for new projects to onboard into the Cosmos ecosystem. The fundraising module allows projects to raise funds and increase their brand awareness before launching their projects.
+
 ## Testing
 
 The repository comes with a sample Cosmos SDK app to test the different module features.

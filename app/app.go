@@ -73,6 +73,7 @@ import (
 
 	"github.com/ignite/modules/docs"
 	claimmodulekeeper "github.com/ignite/modules/x/claim/keeper"
+	fundraisingmodulekeeper "github.com/ignite/modules/x/fundraising/keeper"
 	mintmodulekeeper "github.com/ignite/modules/x/mint/keeper"
 )
 
@@ -133,8 +134,9 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
 
-	MintKeeper  mintmodulekeeper.Keeper
-	ClaimKeeper claimmodulekeeper.Keeper
+	MintKeeper        mintmodulekeeper.Keeper
+	ClaimKeeper       claimmodulekeeper.Keeper
+	FundraisingKeeper fundraisingmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -239,6 +241,7 @@ func New(
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
 		&app.ClaimKeeper,
+		&app.FundraisingKeeper,
 	); err != nil {
 		panic(err)
 	}
