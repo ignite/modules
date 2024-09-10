@@ -12,7 +12,7 @@ import (
 func TestParams(t *testing.T) {
 	defaultParams := types.DefaultParams()
 
-	paramsStr := `auction_creation_fee:<denom:"stake" amount:"100000000" > extended_period:1 `
+	paramsStr := `auctionCreationFee:<denom:"stake" amount:"100000000" > extendedPeriod:1 `
 	require.Equal(t, paramsStr, defaultParams.String())
 }
 
