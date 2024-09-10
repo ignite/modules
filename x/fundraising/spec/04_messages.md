@@ -42,7 +42,7 @@ type MsgCreateBatchAuction struct {
 // MsgCancelAuction defines an SDK message for cancelling an auction
 type MsgCancelAuction struct {
 	Auctioneer      string // the owner of the auction
-	AuctionId       uint64 // id of the auction
+	AuctionID       uint64 // id of the auction
 }
 ```
 
@@ -51,7 +51,7 @@ type MsgCancelAuction struct {
 // MsgPlaceBid defines an SDK message for placing a bid for the auction
 // Bid price must be the start price for FixedPriceAuction whereas it can only be increased for EnglishAuction
 type MsgPlaceBid struct {
-	AuctionId       uint64   // id of the auction
+	AuctionID       uint64   // id of the auction
 	Bidder          string   // account that places a bid for the auction
 	Type            BidType  // bid type; currently How-Much-Worth-To-Buy and How-Many-Coins-To-Buy are supported.
 	Price           sdk.Dec  // bid price to bid for the auction
@@ -67,9 +67,9 @@ type MsgPlaceBid struct {
 // The amount of BiddingCoin cannot be smaller than that of the original bid. If the amount of BiddingCoin is the same that of the original bid, Price should be higher than that of the original bid.  
 // If the amount of BiddingCoin is the same that of the original bid, Price should be higher than that of the original bid. 
 type MsgModifyBid struct {
-	AuctionId       uint64   // id of the auction
+	AuctionID       uint64   // id of the auction
 	Bidder          string   // account that places a bid for the auction 
-	BidId           uint64   // id of the bid of the bidder
+	BidID           uint64   // id of the bid of the bidder
 	Price           sdk.Dec  // bid price to bid for the auction
 	Coin            sdk.Coin // targeted amount of coin that the bidder bids; the denom must be either the denom or SellingCoin or PayingCoinDenom
 }
@@ -87,7 +87,7 @@ make install-testing
 ```go
 // MsgAddAllowedBidder defines a SDK message to add an allowed bidder
 type MsgAddAllowedBidder struct {
-	AuctionId       uint64        // id of the auction
+	AuctionID       uint64        // id of the auction
 	AllowedBidder   AllowedBidder // the bidder and their maximum bid amount
 }
 ```

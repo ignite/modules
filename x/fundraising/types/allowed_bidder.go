@@ -8,9 +8,9 @@ import (
 )
 
 // NewAllowedBidder returns a new AllowedBidder.
-func NewAllowedBidder(auctionId uint64, bidderAddr sdk.AccAddress, maxBidAmount math.Int) AllowedBidder {
+func NewAllowedBidder(auctionID uint64, bidderAddr sdk.AccAddress, maxBidAmount math.Int) AllowedBidder {
 	return AllowedBidder{
-		AuctionId:    auctionId,
+		AuctionID:    auctionID,
 		Bidder:       bidderAddr.String(),
 		MaxBidAmount: maxBidAmount,
 	}

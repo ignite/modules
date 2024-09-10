@@ -26,7 +26,7 @@ func createNAuction(keeper keeper.Keeper, ctx context.Context, n int) ([]*codect
 		iu := uint64(i)
 		auction := &types.FixedPriceAuction{
 			BaseAuction: &types.BaseAuction{
-				Id:          iu,
+				AuctionID:   iu,
 				Auctioneer:  "",
 				StartPrice:  math.LegacyMustNewDecFromStr("10"),
 				SellingCoin: sdk.NewCoin("coin", math.NewInt(5)),
@@ -69,17 +69,17 @@ func TestAuctionQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetAuctionRequest{AuctionId: 0},
+			request:  &types.QueryGetAuctionRequest{AuctionID: 0},
 			response: &types.QueryGetAuctionResponse{Auction: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetAuctionRequest{AuctionId: 1},
+			request:  &types.QueryGetAuctionRequest{AuctionID: 1},
 			response: &types.QueryGetAuctionResponse{Auction: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetAuctionRequest{AuctionId: uint64(len(msgs))},
+			request: &types.QueryGetAuctionRequest{AuctionID: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

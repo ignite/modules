@@ -33,14 +33,14 @@ var (
 //
 //nolint:interfacer
 func NewBaseAuction(
-	id uint64, typ AuctionType, auctioneerAddr string,
+	auctionID uint64, typ AuctionType, auctioneerAddr string,
 	sellingPoolAddr string, payingPoolAddr string,
 	startPrice math.LegacyDec, sellingCoin sdk.Coin, payingCoinDenom string,
 	vestingPoolAddr string, vestingSchedules []VestingSchedule,
 	startTime time.Time, endTimes []time.Time, status AuctionStatus,
 ) *BaseAuction {
 	return &BaseAuction{
-		Id:                    id,
+		AuctionID:             auctionID,
 		Type:                  typ,
 		Auctioneer:            auctioneerAddr,
 		SellingReserveAddress: sellingPoolAddr,
@@ -57,11 +57,11 @@ func NewBaseAuction(
 }
 
 func (ba BaseAuction) GetId() uint64 { //nolint:golint
-	return ba.Id
+	return ba.AuctionID
 }
 
-func (ba *BaseAuction) SetId(id uint64) error { //nolint:golint
-	ba.Id = id
+func (ba *BaseAuction) SetId(auctionID uint64) error { //nolint:golint
+	ba.AuctionID = auctionID
 	return nil
 }
 
@@ -387,16 +387,16 @@ func UnmarshalAuction(cdc codec.BinaryCodec, value []byte) (auction AuctionI, er
 }
 
 // SellingReserveAddress returns the selling reserve address with the given auction id.
-func SellingReserveAddress(auctionId uint64) sdk.AccAddress {
-	return DeriveAddress(ReserveAddressType, ModuleName, SellingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionId))
+func SellingReserveAddress(auctionID uint64) sdk.AccAddress {
+	return DeriveAddress(ReserveAddressType, ModuleName, SellingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionID))
 }
 
 // PayingReserveAddress returns the paying reserve address with the given auction id.
-func PayingReserveAddress(auctionId uint64) sdk.AccAddress {
-	return DeriveAddress(ReserveAddressType, ModuleName, PayingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionId))
+func PayingReserveAddress(auctionID uint64) sdk.AccAddress {
+	return DeriveAddress(ReserveAddressType, ModuleName, PayingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionID))
 }
 
 // VestingReserveAddress returns the vesting reserve address with the given auction id.
-func VestingReserveAddress(auctionId uint64) sdk.AccAddress {
-	return DeriveAddress(ReserveAddressType, ModuleName, VestingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionId))
+func VestingReserveAddress(auctionID uint64) sdk.AccAddress {
+	return DeriveAddress(ReserveAddressType, ModuleName, VestingReserveAddressPrefix+ModuleAddressNameSplitter+fmt.Sprint(auctionID))
 }

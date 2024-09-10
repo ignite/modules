@@ -12,42 +12,42 @@ option go_package = "github.com/ignite/modules/x/mint/types";
 message Params {
   option (amino.name) = "modules/x/mint/Params";
 
-  // type of coin to mint
-  string mint_denom = 1;
-  // maximum annual change in inflation rate
-  string inflation_rate_change = 2 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+  // mintDenom defines the type of coin to mint
+  string mintDenom = 1;
+  // inflationRateChange defines the maximum annual change in inflation rate
+  string inflationRateChange = 2 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  // maximum inflation rate
-  string inflation_max = 3 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+  // inflationMax defines the maximum inflation rate
+  string inflationMax = 3 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  // minimum inflation rate
-  string inflation_min = 4 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+  // inflationMin defines the minimum inflation rate
+  string inflationMin = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  // goal of percent bonded atoms
-  string goal_bonded = 5 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+  // goalBonded defines the goal of percent bonded atoms
+  string goalBonded = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false,
+    (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  // expected blocks per year
+  // blocksPerYear defines the expected blocks per year
   uint64 blocks_per_year = 6;
 
-  // distribution_proportions defines the proportion of the minted denom
-  DistributionProportions distribution_proportions = 7 [(gogoproto.nullable) = false];
+  // distributionProportions defines the proportion of the minted denom
+  DistributionProportions distributionProportions = 7 [(gogoproto.nullable) = false];
 
-  // list of funded addresses
+  // fundedAddresses defines the list of funded addresses
   repeated WeightedAddress fundedAddresses = 8 [(gogoproto.nullable) = false];
 }

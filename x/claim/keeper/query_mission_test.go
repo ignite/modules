@@ -41,17 +41,17 @@ func TestMissionQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetMissionRequest{Id: msgs[0].MissionID},
+			request:  &types.QueryGetMissionRequest{MissionID: msgs[0].MissionID},
 			response: &types.QueryGetMissionResponse{Mission: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetMissionRequest{Id: msgs[1].MissionID},
+			request:  &types.QueryGetMissionRequest{MissionID: msgs[1].MissionID},
 			response: &types.QueryGetMissionResponse{Mission: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetMissionRequest{Id: uint64(len(msgs))},
+			request: &types.QueryGetMissionRequest{MissionID: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

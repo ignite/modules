@@ -13,7 +13,7 @@ import (
 
 func (s *KeeperTestSuite) TestPlaceBid_Validation() {
 	_, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: 1,
+		AuctionID: 1,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("0.5"),
@@ -40,7 +40,7 @@ func (s *KeeperTestSuite) TestPlaceBid_Validation() {
 	s.Require().NoError(err)
 
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("0.5"),
@@ -66,11 +66,11 @@ func (s *KeeperTestSuite) TestFixedPrice_InvalidStartPrice() {
 	s.fundAddr(s.addr(2), parseCoins("200_000_000denom2"))
 
 	// Set allowed bidder
-	err := s.addAllowedBidder(auction.Id, s.addr(2), bidSellingAmount(parseDec("1"), parseCoin("200_000_000denom2")))
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(2), bidSellingAmount(parseDec("1"), parseCoin("200_000_000denom2")))
 	s.Require().NoError(err)
 
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("0.5"),
@@ -92,18 +92,18 @@ func (s *KeeperTestSuite) TestFixedPrice_InsufficientRemainingAmount() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	s.placeBidFixedPrice(auction.Id, s.addr(1), parseDec("1"), parseCoin("200_000_000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(2), parseDec("1"), parseCoin("200_000_000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(3), parseDec("1"), parseCoin("250_000_000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(4), parseDec("1"), parseCoin("250_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), parseDec("1"), parseCoin("200_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(2), parseDec("1"), parseCoin("200_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(3), parseDec("1"), parseCoin("250_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(4), parseDec("1"), parseCoin("250_000_000denom2"), true)
 
 	// The remaining coin amount must be insufficient
 	s.fundAddr(s.addr(5), parseCoins("300_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(5), bidSellingAmount(parseDec("1"), parseCoin("300_000_000denom2")))
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(5), bidSellingAmount(parseDec("1"), parseCoin("300_000_000denom2")))
 	s.Require().NoError(err)
 
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(5).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("1.0"),
@@ -125,11 +125,11 @@ func (s *KeeperTestSuite) TestFixedPrice_OverMaxBidAmountLimit() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	s.placeBidFixedPrice(auction.Id, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
 
 	_, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(1).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("1"),
@@ -151,16 +151,16 @@ func (s *KeeperTestSuite) TestFixedPrice_IncorrectCoinDenom() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	s.placeBidFixedPrice(auction.Id, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(1), parseDec("1"), parseCoin("100_000_000denom1"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), parseDec("1"), parseCoin("100_000_000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), parseDec("1"), parseCoin("100_000_000denom1"), true)
 
 	// The remaining coin amount must be insufficient
 	s.fundAddr(s.addr(1), parseCoins("100_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(1), bidSellingAmount(parseDec("1"), parseCoin("100_000_000denom2")))
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(1), bidSellingAmount(parseDec("1"), parseCoin("100_000_000denom2")))
 	s.Require().NoError(err)
 
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(1).String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     parseDec("1"),
@@ -183,11 +183,11 @@ func (s *KeeperTestSuite) TestFixedPrice_IncorrectAuctionType() {
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
 	s.fundAddr(s.addr(2), parseCoins("200_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(2), bidSellingAmount(parseDec("1"), parseCoin("200_000_000denom2")))
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(2), bidSellingAmount(parseDec("1"), parseCoin("200_000_000denom2")))
 	s.Require().NoError(err)
 
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeBatchWorth,
 		Price:     parseDec("1.0"),
@@ -213,14 +213,14 @@ func (s *KeeperTestSuite) TestBatchAuction_IncorrectCoinDenom() {
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
 	s.fundAddr(s.addr(1), parseCoins("200_000_000denom1, 200_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(1), parseCoin("200_000_000denom1").Amount)
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(1), parseCoin("200_000_000denom1").Amount)
 	s.Require().NoError(err)
-	err = s.addAllowedBidder(auction.Id, s.addr(1), parseCoin("200_000_000denom2").Amount)
+	err = s.addAllowedBidder(auction.AuctionID, s.addr(1), parseCoin("200_000_000denom2").Amount)
 	s.Require().NoError(err)
 
 	// Place a BidTypeBatchWorth bid with an incorrect denom (SellingCoinDenom)
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(1).String(),
 		BidType:   types.BidTypeBatchWorth,
 		Price:     parseDec("1"),
@@ -230,7 +230,7 @@ func (s *KeeperTestSuite) TestBatchAuction_IncorrectCoinDenom() {
 
 	// Place a BidTypeBatchMany bid with an incorrect denom (PayingCoinDenom)
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(1).String(),
 		BidType:   types.BidTypeBatchMany,
 		Price:     parseDec("1"),
@@ -255,15 +255,15 @@ func (s *KeeperTestSuite) TestBatchWorth_OverMaxBidAmountLimit() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	s.placeBidBatchWorth(auction.Id, s.addr(1), parseDec("0.5"), parseCoin("500_000_000denom2"), math.NewInt(1000_000_000), true)
+	s.placeBidBatchWorth(auction.AuctionID, s.addr(1), parseDec("0.5"), parseCoin("500_000_000denom2"), math.NewInt(1000_000_000), true)
 
 	s.fundAddr(s.addr(2), parseCoins("1000_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(2), parseCoin("800_000_000denom1").Amount)
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(2), parseCoin("800_000_000denom1").Amount)
 	s.Require().NoError(err)
 
 	// Place a BidTypeBatchWorth bid with more than maxBidAmount
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeBatchWorth,
 		Price:     parseDec("0.5"),
@@ -288,15 +288,15 @@ func (s *KeeperTestSuite) TestBatchMany_OverMaxBidAmountLimit() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	s.placeBidBatchMany(auction.Id, s.addr(1), parseDec("0.5"), parseCoin("500_000_000denom1"), math.NewInt(800_000_000), true)
+	s.placeBidBatchMany(auction.AuctionID, s.addr(1), parseDec("0.5"), parseCoin("500_000_000denom1"), math.NewInt(800_000_000), true)
 
 	s.fundAddr(s.addr(2), parseCoins("1000_000_000denom2"))
-	err := s.addAllowedBidder(auction.Id, s.addr(2), parseCoin("400_000_000denom1").Amount)
+	err := s.addAllowedBidder(auction.AuctionID, s.addr(2), parseCoin("400_000_000denom1").Amount)
 	s.Require().NoError(err)
 
 	// Place a BidTypeBatchMany bid with more than maxBidAmount
 	_, err = s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auction.Id,
+		AuctionID: auction.AuctionID,
 		Bidder:    s.addr(2).String(),
 		BidType:   types.BidTypeBatchMany,
 		Price:     parseDec("0.5"),
@@ -307,9 +307,9 @@ func (s *KeeperTestSuite) TestBatchMany_OverMaxBidAmountLimit() {
 
 func (s *KeeperTestSuite) TestModifyBid_Validation() {
 	err := s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: 1,
+		AuctionID: 1,
 		Bidder:    s.addr(1).String(),
-		BidId:     5,
+		BidID:     5,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -328,9 +328,9 @@ func (s *KeeperTestSuite) TestModifyBid_Validation() {
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: 1,
+		AuctionID: 1,
 		Bidder:    s.addr(1).String(),
-		BidId:     5,
+		BidID:     5,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -343,9 +343,9 @@ func (s *KeeperTestSuite) TestModifyBid_Validation() {
 	s.Require().NoError(err)
 
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: 1,
+		AuctionID: 1,
 		Bidder:    s.addr(1).String(),
-		BidId:     5,
+		BidID:     5,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -369,13 +369,13 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 	s.Require().Equal(types.AuctionStatusStarted, a.GetStatus())
 
 	// Place a bid
-	b := s.placeBidBatchWorth(a.Id, s.addr(1), parseDec("0.6"), parseCoin("100_000_000denom2"), math.NewInt(1_000_000_000), true)
+	b := s.placeBidBatchWorth(a.AuctionID, s.addr(1), parseDec("0.6"), parseCoin("100_000_000denom2"), math.NewInt(1_000_000_000), true)
 
 	// Modify the bid with not existing bid
 	err := s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     5,
+		BidID:     5,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -383,9 +383,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 
 	// Modify the bid with an incorrect owner
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(0).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -393,9 +393,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 
 	// Modify the bid with an incorrect denom
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom1"),
 	})
@@ -403,9 +403,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 
 	// Modify the bid with lower bid price
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.3"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -413,9 +413,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 
 	// Modify the bid with lower coin amount
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100denom2"),
 	})
@@ -423,9 +423,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeWorth() {
 
 	// No modification
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.6"),
 		Coin:      parseCoin("100_000_000denom2"),
 	})
@@ -449,13 +449,13 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeMany() {
 	s.Require().Equal(types.AuctionStatusStarted, a.GetStatus())
 
 	// Place a bid
-	b := s.placeBidBatchMany(a.Id, s.addr(1), parseDec("0.5"), parseCoin("100_000_000denom1"), math.NewInt(1_000_000_000), true)
+	b := s.placeBidBatchMany(a.AuctionID, s.addr(1), parseDec("0.5"), parseCoin("100_000_000denom1"), math.NewInt(1_000_000_000), true)
 
 	// Insufficient minimum price
 	err := s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.01"),
 		Coin:      parseCoin("100_000_000denom1"),
 	})
@@ -466,9 +466,9 @@ func (s *KeeperTestSuite) TestModifyBid_BidTypeMany() {
 
 	// Modify the bid with not existing bid
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: a.Id,
+		AuctionID: a.AuctionID,
 		Bidder:    s.addr(1).String(),
-		BidId:     b.Id,
+		BidID:     b.BidID,
 		Price:     parseDec("0.8"),
 		Coin:      parseCoin("100_000_000denom1"),
 	})

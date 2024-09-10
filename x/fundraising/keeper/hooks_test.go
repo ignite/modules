@@ -43,7 +43,7 @@ func (h *MockFundraisingHooksReceiver) BeforeFixedPriceAuctionCreated(
 
 func (h *MockFundraisingHooksReceiver) AfterFixedPriceAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	sellingCoin sdk.Coin,
@@ -75,7 +75,7 @@ func (h *MockFundraisingHooksReceiver) BeforeBatchAuctionCreated(
 
 func (h *MockFundraisingHooksReceiver) AfterBatchAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	minBidPrice math.LegacyDec,
@@ -93,7 +93,7 @@ func (h *MockFundraisingHooksReceiver) AfterBatchAuctionCreated(
 
 func (h *MockFundraisingHooksReceiver) BeforeAuctionCanceled(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 ) error {
 	h.BeforeAuctionCanceledValid = true
@@ -102,8 +102,8 @@ func (h *MockFundraisingHooksReceiver) BeforeAuctionCanceled(
 
 func (h *MockFundraisingHooksReceiver) BeforeBidPlaced(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType types.BidType,
 	price math.LegacyDec,
@@ -115,8 +115,8 @@ func (h *MockFundraisingHooksReceiver) BeforeBidPlaced(
 
 func (h *MockFundraisingHooksReceiver) BeforeBidModified(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType types.BidType,
 	price math.LegacyDec,
@@ -136,7 +136,7 @@ func (h *MockFundraisingHooksReceiver) BeforeAllowedBiddersAdded(
 
 func (h *MockFundraisingHooksReceiver) BeforeAllowedBidderUpdated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	maxBidAmount math.Int,
 ) error {
@@ -146,7 +146,7 @@ func (h *MockFundraisingHooksReceiver) BeforeAllowedBidderUpdated(
 
 func (h *MockFundraisingHooksReceiver) BeforeSellingCoinsAllocated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	allocationMap map[string]math.Int,
 	refundMap map[string]math.Int,
 ) error {
@@ -217,13 +217,13 @@ func (s *KeeperTestSuite) TestHooks() {
 	// Cancel the auction
 	err := s.keeper.CancelAuction(s.ctx, &types.MsgCancelAuction{
 		Auctioneer: standByAuction.Auctioneer,
-		AuctionId:  standByAuction.Id,
+		AuctionID:  standByAuction.AuctionID,
 	})
 	s.Require().NoError(err)
 	s.Require().True(fundraisingHooksReceiver.BeforeAuctionCanceledValid)
 
 	// Get already started batch auction
-	auction, err := s.keeper.Auction.Get(s.ctx, batchAuction.Id)
+	auction, err := s.keeper.Auction.Get(s.ctx, batchAuction.AuctionID)
 	s.Require().NoError(err)
 
 	// Add allowed bidder
@@ -243,8 +243,8 @@ func (s *KeeperTestSuite) TestHooks() {
 	// Modify the bid
 	s.fundAddr(bid.GetBidder(), sdk.NewCoins(parseCoin("1_000_000denom4")))
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionId: bid.AuctionId,
-		BidId:     bid.Id,
+		AuctionID: bid.AuctionID,
+		BidID:     bid.BidID,
 		Bidder:    bid.Bidder,
 		Price:     bid.Price,
 		Coin:      parseCoin("6_000_000denom4"),

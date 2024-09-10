@@ -145,16 +145,16 @@ func (k Keeper) PayPlaceBidFee(ctx context.Context, bidderAddr sdk.AccAddress) e
 }
 
 // ReserveSellingCoin reserves the selling coin to the selling reserve account.
-func (k Keeper) ReserveSellingCoin(ctx context.Context, auctionId uint64, auctioneerAddr sdk.AccAddress, sellingCoin sdk.Coin) error {
-	if err := k.bankKeeper.SendCoins(ctx, auctioneerAddr, types.SellingReserveAddress(auctionId), sdk.NewCoins(sellingCoin)); err != nil {
+func (k Keeper) ReserveSellingCoin(ctx context.Context, auctionID uint64, auctioneerAddr sdk.AccAddress, sellingCoin sdk.Coin) error {
+	if err := k.bankKeeper.SendCoins(ctx, auctioneerAddr, types.SellingReserveAddress(auctionID), sdk.NewCoins(sellingCoin)); err != nil {
 		return err
 	}
 	return nil
 }
 
 // ReservePayingCoin reserves paying coin to the paying reserve account.
-func (k Keeper) ReservePayingCoin(ctx context.Context, auctionId uint64, bidderAddr sdk.AccAddress, payingCoin sdk.Coin) error {
-	if err := k.bankKeeper.SendCoins(ctx, bidderAddr, types.PayingReserveAddress(auctionId), sdk.NewCoins(payingCoin)); err != nil {
+func (k Keeper) ReservePayingCoin(ctx context.Context, auctionID uint64, bidderAddr sdk.AccAddress, payingCoin sdk.Coin) error {
+	if err := k.bankKeeper.SendCoins(ctx, bidderAddr, types.PayingReserveAddress(auctionID), sdk.NewCoins(payingCoin)); err != nil {
 		return err
 	}
 	return nil

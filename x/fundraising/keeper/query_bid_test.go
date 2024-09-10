@@ -22,20 +22,20 @@ import (
 
 func createNBid(keeper keeper.Keeper, ctx context.Context, n int) ([]types.Bid, error) {
 	items := make([]types.Bid, n)
-	auctionId := uint64(0)
+	auctionID := uint64(0)
 	for i := range items {
-		bidid := uint64(i)
-		items[i].AuctionId = auctionId
-		items[i].Id = bidid
+		bidID := uint64(i)
+		items[i].AuctionID = auctionID
+		items[i].BidID = bidID
 		items[i].Bidder = sample.Address(r)
 		items[i].Coin = sdk.NewCoin("coin", math.NewInt(int64(i)))
 		items[i].Price = math.LegacyNewDec(int64(i))
 		items[i].Type = types.BidTypeFixedPrice
 
-		if err := keeper.Bid.Set(ctx, collections.Join(auctionId, bidid), items[i]); err != nil {
+		if err := keeper.Bid.Set(ctx, collections.Join(auctionID, bidID), items[i]); err != nil {
 			return nil, err
 		}
-		if err := keeper.BidSeq.Set(ctx, auctionId, items[i].Id); err != nil {
+		if err := keeper.BidSeq.Set(ctx, auctionID, bidID); err != nil {
 			return nil, err
 		}
 	}
@@ -56,17 +56,17 @@ func TestBidQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetBidRequest{AuctionId: 0, BidId: msgs[0].Id},
+			request:  &types.QueryGetBidRequest{AuctionID: 0, BidID: msgs[0].BidID},
 			response: &types.QueryGetBidResponse{Bid: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetBidRequest{AuctionId: 0, BidId: msgs[1].Id},
+			request:  &types.QueryGetBidRequest{AuctionID: 0, BidID: msgs[1].BidID},
 			response: &types.QueryGetBidResponse{Bid: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetBidRequest{AuctionId: 0, BidId: uint64(len(msgs))},
+			request: &types.QueryGetBidRequest{AuctionID: 0, BidID: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

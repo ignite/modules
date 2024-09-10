@@ -31,7 +31,7 @@ service Query {
 
   // Queries a list of Mission items.
   rpc GetMission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-    option (google.api.http).get = "/ignite/modules/claim/mission/{id}";
+    option (google.api.http).get = "/ignite/modules/claim/mission/{missionID}";
   }
   rpc ListMission(QueryAllMissionRequest) returns (QueryAllMissionResponse) {
     option (google.api.http).get = "/ignite/modules/claim/mission";
@@ -78,7 +78,7 @@ message QueryAllClaimRecordResponse {
 }
 
 message QueryGetMissionRequest {
-  uint64 id = 1;
+  uint64 missionID = 1;
 }
 
 message QueryGetMissionResponse {

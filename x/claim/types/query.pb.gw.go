@@ -152,15 +152,15 @@ func request_Query_GetMission_0(ctx context.Context, marshaler runtime.Marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["missionID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "missionID")
 	}
 
-	protoReq.Id, err = runtime.Uint64(val)
+	protoReq.MissionID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "missionID", err)
 	}
 
 	msg, err := client.GetMission(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -179,15 +179,15 @@ func local_request_Query_GetMission_0(ctx context.Context, marshaler runtime.Mar
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["missionID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "missionID")
 	}
 
-	protoReq.Id, err = runtime.Uint64(val)
+	protoReq.MissionID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "missionID", err)
 	}
 
 	msg, err := server.GetMission(ctx, &protoReq)
@@ -625,7 +625,7 @@ var (
 
 	pattern_Query_ListClaimRecord_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "claim_record"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_GetMission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "mission", "id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GetMission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"ignite", "modules", "claim", "mission", "missionID"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_ListMission_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"ignite", "modules", "claim", "mission"}, "", runtime.AssumeColonVerbOpt(false)))
 

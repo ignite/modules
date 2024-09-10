@@ -48,14 +48,14 @@ func (k Keeper) IterateAuctions(ctx context.Context, cb func(uint64, types.Aucti
 // It doesn't have any auctioneer's verification logic because the module is fundamentally designed
 // to delegate full authorization to an external module.
 // It is up to an external module to freely add necessary verification and operations depending on their use cases.
-func (k Keeper) AddAllowedBidders(ctx context.Context, auctionId uint64, allowedBidders []types.AllowedBidder) error {
+func (k Keeper) AddAllowedBidders(ctx context.Context, auctionID uint64, allowedBidders []types.AllowedBidder) error {
 	if len(allowedBidders) == 0 {
 		return types.ErrEmptyAllowedBidders
 	}
 
-	auction, err := k.Auction.Get(ctx, auctionId)
+	auction, err := k.Auction.Get(ctx, auctionID)
 	if err != nil {
-		return sdkerrors.Wrapf(err, "auction %d is not found", auctionId)
+		return sdkerrors.Wrapf(err, "auction %d is not found", auctionID)
 	}
 
 	// Call hook before adding allowed bidders for the auction
@@ -76,7 +76,7 @@ func (k Keeper) AddAllowedBidders(ctx context.Context, auctionId uint64, allowed
 		if err != nil {
 			return err
 		}
-		if err := k.AllowedBidder.Set(ctx, collections.Join(auctionId, bidder), ab); err != nil {
+		if err := k.AllowedBidder.Set(ctx, collections.Join(auctionID, bidder), ab); err != nil {
 			return err
 		}
 	}
@@ -89,29 +89,29 @@ func (k Keeper) AddAllowedBidders(ctx context.Context, auctionId uint64, allowed
 // It doesn't have any auctioneer's verification logic because the module is fundamentally designed
 // to delegate full authorization to an external module.
 // It is up to an external module to freely add necessary verification and operations depending on their use cases.
-func (k Keeper) UpdateAllowedBidder(ctx context.Context, auctionId uint64, bidder sdk.AccAddress, maxBidAmount math.Int) error {
-	_, err := k.Auction.Get(ctx, auctionId)
+func (k Keeper) UpdateAllowedBidder(ctx context.Context, auctionID uint64, bidder sdk.AccAddress, maxBidAmount math.Int) error {
+	_, err := k.Auction.Get(ctx, auctionID)
 	if err != nil {
-		return sdkerrors.Wrapf(err, "auction %d is not found", auctionId)
+		return sdkerrors.Wrapf(err, "auction %d is not found", auctionID)
 	}
 
-	_, err = k.AllowedBidder.Get(ctx, collections.Join(auctionId, bidder))
+	_, err = k.AllowedBidder.Get(ctx, collections.Join(auctionID, bidder))
 	if err != nil {
 		return sdkerrors.Wrapf(errors.ErrNotFound, "bidder %s is not found", bidder.String())
 	}
 
-	allowedBidder := types.NewAllowedBidder(auctionId, bidder, maxBidAmount)
+	allowedBidder := types.NewAllowedBidder(auctionID, bidder, maxBidAmount)
 
 	if err := allowedBidder.Validate(); err != nil {
 		return err
 	}
 
 	// Call hook before updating the allowed bidders for the auction
-	if err := k.BeforeAllowedBidderUpdated(ctx, auctionId, bidder, maxBidAmount); err != nil {
+	if err := k.BeforeAllowedBidderUpdated(ctx, auctionID, bidder, maxBidAmount); err != nil {
 		return err
 	}
 
-	if err := k.AllowedBidder.Set(ctx, collections.Join(auctionId, bidder), allowedBidder); err != nil {
+	if err := k.AllowedBidder.Set(ctx, collections.Join(auctionID, bidder), allowedBidder); err != nil {
 		return sdkerrors.Wrapf(errors.ErrNotFound, "allowed bidder %s no set", bidder.String())
 	}
 
@@ -177,7 +177,7 @@ func (k Keeper) AllocateSellingCoin(ctx context.Context, auction types.AuctionI,
 
 // ReleaseVestingPayingCoin releases the vested selling coin to the auctioneer from the vesting reserve account.
 func (k Keeper) ReleaseVestingPayingCoin(ctx context.Context, auction types.AuctionI) error {
-	vestingQueues, err := k.GetVestingQueuesByAuctionId(ctx, auction.GetId())
+	vestingQueues, err := k.GetVestingQueuesByAuctionID(ctx, auction.GetId())
 	if err != nil {
 		return err
 	}
@@ -196,7 +196,7 @@ func (k Keeper) ReleaseVestingPayingCoin(ctx context.Context, auction types.Auct
 
 			vestingQueue.SetReleased(true)
 			if err := k.VestingQueue.Set(ctx, collections.Join(
-				vestingQueue.AuctionId,
+				vestingQueue.AuctionID,
 				vestingQueue.ReleaseTime,
 			), vestingQueue); err != nil {
 				return err
@@ -466,7 +466,7 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 	// Call hook after storing an auction
 	if err := k.AfterFixedPriceAuctionCreated(
 		ctx,
-		auction.Id,
+		auction.AuctionID,
 		auction.Auctioneer,
 		auction.StartPrice,
 		auction.SellingCoin,
@@ -481,7 +481,7 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeCreateFixedPriceAuction,
-			sdk.NewAttribute(types.AttributeKeyAuctionId, strconv.FormatUint(nextId, 10)),
+			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(nextId, 10)),
 			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer().String()),
 			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress().String()),
 			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress().String()),
@@ -589,7 +589,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 	// Call hook after storing an auction
 	if err := k.AfterBatchAuctionCreated(
 		ctx,
-		auction.Id,
+		auction.AuctionID,
 		auction.Auctioneer,
 		auction.StartPrice,
 		auction.MinBidPrice,
@@ -607,7 +607,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeCreateBatchAuction,
-			sdk.NewAttribute(types.AttributeKeyAuctionId, strconv.FormatUint(nextId, 10)),
+			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(nextId, 10)),
 			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer().String()),
 			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress().String()),
 			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress().String()),
@@ -630,7 +630,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 // CancelAuction handles types.MsgCancelAuction and cancels the auction.
 // An auction can only be canceled when it is not started yet.
 func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) error {
-	auction, err := k.Auction.Get(ctx, msg.AuctionId)
+	auction, err := k.Auction.Get(ctx, msg.AuctionID)
 	if err != nil {
 		return err
 	}
@@ -654,7 +654,7 @@ func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) 
 	}
 
 	// Call hook before cancelling the auction
-	if err := k.BeforeAuctionCanceled(ctx, msg.AuctionId, msg.Auctioneer); err != nil {
+	if err := k.BeforeAuctionCanceled(ctx, msg.AuctionID, msg.Auctioneer); err != nil {
 		return err
 	}
 
@@ -673,7 +673,7 @@ func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) 
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeCancelAuction,
-			sdk.NewAttribute(types.AttributeKeyAuctionId, strconv.FormatUint(auction.GetId(), 10)),
+			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(auction.GetId(), 10)),
 		),
 	})
 

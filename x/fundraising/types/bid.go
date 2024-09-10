@@ -6,11 +6,11 @@ import (
 )
 
 // NewBid returns a new Bid.
-func NewBid(auctionId uint64, bidder sdk.AccAddress, bidId uint64, bidType BidType, price math.LegacyDec, coin sdk.Coin, isMatched bool) Bid {
+func NewBid(auctionID uint64, bidder sdk.AccAddress, bidID uint64, bidType BidType, price math.LegacyDec, coin sdk.Coin, isMatched bool) Bid {
 	return Bid{
-		AuctionId: auctionId,
+		AuctionID: auctionID,
 		Bidder:    bidder.String(),
-		Id:        bidId,
+		BidID:     bidID,
 		Type:      bidType,
 		Price:     price,
 		Coin:      coin,

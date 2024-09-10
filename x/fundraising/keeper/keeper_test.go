@@ -134,8 +134,8 @@ func (s *KeeperTestSuite) createBatchAuction(
 	return auction.(*types.BatchAuction)
 }
 
-func (s *KeeperTestSuite) addAllowedBidder(auctionId uint64, bidder sdk.AccAddress, maxBidAmt math.Int) error {
-	allowedBidder, err := s.keeper.AllowedBidder.Get(s.ctx, collections.Join(auctionId, bidder))
+func (s *KeeperTestSuite) addAllowedBidder(auctionID uint64, bidder sdk.AccAddress, maxBidAmt math.Int) error {
+	allowedBidder, err := s.keeper.AllowedBidder.Get(s.ctx, collections.Join(auctionID, bidder))
 	if err == nil {
 		maxBidAmt = maxBidAmt.Add(allowedBidder.MaxBidAmount)
 	}
@@ -143,17 +143,17 @@ func (s *KeeperTestSuite) addAllowedBidder(auctionId uint64, bidder sdk.AccAddre
 		return err
 	}
 
-	return s.keeper.AllowedBidder.Set(s.ctx, collections.Join(auctionId, bidder), types.NewAllowedBidder(auctionId, bidder, maxBidAmt))
+	return s.keeper.AllowedBidder.Set(s.ctx, collections.Join(auctionID, bidder), types.NewAllowedBidder(auctionID, bidder, maxBidAmt))
 }
 
 func (s *KeeperTestSuite) placeBidFixedPrice(
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	price math.LegacyDec,
 	coin sdk.Coin,
 	fund bool,
 ) types.Bid {
-	auction, err := s.keeper.Auction.Get(s.ctx, auctionId)
+	auction, err := s.keeper.Auction.Get(s.ctx, auctionID)
 	s.Require().NoError(err)
 
 	var fundAmt math.Int
@@ -173,11 +173,11 @@ func (s *KeeperTestSuite) placeBidFixedPrice(
 		s.fundAddr(bidder, sdk.NewCoins(fundCoin))
 	}
 
-	err = s.addAllowedBidder(auctionId, bidder, maxBidAmt)
+	err = s.addAllowedBidder(auctionID, bidder, maxBidAmt)
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auctionId,
+		AuctionID: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     price,
@@ -189,7 +189,7 @@ func (s *KeeperTestSuite) placeBidFixedPrice(
 }
 
 func (s *KeeperTestSuite) placeBidBatchWorth(
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	price math.LegacyDec,
 	coin sdk.Coin,
@@ -200,11 +200,11 @@ func (s *KeeperTestSuite) placeBidBatchWorth(
 		s.fundAddr(bidder, sdk.NewCoins(coin))
 	}
 
-	err := s.addAllowedBidder(auctionId, bidder, maxBidAmt)
+	err := s.addAllowedBidder(auctionID, bidder, maxBidAmt)
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auctionId,
+		AuctionID: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeBatchWorth,
 		Price:     price,
@@ -216,14 +216,14 @@ func (s *KeeperTestSuite) placeBidBatchWorth(
 }
 
 func (s *KeeperTestSuite) placeBidBatchMany(
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	price math.LegacyDec,
 	coin sdk.Coin,
 	maxBidAmt math.Int,
 	fund bool,
 ) types.Bid {
-	auction, err := s.keeper.Auction.Get(s.ctx, auctionId)
+	auction, err := s.keeper.Auction.Get(s.ctx, auctionID)
 	s.Require().NoError(err)
 
 	if fund {
@@ -233,11 +233,11 @@ func (s *KeeperTestSuite) placeBidBatchMany(
 		s.fundAddr(bidder, sdk.NewCoins(fundCoin))
 	}
 
-	err = s.addAllowedBidder(auctionId, bidder, maxBidAmt)
+	err = s.addAllowedBidder(auctionID, bidder, maxBidAmt)
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionId: auctionId,
+		AuctionID: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeBatchMany,
 		Price:     price,
@@ -277,12 +277,12 @@ func (s *KeeperTestSuite) sendCoins(fromAddr, toAddr sdk.AccAddress, coins sdk.C
 // fullString is a helper function that returns a full output of the matching result.
 // it includes all bids sorted in descending order, allocation, refund, and matching info.
 // it is useful for debugging.
-func (s *KeeperTestSuite) fullString(auctionId uint64, mInfo keeper.MatchingInfo) string {
-	auction, err := s.keeper.Auction.Get(s.ctx, auctionId)
+func (s *KeeperTestSuite) fullString(auctionID uint64, mInfo keeper.MatchingInfo) string {
+	auction, err := s.keeper.Auction.Get(s.ctx, auctionID)
 	s.Require().NoError(err)
 
 	payingCoinDenom := auction.GetPayingCoinDenom()
-	bids, err := s.keeper.GetBidsByAuctionId(s.ctx, auctionId)
+	bids, err := s.keeper.GetBidsByAuctionID(s.ctx, auctionID)
 	s.Require().NoError(err)
 
 	bids = types.SortBids(bids)
@@ -296,7 +296,7 @@ func (s *KeeperTestSuite) fullString(auctionId uint64, mInfo keeper.MatchingInfo
 		reserveAmt := bid.ConvertToPayingAmount(payingCoinDenom)
 		bidAmt := bid.ConvertToSellingAmount(payingCoinDenom)
 
-		_, _ = fmt.Fprintf(&b, "| %28s | %2d | %21s | %20s | %22s | %22s |\n", bid.Bidder, bid.Id, bid.Price.String(), bid.Type, reserveAmt, bidAmt)
+		_, _ = fmt.Fprintf(&b, "| %28s | %2d | %21s | %20s | %22s | %22s |\n", bid.Bidder, bid.BidID, bid.Price.String(), bid.Type, reserveAmt, bidAmt)
 	}
 	b.WriteString("+-----------------------------------------------+----+-----------------------+----------------------+------------------------+------------------------+\n\n")
 

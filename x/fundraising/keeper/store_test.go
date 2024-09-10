@@ -11,20 +11,20 @@ import (
 	"github.com/ignite/modules/x/fundraising/types"
 )
 
-func (s *KeeperTestSuite) TestLastAuctionId() {
+func (s *KeeperTestSuite) TestLastAuctionID() {
 	cacheCtx, _ := s.ctx.CacheContext()
 
-	auctionId, err := s.keeper.AuctionSeq.Peek(cacheCtx)
+	auctionID, err := s.keeper.AuctionSeq.Peek(cacheCtx)
 	s.Require().NoError(err)
-	s.Require().Equal(uint64(0), auctionId)
+	s.Require().Equal(uint64(0), auctionID)
 
-	nextAuctionId, err := s.keeper.AuctionSeq.Next(cacheCtx)
+	nextAuctionID, err := s.keeper.AuctionSeq.Next(cacheCtx)
 	s.Require().NoError(err)
-	s.Require().Equal(uint64(0), nextAuctionId)
+	s.Require().Equal(uint64(0), nextAuctionID)
 
-	nextAuctionId, err = s.keeper.AuctionSeq.Next(cacheCtx)
+	nextAuctionID, err = s.keeper.AuctionSeq.Next(cacheCtx)
 	s.Require().NoError(err)
-	s.Require().Equal(uint64(1), nextAuctionId)
+	s.Require().Equal(uint64(1), nextAuctionID)
 
 	s.createFixedPriceAuction(
 		s.addr(0),
@@ -36,9 +36,9 @@ func (s *KeeperTestSuite) TestLastAuctionId() {
 		time.Now().AddDate(0, 6, 0).AddDate(0, 1, 0),
 		true,
 	)
-	nextAuctionId, err = s.keeper.AuctionSeq.Next(cacheCtx)
+	nextAuctionID, err = s.keeper.AuctionSeq.Next(cacheCtx)
 	s.Require().NoError(err)
-	s.Require().Equal(uint64(2), nextAuctionId)
+	s.Require().Equal(uint64(2), nextAuctionID)
 
 	auctions, err := s.keeper.Auctions(s.ctx)
 	s.Require().NoError(err)
@@ -54,9 +54,9 @@ func (s *KeeperTestSuite) TestLastAuctionId() {
 		time.Now().AddDate(0, 6, 0).AddDate(0, 1, 0),
 		true,
 	)
-	nextAuctionId, err = s.keeper.AuctionSeq.Next(cacheCtx)
+	nextAuctionID, err = s.keeper.AuctionSeq.Next(cacheCtx)
 	s.Require().NoError(err)
-	s.Require().Equal(uint64(3), nextAuctionId)
+	s.Require().Equal(uint64(3), nextAuctionID)
 
 	auctions, err = s.keeper.Auctions(s.ctx)
 	s.Require().NoError(err)
@@ -76,25 +76,25 @@ func (s *KeeperTestSuite) TestAllowedBidderByAuction() {
 	)
 	s.Require().Equal(auction.GetStatus(), types.AuctionStatusStandBy)
 
-	allowedBidders, err := s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.Id)
+	allowedBidders, err := s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionID)
 	s.Require().NoError(err)
 	s.Require().Len(allowedBidders, 0)
 
 	// Add new allowed bidders
 	newAllowedBidders := []types.AllowedBidder{
-		{AuctionId: 1, Bidder: s.addr(1).String(), MaxBidAmount: parseInt("100000")},
-		{AuctionId: 1, Bidder: s.addr(2).String(), MaxBidAmount: parseInt("100000")},
-		{AuctionId: 1, Bidder: s.addr(3).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionID: 1, Bidder: s.addr(1).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionID: 1, Bidder: s.addr(2).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionID: 1, Bidder: s.addr(3).String(), MaxBidAmount: parseInt("100000")},
 	}
-	err = s.keeper.AddAllowedBidders(s.ctx, auction.Id, newAllowedBidders)
+	err = s.keeper.AddAllowedBidders(s.ctx, auction.AuctionID, newAllowedBidders)
 	s.Require().NoError(err)
 
-	allowedBidders, err = s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.Id)
+	allowedBidders, err = s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionID)
 	s.Require().NoError(err)
 	s.Require().Len(allowedBidders, 3)
 }
 
-func (s *KeeperTestSuite) TestLastBidId() {
+func (s *KeeperTestSuite) TestLastBidID() {
 	auction := s.createFixedPriceAuction(
 		s.addr(0),
 		math.LegacyOneDec(),
@@ -107,19 +107,19 @@ func (s *KeeperTestSuite) TestLastBidId() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	bidId, err := s.keeper.BidSeq.Get(s.ctx, auction.Id)
+	bidID, err := s.keeper.BidSeq.Get(s.ctx, auction.AuctionID)
 	s.Require().Error(err)
-	s.Require().Equal(uint64(0), bidId)
+	s.Require().Equal(uint64(0), bidID)
 
-	s.placeBidFixedPrice(auction.Id, s.addr(1), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(2), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
-	s.placeBidFixedPrice(auction.Id, s.addr(3), math.LegacyOneDec(), parseCoin("15000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(2), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionID, s.addr(3), math.LegacyOneDec(), parseCoin("15000000denom2"), true)
 
-	bidsById, err := s.keeper.GetBidsByAuctionId(s.ctx, auction.GetId())
+	bidsById, err := s.keeper.GetBidsByAuctionID(s.ctx, auction.GetId())
 	s.Require().NoError(err)
 	s.Require().Len(bidsById, 3)
 
-	nextId, err := s.keeper.GetNextBidIdWithUpdate(s.ctx, auction.GetId())
+	nextId, err := s.keeper.GetNextBidIDWithUpdate(s.ctx, auction.GetId())
 	s.Require().NoError(err)
 	s.Require().Equal(uint64(4), nextId)
 
@@ -136,11 +136,11 @@ func (s *KeeperTestSuite) TestLastBidId() {
 	)
 
 	// Bid id must start from 1 with new auction
-	bidsById, err = s.keeper.GetBidsByAuctionId(s.ctx, auction2.GetId())
+	bidsById, err = s.keeper.GetBidsByAuctionID(s.ctx, auction2.GetId())
 	s.Require().NoError(err)
 	s.Require().Len(bidsById, 0)
 
-	nextId, err = s.keeper.GetNextBidIdWithUpdate(s.ctx, auction2.GetId())
+	nextId, err = s.keeper.GetNextBidIDWithUpdate(s.ctx, auction2.GetId())
 	s.Require().NoError(err)
 	s.Require().Equal(uint64(1), nextId)
 }
@@ -170,7 +170,7 @@ func (s *KeeperTestSuite) TestIterateBids() {
 	s.Require().NoError(err)
 	s.Require().Len(bids, 4)
 
-	bidsById, err := s.keeper.GetBidsByAuctionId(s.ctx, auction.GetId())
+	bidsById, err := s.keeper.GetBidsByAuctionID(s.ctx, auction.GetId())
 	s.Require().NoError(err)
 	s.Require().Len(bidsById, 4)
 
@@ -190,14 +190,14 @@ func (s *KeeperTestSuite) TestVestingQueue() {
 	err := s.keeper.VestingQueue.Set(
 		s.ctx,
 		collections.Join(
-			vestingQueue.AuctionId,
+			vestingQueue.AuctionID,
 			vestingQueue.ReleaseTime,
 		),
 		vestingQueue,
 	)
 	s.Require().NoError(err)
 
-	vq, err := s.keeper.VestingQueue.Get(s.ctx, collections.Join(vestingQueue.AuctionId, vestingQueue.ReleaseTime))
+	vq, err := s.keeper.VestingQueue.Get(s.ctx, collections.Join(vestingQueue.AuctionID, vestingQueue.ReleaseTime))
 	s.Require().NoError(err)
 	s.Require().EqualValues(vestingQueue, vq)
 }
@@ -221,7 +221,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		payingAmt := math.LegacyNewDecFromInt(reserveCoin.Amount).MulTruncate(vs.Weight).TruncateInt()
 
 		vestingQueue := types.VestingQueue{
-			AuctionId:   uint64(1),
+			AuctionID:   uint64(1),
 			Auctioneer:  s.addr(1).String(),
 			PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 			ReleaseTime: vs.ReleaseTime,
@@ -230,7 +230,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		err := s.keeper.VestingQueue.Set(
 			s.ctx,
 			collections.Join(
-				vestingQueue.AuctionId,
+				vestingQueue.AuctionID,
 				vestingQueue.ReleaseTime,
 			),
 			vestingQueue,
@@ -260,7 +260,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		payingAmt := math.LegacyNewDecFromInt(reserveCoin.Amount).MulTruncate(vs.Weight).TruncateInt()
 
 		vestingQueue := types.VestingQueue{
-			AuctionId:   uint64(2),
+			AuctionID:   uint64(2),
 			Auctioneer:  s.addr(2).String(),
 			PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 			ReleaseTime: vs.ReleaseTime,
@@ -269,7 +269,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		err := s.keeper.VestingQueue.Set(
 			s.ctx,
 			collections.Join(
-				vestingQueue.AuctionId,
+				vestingQueue.AuctionID,
 				vestingQueue.ReleaseTime,
 			),
 			vestingQueue,
@@ -277,11 +277,11 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		s.Require().NoError(err)
 	}
 
-	vq1, err := s.keeper.GetVestingQueuesByAuctionId(s.ctx, uint64(1))
+	vq1, err := s.keeper.GetVestingQueuesByAuctionID(s.ctx, uint64(1))
 	s.Require().NoError(err)
 	s.Require().Len(vq1, 2)
 
-	vq2, err := s.keeper.GetVestingQueuesByAuctionId(s.ctx, uint64(2))
+	vq2, err := s.keeper.GetVestingQueuesByAuctionID(s.ctx, uint64(2))
 	s.Require().NoError(err)
 	s.Require().Len(vq2, 4)
 

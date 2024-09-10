@@ -26,11 +26,11 @@ func createNAllowedBidder(keeper keeper.Keeper, ctx context.Context, n int) []ty
 	items := make([]types.AllowedBidder, n)
 	for i := range items {
 		bidder := sample.AccAddress(r)
-		items[i].AuctionId = uint64(i)
+		items[i].AuctionID = uint64(i)
 		items[i].Bidder = bidder.String()
 		items[i].MaxBidAmount = math.ZeroInt()
 
-		_ = keeper.AllowedBidder.Set(ctx, collections.Join(items[i].AuctionId, bidder), items[i])
+		_ = keeper.AllowedBidder.Set(ctx, collections.Join(items[i].AuctionID, bidder), items[i])
 	}
 	return items
 }
@@ -48,7 +48,7 @@ func TestAllowedBidderQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetAllowedBidderRequest{
-				AuctionId: msgs[0].AuctionId,
+				AuctionID: msgs[0].AuctionID,
 				Bidder:    msgs[0].Bidder,
 			},
 			response: &types.QueryGetAllowedBidderResponse{AllowedBidder: msgs[0]},
@@ -56,7 +56,7 @@ func TestAllowedBidderQuerySingle(t *testing.T) {
 		{
 			desc: "Second",
 			request: &types.QueryGetAllowedBidderRequest{
-				AuctionId: msgs[1].AuctionId,
+				AuctionID: msgs[1].AuctionID,
 				Bidder:    msgs[1].Bidder,
 			},
 			response: &types.QueryGetAllowedBidderResponse{AllowedBidder: msgs[1]},
@@ -64,7 +64,7 @@ func TestAllowedBidderQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetAllowedBidderRequest{
-				AuctionId: 100000,
+				AuctionID: 100000,
 				Bidder:    sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "not found"),
@@ -94,7 +94,7 @@ func TestAllowedBidderQueryPaginated(t *testing.T) {
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllAllowedBidderRequest {
 		return &types.QueryAllAllowedBidderRequest{
-			AuctionId: 0,
+			AuctionID: 0,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

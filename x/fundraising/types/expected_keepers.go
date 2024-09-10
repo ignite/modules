@@ -55,7 +55,7 @@ type FundraisingHooks interface {
 
 	AfterFixedPriceAuctionCreated(
 		ctx context.Context,
-		auctionId uint64,
+		auctionID uint64,
 		auctioneer string,
 		startPrice math.LegacyDec,
 		sellingCoin sdk.Coin,
@@ -81,7 +81,7 @@ type FundraisingHooks interface {
 
 	AfterBatchAuctionCreated(
 		ctx context.Context,
-		auctionId uint64,
+		auctionID uint64,
 		auctioneer string,
 		startPrice math.LegacyDec,
 		minBidPrice math.LegacyDec,
@@ -96,14 +96,14 @@ type FundraisingHooks interface {
 
 	BeforeAuctionCanceled(
 		ctx context.Context,
-		auctionId uint64,
+		auctionID uint64,
 		auctioneer string,
 	) error
 
 	BeforeBidPlaced(
 		ctx context.Context,
-		auctionId uint64,
-		bidId uint64,
+		auctionID uint64,
+		bidID uint64,
 		bidder string,
 		bidType BidType,
 		price math.LegacyDec,
@@ -112,8 +112,8 @@ type FundraisingHooks interface {
 
 	BeforeBidModified(
 		ctx context.Context,
-		auctionId uint64,
-		bidId uint64,
+		auctionID uint64,
+		bidID uint64,
 		bidder string,
 		bidType BidType,
 		price math.LegacyDec,
@@ -127,14 +127,14 @@ type FundraisingHooks interface {
 
 	BeforeAllowedBidderUpdated(
 		ctx context.Context,
-		auctionId uint64,
+		auctionID uint64,
 		bidder sdk.AccAddress,
 		maxBidAmount math.Int,
 	) error
 
 	BeforeSellingCoinsAllocated(
 		ctx context.Context,
-		auctionId uint64,
+		auctionID uint64,
 		allocationMap map[string]math.Int,
 		refundMap map[string]math.Int,
 	) error

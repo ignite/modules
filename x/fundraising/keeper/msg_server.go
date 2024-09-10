@@ -30,7 +30,7 @@ func (k msgServer) AddAllowedBidder(ctx context.Context, msg *types.MsgAddAllowe
 		return nil, sdkerrors.Wrap(errors.ErrInvalidRequest, "EnableAddAllowedBidder is disabled")
 	}
 
-	if err := k.Keeper.AddAllowedBidders(ctx, msg.AuctionId, []types.AllowedBidder{msg.AllowedBidder}); err != nil {
+	if err := k.Keeper.AddAllowedBidders(ctx, msg.AuctionID, []types.AllowedBidder{msg.AllowedBidder}); err != nil {
 		return nil, err
 	}
 

@@ -24,7 +24,7 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "GetClaimRecord",
-					Use:            "get-claim-record [id]",
+					Use:            "get-claim-record [address]",
 					Short:          "Gets a ClaimRecord",
 					Alias:          []string{"show-claim-record"},
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "address"}},
@@ -36,10 +36,10 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "GetMission",
-					Use:            "get-mission [id]",
+					Use:            "get-mission [mission-id]",
 					Short:          "Gets a Mission by id",
 					Alias:          []string{"show-mission"},
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "missionID"}},
 				},
 				{
 					RpcMethod: "GetInitialClaim",

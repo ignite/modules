@@ -9,7 +9,6 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "modules/fundraising/v1/allowed_bidder.proto";
-import "modules/fundraising/v1/auction.proto";
 import "modules/fundraising/v1/bid.proto";
 import "modules/fundraising/v1/params.proto";
 import "modules/fundraising/v1/vesting_queue.proto";
@@ -28,28 +27,28 @@ service Query {
     option (google.api.http).get = "/ignite/modules/fundraising/auction";
   }
   rpc GetAuction(QueryGetAuctionRequest) returns (QueryGetAuctionResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}";
   }
 
   // Queries a list of AllowedBidder items.
   rpc ListAllowedBidder(QueryAllAllowedBidderRequest) returns (QueryAllAllowedBidderResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}/allowed_bidder";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}/allowedBidder";
   }
   rpc GetAllowedBidder(QueryGetAllowedBidderRequest) returns (QueryGetAllowedBidderResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}/allowed_bidder/{bidder}";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}/allowed_bidder/{bidder}";
   }
 
   // Queries a list of Bid items.
   rpc ListBid(QueryAllBidRequest) returns (QueryAllBidResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}/bid";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}/bid";
   }
   rpc GetBid(QueryGetBidRequest) returns (QueryGetBidResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}/bid/{bid_id}";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}/bid/{bidID}";
   }
 
   // Queries a list of VestingQueue items.
   rpc ListVestingQueue(QueryAllVestingQueueRequest) returns (QueryAllVestingQueueResponse) {
-    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auction_id}/vestings";
+    option (google.api.http).get = "/ignite/modules/fundraising/auction/{auctionID}/vestings";
   }
 }
 
@@ -83,7 +82,7 @@ message QueryAllAuctionResponse {
 
 // QueryGetAuctionRequest is the request type for the Query/Auction RPC method.
 message QueryGetAuctionRequest {
-  uint64 auction_id = 1;
+  uint64 auctionID = 1;
 }
 
 // QueryGetAuctionResponse is the response type for the Query/Auction RPC method.
@@ -93,15 +92,14 @@ message QueryGetAuctionResponse {
 
 // QueryAllowedBidderRequest is the request type for the Query/AllowedBidder RPC method.
 message QueryAllAllowedBidderRequest {
-  uint64 auction_id = 1;
-
+  uint64 auctionID = 1;
+  // pagination defines the pagination in the request
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 // QueryAllowedBidderResponse is the response type for the Query/AllowedBidder RPC method.
 message QueryAllAllowedBidderResponse {
-  repeated AllowedBidder allowed_bidder = 1 [(gogoproto.nullable) = false];
-
+  repeated AllowedBidder allowedBidder = 1 [(gogoproto.nullable) = false];
   // pagination defines the pagination in the response
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
@@ -109,20 +107,20 @@ message QueryAllAllowedBidderResponse {
 // QueryAllowedBidderRequest is the request type for the Query/AllowedBidder RPC
 // method.
 message QueryGetAllowedBidderRequest {
-  uint64 auction_id = 1;
+  uint64 auctionID = 1;
   string bidder = 2;
 }
 
 // QueryAllowedBidderResponse is the response type for the Query/AllowedBidder
 // RPC method.
 message QueryGetAllowedBidderResponse {
-  AllowedBidder allowed_bidder = 1 [(gogoproto.nullable) = false];
+  AllowedBidder allowedBidder = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryGetBidRequest is the request type for the Query/Sequence RPC method.
 message QueryGetBidRequest {
-  uint64 auction_id = 1;
-  uint64 bid_id = 2;
+  uint64 auctionID = 1;
+  uint64 bidID = 2;
 }
 
 // QueryGetBidResponse is response type for the Query/Sequence RPC method.
@@ -133,9 +131,10 @@ message QueryGetBidResponse {
 
 // QueryBidsRequest is request type for the Query/Bids RPC method.
 message QueryAllBidRequest {
-  uint64 auction_id = 1;
+  uint64 auctionID = 1;
   string bidder = 2;
-  string is_matched = 3;
+  string isMatched = 3;
+  // pagination defines the pagination in the request
   cosmos.base.query.v1beta1.PageRequest pagination = 4;
 }
 
@@ -143,15 +142,14 @@ message QueryAllBidRequest {
 message QueryAllBidResponse {
   // bids specifies the existing bids
   repeated Bid bid = 1 [(gogoproto.nullable) = false];
-
   // pagination defines the pagination in the response
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryAllVestingQueueRequest is request type for the Query/Vestings RPC method.
 message QueryAllVestingQueueRequest {
-  uint64 auction_id = 1;
-
+  uint64 auctionID = 1;
+  // pagination defines the pagination in the request
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
@@ -159,6 +157,6 @@ message QueryAllVestingQueueRequest {
 message QueryAllVestingQueueResponse {
   // vestings specifies the existing vestings
   repeated VestingQueue vestingQueue = 1 [(gogoproto.nullable) = false];
-
+  // pagination defines the pagination in the response
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

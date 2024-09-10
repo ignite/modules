@@ -9,10 +9,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func NewMsgCancelAuction(auctioneer string, auctionId uint64) *MsgCancelAuction {
+func NewMsgCancelAuction(auctioneer string, auctionID uint64) *MsgCancelAuction {
 	return &MsgCancelAuction{
 		Auctioneer: auctioneer,
-		AuctionId:  auctionId,
+		AuctionID:  auctionID,
 	}
 }
 
@@ -138,7 +138,7 @@ func (msg MsgCreateFixedPriceAuction) ValidateBasic() error {
 }
 
 func NewMsgPlaceBid(
-	auctionId uint64,
+	auctionID uint64,
 	bidder string,
 	bidType BidType,
 	price math.LegacyDec,
@@ -146,7 +146,7 @@ func NewMsgPlaceBid(
 ) *MsgPlaceBid {
 	return &MsgPlaceBid{
 		Bidder:    bidder,
-		AuctionId: auctionId,
+		AuctionID: auctionID,
 		BidType:   bidType,
 		Price:     price,
 		Coin:      coin,
@@ -177,12 +177,9 @@ func (msg MsgPlaceBid) ValidateBasic() error {
 	return nil
 }
 
-func NewMsgAddAllowedBidder(
-	auctionId uint64,
-	allowedBidder AllowedBidder,
-) *MsgAddAllowedBidder {
+func NewMsgAddAllowedBidder(auctionID uint64, allowedBidder AllowedBidder) *MsgAddAllowedBidder {
 	return &MsgAddAllowedBidder{
-		AuctionId:     auctionId,
+		AuctionID:     auctionID,
 		AllowedBidder: allowedBidder,
 	}
 }
@@ -207,16 +204,16 @@ func (msg MsgAddAllowedBidder) ValidateBasic() error {
 }
 
 func NewMsgModifyBid(
-	auctionId uint64,
+	auctionID uint64,
 	bidder string,
-	bidId uint64,
+	bidID uint64,
 	price math.LegacyDec,
 	coin sdk.Coin,
 ) *MsgModifyBid {
 	return &MsgModifyBid{
 		Bidder:    bidder,
-		AuctionId: auctionId,
-		BidId:     bidId,
+		AuctionID: auctionID,
+		BidID:     bidID,
 		Price:     price,
 		Coin:      coin,
 	}

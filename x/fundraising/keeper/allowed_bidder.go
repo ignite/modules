@@ -10,9 +10,9 @@ import (
 )
 
 // GetAllowedBiddersByAuction returns allowed bidders list for the auction.
-func (k Keeper) GetAllowedBiddersByAuction(ctx context.Context, auctionId uint64) ([]types.AllowedBidder, error) {
+func (k Keeper) GetAllowedBiddersByAuction(ctx context.Context, auctionID uint64) ([]types.AllowedBidder, error) {
 	allowedBidders := make([]types.AllowedBidder, 0)
-	rng := collections.NewPrefixedPairRange[uint64, sdk.AccAddress](auctionId)
+	rng := collections.NewPrefixedPairRange[uint64, sdk.AccAddress](auctionID)
 	err := k.AllowedBidder.Walk(ctx, rng, func(_ collections.Pair[uint64, sdk.AccAddress], allowedBidder types.AllowedBidder) (bool, error) {
 		allowedBidders = append(allowedBidders, allowedBidder)
 		return false, nil

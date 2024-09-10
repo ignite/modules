@@ -30,10 +30,10 @@ func (k Keeper) IterateVestingQueues(ctx context.Context, cb func(collections.Pa
 	return nil
 }
 
-// GetVestingQueuesByAuctionId returns all vesting queues associated with the auction id that are registered in the store.
-func (k Keeper) GetVestingQueuesByAuctionId(ctx context.Context, auctionId uint64) ([]types.VestingQueue, error) {
+// GetVestingQueuesByAuctionID returns all vesting queues associated with the auction id that are registered in the store.
+func (k Keeper) GetVestingQueuesByAuctionID(ctx context.Context, auctionID uint64) ([]types.VestingQueue, error) {
 	vestingQueues := make([]types.VestingQueue, 0)
-	rng := collections.NewPrefixedPairRange[uint64, time.Time](auctionId)
+	rng := collections.NewPrefixedPairRange[uint64, time.Time](auctionID)
 	err := k.VestingQueue.Walk(ctx, rng, func(key collections.Pair[uint64, time.Time], vestingQueue types.VestingQueue) (bool, error) {
 		vestingQueues = append(vestingQueues, vestingQueue)
 		return false, nil
@@ -85,7 +85,7 @@ func (k Keeper) ApplyVestingSchedules(ctx context.Context, auction types.Auction
 					schedule.ReleaseTime,
 				),
 				types.VestingQueue{
-					AuctionId:   auction.GetId(),
+					AuctionID:   auction.GetId(),
 					Auctioneer:  auction.GetAuctioneer().String(),
 					PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 					ReleaseTime: schedule.ReleaseTime,

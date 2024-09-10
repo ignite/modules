@@ -14,22 +14,22 @@ import (
 	"github.com/ignite/modules/x/fundraising/types"
 )
 
-// GetNextBidIdWithUpdate increments bid id by one and set it.
-func (k Keeper) GetNextBidIdWithUpdate(ctx context.Context, auctionId uint64) (uint64, error) {
-	seq, err := k.BidSeq.Get(ctx, auctionId)
+// GetNextBidIDWithUpdate increments bid id by one and set it.
+func (k Keeper) GetNextBidIDWithUpdate(ctx context.Context, auctionID uint64) (uint64, error) {
+	seq, err := k.BidSeq.Get(ctx, auctionID)
 	if errors.Is(err, collections.ErrNotFound) {
 		seq = 0
 	} else if err != nil {
 		return 0, err
 	}
 	seq++
-	return seq, k.BidSeq.Set(ctx, auctionId, seq)
+	return seq, k.BidSeq.Set(ctx, auctionID, seq)
 }
 
-// GetBidsByAuctionId returns all bids associated with the auction id that are registered in the store.
-func (k Keeper) GetBidsByAuctionId(ctx context.Context, auctionId uint64) ([]types.Bid, error) {
+// GetBidsByAuctionID returns all bids associated with the auction id that are registered in the store.
+func (k Keeper) GetBidsByAuctionID(ctx context.Context, auctionID uint64) ([]types.Bid, error) {
 	bids := make([]types.Bid, 0)
-	rng := collections.NewPrefixedPairRange[uint64, uint64](auctionId)
+	rng := collections.NewPrefixedPairRange[uint64, uint64](auctionID)
 	err := k.Bid.Walk(ctx, rng, func(key collections.Pair[uint64, uint64], bid types.Bid) (bool, error) {
 		bids = append(bids, bid)
 		return false, nil
@@ -72,7 +72,7 @@ func (k Keeper) IterateBids(ctx context.Context, cb func(collections.Pair[uint64
 
 // PlaceBid places a bid for the selling coin of the auction.
 func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid, error) {
-	auction, err := k.Auction.Get(ctx, msg.AuctionId)
+	auction, err := k.Auction.Get(ctx, msg.AuctionID)
 	if err != nil {
 		return types.Bid{}, err
 	}
@@ -101,13 +101,13 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 		return types.Bid{}, sdkerrors.Wrap(err, "failed to pay place bid fee")
 	}
 
-	bidID, err := k.GetNextBidIdWithUpdate(ctx, auction.GetId())
+	bidID, err := k.GetNextBidIDWithUpdate(ctx, auction.GetId())
 	if err != nil {
 		return types.Bid{}, sdkerrors.Wrap(err, "failed to get next bid id")
 	}
 	bid := types.Bid{
-		AuctionId: msg.AuctionId,
-		Id:        bidID,
+		AuctionID: msg.AuctionID,
+		BidID:     bidID,
 		Bidder:    msg.Bidder,
 		Type:      msg.BidType,
 		Price:     msg.Price,
@@ -129,7 +129,7 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 		// Reserve bid amount
 		bidPayingAmt := bid.ConvertToPayingAmount(payingCoinDenom)
 		bidPayingCoin := sdk.NewCoin(payingCoinDenom, bidPayingAmt)
-		if err := k.ReservePayingCoin(ctx, msg.AuctionId, bidder, bidPayingCoin); err != nil {
+		if err := k.ReservePayingCoin(ctx, msg.AuctionID, bidder, bidPayingCoin); err != nil {
 			return types.Bid{}, sdkerrors.Wrap(err, "failed to reserve paying coin")
 		}
 
@@ -149,7 +149,7 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 			return types.Bid{}, err
 		}
 
-		if err := k.ReservePayingCoin(ctx, msg.AuctionId, bidder, msg.Coin); err != nil {
+		if err := k.ReservePayingCoin(ctx, msg.AuctionID, bidder, msg.Coin); err != nil {
 			return types.Bid{}, sdkerrors.Wrap(err, "failed to reserve paying coin")
 		}
 
@@ -161,17 +161,17 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 		reserveAmt := bid.ConvertToPayingAmount(payingCoinDenom)
 		reserveCoin := sdk.NewCoin(payingCoinDenom, reserveAmt)
 
-		if err := k.ReservePayingCoin(ctx, msg.AuctionId, bidder, reserveCoin); err != nil {
+		if err := k.ReservePayingCoin(ctx, msg.AuctionID, bidder, reserveCoin); err != nil {
 			return types.Bid{}, sdkerrors.Wrap(err, "failed to reserve paying coin")
 		}
 	}
 
 	// Call before bid placed hook
-	if err := k.BeforeBidPlaced(ctx, bid.AuctionId, bid.Id, bid.Bidder, bid.Type, bid.Price, bid.Coin); err != nil {
+	if err := k.BeforeBidPlaced(ctx, bid.AuctionID, bid.BidID, bid.Bidder, bid.Type, bid.Price, bid.Coin); err != nil {
 		return types.Bid{}, err
 	}
 
-	if err := k.Bid.Set(ctx, collections.Join(bid.AuctionId, bid.Id), bid); err != nil {
+	if err := k.Bid.Set(ctx, collections.Join(bid.AuctionID, bid.BidID), bid); err != nil {
 		return types.Bid{}, err
 	}
 
@@ -179,7 +179,7 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypePlaceBid,
-			sdk.NewAttribute(types.AttributeKeyAuctionId, strconv.FormatUint(auction.GetId(), 10)),
+			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(auction.GetId(), 10)),
 			sdk.NewAttribute(types.AttributeKeyBidderAddress, msg.GetBidder()),
 			sdk.NewAttribute(types.AttributeKeyBidPrice, msg.Price.String()),
 			sdk.NewAttribute(types.AttributeKeyBidCoin, msg.Coin.String()),
@@ -220,13 +220,13 @@ func (k Keeper) ValidateFixedPriceBid(ctx context.Context, auction types.Auction
 	}
 	totalBidAmt := math.ZeroInt()
 	for _, bid := range bids {
-		if bid.AuctionId == auction.GetId() {
+		if bid.AuctionID == auction.GetId() {
 			bidSellingAmt := bid.ConvertToSellingAmount(auction.GetPayingCoinDenom())
 			totalBidAmt = totalBidAmt.Add(bidSellingAmt)
 		}
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionID, bid.GetBidder()))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -251,7 +251,7 @@ func (k Keeper) ValidateBatchWorthBid(ctx context.Context, auction types.Auction
 		return types.ErrIncorrectCoinDenom
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionID, bid.GetBidder()))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -276,7 +276,7 @@ func (k Keeper) ValidateBatchManyBid(ctx context.Context, auction types.AuctionI
 		return types.ErrIncorrectCoinDenom
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionID, bid.GetBidder()))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -295,7 +295,7 @@ func (k Keeper) ValidateBatchManyBid(ctx context.Context, auction types.AuctionI
 // A bidder must provide either greater bid price or coin amount.
 // They are not permitted to modify with less bid price or coin amount.
 func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
-	auction, err := k.Auction.Get(ctx, msg.AuctionId)
+	auction, err := k.Auction.Get(ctx, msg.AuctionID)
 	if err != nil {
 		return err
 	}
@@ -308,7 +308,7 @@ func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
 		return types.ErrIncorrectAuctionType
 	}
 
-	bid, err := k.Bid.Get(ctx, collections.Join(msg.AuctionId, msg.BidId))
+	bid, err := k.Bid.Get(ctx, collections.Join(msg.AuctionID, msg.BidID))
 	if err != nil {
 		return err
 	}
@@ -343,7 +343,7 @@ func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
 	case types.BidTypeBatchWorth:
 		diffReserveCoin := msg.Coin.Sub(bid.Coin)
 		if diffReserveCoin.IsPositive() {
-			if err := k.ReservePayingCoin(ctx, msg.AuctionId, bidder, diffReserveCoin); err != nil {
+			if err := k.ReservePayingCoin(ctx, msg.AuctionID, bidder, diffReserveCoin); err != nil {
 				return sdkerrors.Wrap(err, "failed to reserve paying coin")
 			}
 		}
@@ -353,7 +353,7 @@ func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
 		diffReserveAmt := currReserveAmt.Sub(prevReserveAmt).TruncateInt()
 		diffReserveCoin := sdk.NewCoin(auction.GetPayingCoinDenom(), diffReserveAmt)
 		if diffReserveCoin.IsPositive() {
-			if err := k.ReservePayingCoin(ctx, msg.AuctionId, bidder, diffReserveCoin); err != nil {
+			if err := k.ReservePayingCoin(ctx, msg.AuctionID, bidder, diffReserveCoin); err != nil {
 				return sdkerrors.Wrap(err, "failed to reserve paying coin")
 			}
 		}
@@ -363,11 +363,11 @@ func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
 	bid.Coin = msg.Coin
 
 	// Call the before mid modified hook
-	if err := k.BeforeBidModified(ctx, bid.AuctionId, bid.Id, bid.Bidder, bid.Type, bid.Price, bid.Coin); err != nil {
+	if err := k.BeforeBidModified(ctx, bid.AuctionID, bid.BidID, bid.Bidder, bid.Type, bid.Price, bid.Coin); err != nil {
 		return err
 	}
 
-	if err := k.Bid.Set(ctx, collections.Join(bid.AuctionId, bid.Id), bid); err != nil {
+	if err := k.Bid.Set(ctx, collections.Join(bid.AuctionID, bid.BidID), bid); err != nil {
 		return err
 	}
 	return nil

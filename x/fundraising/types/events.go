@@ -7,7 +7,7 @@ const (
 	EventTypeCancelAuction           = "cancel_auction"
 	EventTypePlaceBid                = "place_bid"
 
-	AttributeKeyAuctionId             = "auction_id" //nolint:golint
+	AttributeKeyAuctionID             = "auction_id" //nolint:golint
 	AttributeKeyAuctioneerAddress     = "auctioneer_address"
 	AttributeKeySellingReserveAddress = "selling_pool_address"
 	AttributeKeyPayingReserveAddress  = "paying_pool_address"
