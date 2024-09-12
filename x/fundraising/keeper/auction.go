@@ -23,6 +23,15 @@ type inOutCoins struct {
 	outputs []banktypes.Output
 }
 
+// GetAuction returns Auction interface by auction ID.
+func (k Keeper) GetAuction(ctx context.Context, auctionID uint64) (types.AuctionI, error) {
+	a, err := k.Auction.Get(ctx, auctionID)
+	if sdkerrors.IsOf(err, collections.ErrNotFound) {
+		return nil, types.ErrAuctionNotFound
+	}
+	return a, err
+}
+
 // Auctions returns all Actions.
 func (k Keeper) Auctions(ctx context.Context) ([]types.AuctionI, error) {
 	auctions := make([]types.AuctionI, 0)

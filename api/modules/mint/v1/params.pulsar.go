@@ -2,17 +2,19 @@
 package mintv1
 
 import (
-	_ "cosmossdk.io/api/amino"
 	fmt "fmt"
+	io "io"
+	reflect "reflect"
+	sync "sync"
+
+	_ "cosmossdk.io/api/amino"
+
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	io "io"
-	reflect "reflect"
-	sync "sync"
 )
 
 var _ protoreflect.List = (*_Params_8_list)(nil)
@@ -111,17 +113,21 @@ func (x *Params) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_Params_messageType fastReflection_Params_messageType
-var _ protoreflect.MessageType = fastReflection_Params_messageType{}
+var (
+	_fastReflection_Params_messageType fastReflection_Params_messageType
+	_                                  protoreflect.MessageType = fastReflection_Params_messageType{}
+)
 
 type fastReflection_Params_messageType struct{}
 
 func (x fastReflection_Params_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_Params)(nil)
 }
+
 func (x fastReflection_Params_messageType) New() protoreflect.Message {
 	return new(fastReflection_Params)
 }
+
 func (x fastReflection_Params_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_Params
 }
@@ -1149,12 +1155,15 @@ func file_modules_mint_v1_params_proto_rawDescGZIP() []byte {
 	return file_modules_mint_v1_params_proto_rawDescData
 }
 
-var file_modules_mint_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_modules_mint_v1_params_proto_goTypes = []interface{}{
-	(*Params)(nil),                  // 0: modules.mint.v1.Params
-	(*DistributionProportions)(nil), // 1: modules.mint.v1.DistributionProportions
-	(*WeightedAddress)(nil),         // 2: modules.mint.v1.WeightedAddress
-}
+var (
+	file_modules_mint_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+	file_modules_mint_v1_params_proto_goTypes  = []interface{}{
+		(*Params)(nil),                  // 0: modules.mint.v1.Params
+		(*DistributionProportions)(nil), // 1: modules.mint.v1.DistributionProportions
+		(*WeightedAddress)(nil),         // 2: modules.mint.v1.WeightedAddress
+	}
+)
+
 var file_modules_mint_v1_params_proto_depIdxs = []int32{
 	1, // 0: modules.mint.v1.Params.distributionProportions:type_name -> modules.mint.v1.DistributionProportions
 	2, // 1: modules.mint.v1.Params.fundedAddresses:type_name -> modules.mint.v1.WeightedAddress
