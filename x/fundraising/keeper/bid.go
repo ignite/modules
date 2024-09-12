@@ -14,6 +14,15 @@ import (
 	"github.com/ignite/modules/x/fundraising/types"
 )
 
+// GetBid returns Bid by auction ID and bid ID.
+func (k Keeper) GetBid(ctx context.Context, auctionID, bidID uint64) (types.Bid, error) {
+	b, err := k.Bid.Get(ctx, collections.Join(auctionID, bidID))
+	if sdkerrors.IsOf(err, collections.ErrNotFound) {
+		return types.Bid{}, types.ErrBidNotFound
+	}
+	return b, err
+}
+
 // GetNextBidIDWithUpdate increments bid id by one and set it.
 func (k Keeper) GetNextBidIDWithUpdate(ctx context.Context, auctionID uint64) (uint64, error) {
 	seq, err := k.BidSeq.Get(ctx, auctionID)

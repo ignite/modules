@@ -5,11 +5,21 @@ import (
 	"time"
 
 	"cosmossdk.io/collections"
+	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/ignite/modules/x/fundraising/types"
 )
+
+// GetVestingQueue returns VestingQueue by auction ID and release time.
+func (k Keeper) GetVestingQueue(ctx context.Context, auctionID uint64, releaseTime time.Time) (types.VestingQueue, error) {
+	v, err := k.VestingQueue.Get(ctx, collections.Join(auctionID, releaseTime))
+	if sdkerrors.IsOf(err, collections.ErrNotFound) {
+		return types.VestingQueue{}, types.ErrVestingQueueNotFound
+	}
+	return v, err
+}
 
 // VestingQueues returns all VestingQueue.
 func (k Keeper) VestingQueues(ctx context.Context) ([]types.VestingQueue, error) {
