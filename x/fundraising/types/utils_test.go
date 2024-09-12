@@ -125,30 +125,30 @@ func TestDeriveAddress(t *testing.T) {
 func TestSortByBidPrice(t *testing.T) {
 	sampleBids := []types.Bid{
 		{
-			AuctionId: 1,
+			AuctionID: 1,
 			Bidder:    sdk.AccAddress(crypto.AddressHash([]byte("Bidder1"))).String(),
-			Id:        1,
+			BidID:     1,
 			Price:     math.LegacyMustNewDecFromStr("0.10"),
 			Coin:      sdk.NewInt64Coin("denom1", 1),
 		},
 		{
-			AuctionId: 1,
+			AuctionID: 1,
 			Bidder:    sdk.AccAddress(crypto.AddressHash([]byte("Bidder2"))).String(),
-			Id:        2,
+			BidID:     2,
 			Price:     math.LegacyMustNewDecFromStr("1.10"),
 			Coin:      sdk.NewInt64Coin("denom1", 1),
 		},
 		{
-			AuctionId: 1,
+			AuctionID: 1,
 			Bidder:    sdk.AccAddress(crypto.AddressHash([]byte("Bidder3"))).String(),
-			Id:        3,
+			BidID:     3,
 			Price:     math.LegacyMustNewDecFromStr("0.35"),
 			Coin:      sdk.NewInt64Coin("denom1", 1),
 		},
 		{
-			AuctionId: 1,
+			AuctionID: 1,
 			Bidder:    sdk.AccAddress(crypto.AddressHash([]byte("Bidder4"))).String(),
-			Id:        4,
+			BidID:     4,
 			Price:     math.LegacyMustNewDecFromStr("0.77"),
 			Coin:      sdk.NewInt64Coin("denom1", 1),
 		},

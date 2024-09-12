@@ -23,7 +23,7 @@ func TestShouldRelease(t *testing.T) {
 		{
 			"the release time is already passed the current block time",
 			types.VestingQueue{
-				AuctionId:   1,
+				AuctionID:   1,
 				Auctioneer:  sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 				PayingCoin:  sdk.NewInt64Coin("denom1", 10000000),
 				ReleaseTime: types.MustParseRFC3339("2021-11-01T00:00:00Z"),
@@ -34,7 +34,7 @@ func TestShouldRelease(t *testing.T) {
 		{
 			"the release time is exactly the same time as the current block time",
 			types.VestingQueue{
-				AuctionId:   1,
+				AuctionID:   1,
 				Auctioneer:  sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 				PayingCoin:  sdk.NewInt64Coin("denom1", 10000000),
 				ReleaseTime: now,
@@ -45,7 +45,7 @@ func TestShouldRelease(t *testing.T) {
 		{
 			"the release time has not passed the current block time",
 			types.VestingQueue{
-				AuctionId:   1,
+				AuctionID:   1,
 				Auctioneer:  sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 				PayingCoin:  sdk.NewInt64Coin("denom1", 10000000),
 				ReleaseTime: types.MustParseRFC3339("2022-01-30T00:00:00Z"),

@@ -21,16 +21,16 @@ type MatchingInfo struct {
 	RefundMap          map[string]math.Int // the map that holds refund amount information for each bidder
 }
 
-func (k Keeper) GetLastMatchedBidsLen(ctx context.Context, auctionId uint64) (int64, error) {
-	matchedBidsLen, err := k.MatchedBidsLen.Get(ctx, auctionId)
+func (k Keeper) GetLastMatchedBidsLen(ctx context.Context, auctionID uint64) (int64, error) {
+	matchedBidsLen, err := k.MatchedBidsLen.Get(ctx, auctionID)
 	if errors.Is(err, collections.ErrNotFound) {
 		return 0, nil
 	}
 	return matchedBidsLen, err
 }
 
-func (k Keeper) SetMatchedBidsLen(ctx context.Context, auctionId uint64, matchedLen int64) error {
-	return k.MatchedBidsLen.Set(ctx, auctionId, matchedLen)
+func (k Keeper) SetMatchedBidsLen(ctx context.Context, auctionID uint64, matchedLen int64) error {
+	return k.MatchedBidsLen.Set(ctx, auctionID, matchedLen)
 }
 
 // CalculateFixedPriceAllocation loops through all bids for the auction and calculate matching information.
@@ -41,7 +41,7 @@ func (k Keeper) CalculateFixedPriceAllocation(ctx context.Context, auction types
 		AllocationMap:      map[string]math.Int{},
 	}
 
-	bids, err := k.GetBidsByAuctionId(ctx, auction.GetId())
+	bids, err := k.GetBidsByAuctionID(ctx, auction.GetId())
 	if err != nil {
 		return mInfo, err
 	}
@@ -71,7 +71,7 @@ func (k Keeper) CalculateBatchAllocation(ctx context.Context, auction types.Auct
 		RefundMap:          map[string]math.Int{},
 	}
 
-	bids, err := k.GetBidsByAuctionId(ctx, auction.GetId())
+	bids, err := k.GetBidsByAuctionID(ctx, auction.GetId())
 	if err != nil {
 		return mInfo, err
 	}
@@ -133,7 +133,7 @@ func (k Keeper) CalculateBatchAllocation(ctx context.Context, auction types.Auct
 
 	for _, bid := range matchRes.MatchedBids {
 		bid.SetMatched(true)
-		if err := k.Bid.Set(ctx, collections.Join(bid.AuctionId, bid.Id), bid); err != nil {
+		if err := k.Bid.Set(ctx, collections.Join(bid.AuctionID, bid.BidID), bid); err != nil {
 			return mInfo, err
 		}
 	}

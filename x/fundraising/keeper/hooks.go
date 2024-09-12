@@ -53,7 +53,7 @@ func (k Keeper) BeforeFixedPriceAuctionCreated(
 // AfterFixedPriceAuctionCreated - call hook if registered
 func (k Keeper) AfterFixedPriceAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	sellingCoin sdk.Coin,
@@ -65,7 +65,7 @@ func (k Keeper) AfterFixedPriceAuctionCreated(
 	if k.hooks != nil {
 		if err := k.hooks.AfterFixedPriceAuctionCreated(
 			ctx,
-			auctionId,
+			auctionID,
 			auctioneer,
 			startPrice,
 			sellingCoin,
@@ -117,7 +117,7 @@ func (k Keeper) BeforeBatchAuctionCreated(
 // AfterBatchAuctionCreated - call hook if registered
 func (k Keeper) AfterBatchAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	minBidPrice math.LegacyDec,
@@ -132,7 +132,7 @@ func (k Keeper) AfterBatchAuctionCreated(
 	if k.hooks != nil {
 		if err := k.hooks.AfterBatchAuctionCreated(
 			ctx,
-			auctionId,
+			auctionID,
 			auctioneer,
 			startPrice,
 			minBidPrice,
@@ -153,11 +153,11 @@ func (k Keeper) AfterBatchAuctionCreated(
 // BeforeAuctionCanceled - call hook if registered
 func (k Keeper) BeforeAuctionCanceled(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 ) error {
 	if k.hooks != nil {
-		if err := k.hooks.BeforeAuctionCanceled(ctx, auctionId, auctioneer); err != nil {
+		if err := k.hooks.BeforeAuctionCanceled(ctx, auctionID, auctioneer); err != nil {
 			return err
 		}
 	}
@@ -167,15 +167,15 @@ func (k Keeper) BeforeAuctionCanceled(
 // BeforeBidPlaced - call hook if registered
 func (k Keeper) BeforeBidPlaced(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType types.BidType,
 	price math.LegacyDec,
 	coin sdk.Coin,
 ) error {
 	if k.hooks != nil {
-		if err := k.hooks.BeforeBidPlaced(ctx, auctionId, bidId, bidder, bidType, price, coin); err != nil {
+		if err := k.hooks.BeforeBidPlaced(ctx, auctionID, bidID, bidder, bidType, price, coin); err != nil {
 			return err
 		}
 	}
@@ -185,15 +185,15 @@ func (k Keeper) BeforeBidPlaced(
 // BeforeBidModified - call hook if registered
 func (k Keeper) BeforeBidModified(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType types.BidType,
 	price math.LegacyDec,
 	coin sdk.Coin,
 ) error {
 	if k.hooks != nil {
-		if err := k.hooks.BeforeBidModified(ctx, auctionId, bidId, bidder, bidType, price, coin); err != nil {
+		if err := k.hooks.BeforeBidModified(ctx, auctionID, bidID, bidder, bidType, price, coin); err != nil {
 			return err
 		}
 	}
@@ -216,12 +216,12 @@ func (k Keeper) BeforeAllowedBiddersAdded(
 // BeforeAllowedBidderUpdated - call hook if registered
 func (k Keeper) BeforeAllowedBidderUpdated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	maxBidAmount math.Int,
 ) error {
 	if k.hooks != nil {
-		if err := k.hooks.BeforeAllowedBidderUpdated(ctx, auctionId, bidder, maxBidAmount); err != nil {
+		if err := k.hooks.BeforeAllowedBidderUpdated(ctx, auctionID, bidder, maxBidAmount); err != nil {
 			return err
 		}
 	}
@@ -231,12 +231,12 @@ func (k Keeper) BeforeAllowedBidderUpdated(
 // BeforeSellingCoinsAllocated - call hook if registered
 func (k Keeper) BeforeSellingCoinsAllocated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	allocationMap map[string]math.Int,
 	refundMap map[string]math.Int,
 ) error {
 	if k.hooks != nil {
-		if err := k.hooks.BeforeSellingCoinsAllocated(ctx, auctionId, allocationMap, refundMap); err != nil {
+		if err := k.hooks.BeforeSellingCoinsAllocated(ctx, auctionID, allocationMap, refundMap); err != nil {
 			return err
 		}
 	}

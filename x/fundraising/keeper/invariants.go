@@ -84,7 +84,7 @@ func PayingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 		for _, auction := range auctions {
 			totalBidCoin := sdk.NewCoin(auction.GetPayingCoinDenom(), math.ZeroInt())
 
-			bids, err := k.GetBidsByAuctionId(ctx, auction.GetId())
+			bids, err := k.GetBidsByAuctionID(ctx, auction.GetId())
 			if err != nil {
 				return "", false
 			}
@@ -127,7 +127,7 @@ func VestingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 		for _, auction := range auctions {
 			totalPayingCoin := sdk.NewCoin(auction.GetPayingCoinDenom(), math.ZeroInt())
 
-			vestingQueues, err := k.GetVestingQueuesByAuctionId(ctx, auction.GetId())
+			vestingQueues, err := k.GetVestingQueuesByAuctionID(ctx, auction.GetId())
 			if err != nil {
 				return "", false
 			}

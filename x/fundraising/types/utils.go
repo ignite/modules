@@ -39,7 +39,7 @@ func SortBids(bids []Bid) []Bid {
 		if bids[i].Price.GT(bids[j].Price) {
 			return true
 		}
-		return bids[i].Id < bids[j].Id
+		return bids[i].BidID < bids[j].BidID
 	})
 	return bids
 }

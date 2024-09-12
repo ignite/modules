@@ -17,7 +17,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	validAddr := sdk.AccAddress(crypto.AddressHash([]byte("validAddr")))
 	validAuction := types.NewFixedPriceAuction(
 		&types.BaseAuction{
-			Id:                    1,
+			AuctionID:             1,
 			Type:                  types.AuctionTypeFixedPrice,
 			Auctioneer:            validAddr.String(),
 			SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -44,21 +44,21 @@ func TestGenesisState_Validate(t *testing.T) {
 	)
 
 	validAllowedBidder := types.AllowedBidder{
-		AuctionId:    1,
+		AuctionID:    1,
 		Bidder:       validAddr.String(),
 		MaxBidAmount: math.NewInt(10_000_000),
 	}
 
 	validBid := types.Bid{
-		AuctionId: 1,
-		Id:        1,
+		AuctionID: 1,
+		BidID:     1,
 		Bidder:    validAddr.String(),
 		Price:     math.LegacyMustNewDecFromStr("0.5"),
 		Coin:      sdk.NewInt64Coin("denom2", 50_000_000),
 	}
 
 	validVestingQueue := types.VestingQueue{
-		AuctionId:   1,
+		AuctionID:   1,
 		Auctioneer:  validAddr.String(),
 		PayingCoin:  sdk.NewInt64Coin("denom2", 100_000_000),
 		ReleaseTime: types.MustParseRFC3339("2022-12-20T00:00:00Z"),
@@ -100,7 +100,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						Id:                    1,
+						AuctionID:             1,
 						Type:                  types.AuctionTypeNil,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -135,7 +135,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						Id:                    1,
+						AuctionID:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -170,7 +170,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						Id:                    1,
+						AuctionID:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -205,7 +205,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						Id:                    1,
+						AuctionID:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            "invalid",
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -240,8 +240,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionId: 1,
-						Id:        1,
+						AuctionID: 1,
+						BidID:     1,
 						Bidder:    "invalid",
 						Price:     math.LegacyMustNewDecFromStr("0.5"),
 						Coin:      sdk.NewInt64Coin("denom2", 50_000_000),
@@ -255,8 +255,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionId: 1,
-						Id:        1,
+						AuctionID: 1,
+						BidID:     1,
 						Bidder:    validAddr.String(),
 						Price:     math.LegacyMustNewDecFromStr("0.5"),
 						Coin:      sdk.NewInt64Coin("denom2", 0),
@@ -270,8 +270,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionId: 1,
-						Id:        1,
+						AuctionID: 1,
+						BidID:     1,
 						Bidder:    validAddr.String(),
 						Price:     math.LegacyMustNewDecFromStr("0"),
 						Coin:      sdk.NewInt64Coin("denom2", 100_000),
@@ -285,7 +285,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.AllowedBidderList = []types.AllowedBidder{
 					{
-						AuctionId:    1,
+						AuctionID:    1,
 						Bidder:       validAddr.String(),
 						MaxBidAmount: math.NewInt(0),
 					},
@@ -300,7 +300,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				genState.Params = params
 				genState.VestingQueueList = []types.VestingQueue{
 					{
-						AuctionId:   2,
+						AuctionID:   2,
 						Auctioneer:  "",
 						PayingCoin:  sdk.NewInt64Coin("denom2", 100_000_000),
 						ReleaseTime: types.MustParseRFC3339("2022-12-20T00:00:00Z"),

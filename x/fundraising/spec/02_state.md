@@ -103,7 +103,7 @@ type VestingSchedule struct {
 
 // VestingQueue defines the vesting queue.
 type VestingQueue struct {
-	AuctionId       uint64    // id of the auction
+	AuctionID       uint64    // id of the auction
 	Auctioneer      string    // the owner of the auction
 	PayingCoin      sdk.Coin  // the paying amount of coin for the vesting
 	ReleaseTime     time.Time // the release time of the vesting 
@@ -169,7 +169,7 @@ const (
 ```go
 // Bid defines a standard bid for an auction.
 type Bid struct {
-	AuctionId 	uint64   // id of the auction
+	AuctionID 	uint64   // id of the auction
 	Bidder    	string   // the account that bids for the auction
 	Id        	uint64   // id of the bid of the bidder
 	Type      	BidType  // the bid type; currently Fixed-Price, How-Much-Worth-To-Buy and How-Many-Coins-To-Buy are supported.
@@ -221,32 +221,32 @@ Stores are KVStores in the multi-store. The key to find the store is the first p
 
 ### The key for the latest auction id
 
-- `LastAuctionIdKey: 0x11 -> Uint64Value(lastAuctionId)`
+- `LastAuctionIDKey: 0x11 -> Uint64Value(lastAuctionID)`
 
 ### The key for the latest bid id
 
-- `LastBidIdKey: 0x12 | AuctionId -> Uint64Value(lastBidId)`
+- `LastBidIDKey: 0x12 | AuctionID -> Uint64Value(lastBidID)`
 
 ### The key to retrieve the auction object from the auction id
 
-- `AuctionKey: 0x21 | AuctionId -> ProtocolBuffer(Auction)`
+- `AuctionKey: 0x21 | AuctionID -> ProtocolBuffer(Auction)`
 
 ### The key to retrieve the allowed bidder object for the auction
 
-- `AllowedBidderKey: 0x22 | AuctionId | BidderAddrLen (1 byte) | BidderAddr -> ProtocolBuffer(AllowedBidder)`
+- `AllowedBidderKey: 0x22 | AuctionID | BidderAddrLen (1 byte) | BidderAddr -> ProtocolBuffer(AllowedBidder)`
 
 ### The key to retrieve the bid object from the auction id and bid id
 
-- `BidKey: 0x31 | AuctionId | BidId -> ProtocolBuffer(Bid)`
+- `BidKey: 0x31 | AuctionID | BidID -> ProtocolBuffer(Bid)`
 
 ### The index key to retrieve the bid object from the bidder address
 
-- `BidIndexKey: 0x32 | BidderAddrLen (1 byte) | BidderAddr | AuctionId | BidId -> nil`
+- `BidIndexKey: 0x32 | BidderAddrLen (1 byte) | BidderAddr | AuctionID | BidID -> nil`
 
 ### The key to retrieve the last matched bids length 
 
-- `LastMatchedBidsLenKey: 0x33 | AuctionId -> Uint64Value(lastMatchedBidsLen)`
+- `LastMatchedBidsLenKey: 0x33 | AuctionID -> Uint64Value(lastMatchedBidsLen)`
 
 ### The key to retrieve the vesting queue object from the  auction id and 
 
-- `VestingQueueKey: 0x41 | AuctionId | sdk.FormatTimeBytes(releaseTime) -> ProtocolBuffer(VestingQueue)`
+- `VestingQueueKey: 0x41 | AuctionID | sdk.FormatTimeBytes(releaseTime) -> ProtocolBuffer(VestingQueue)`

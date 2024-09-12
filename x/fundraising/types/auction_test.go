@@ -53,7 +53,7 @@ func TestUnpackAuction(t *testing.T) {
 	auction2, err := types.UnpackAuction(&any2)
 	require.NoError(t, err)
 
-	require.Equal(t, auction.Id, auction2.GetId())
+	require.Equal(t, auction.AuctionID, auction2.GetId())
 	require.Equal(t, auction.Type, auction2.GetType())
 	require.Equal(t, auction.Auctioneer, auction2.GetAuctioneer().String())
 	require.Equal(t, auction.SellingCoin, auction2.GetSellingCoin())
@@ -200,7 +200,7 @@ func TestUnpackAuctions(t *testing.T) {
 
 func TestShouldAuctionStarted(t *testing.T) {
 	auction := types.BaseAuction{
-		Id:                    1,
+		AuctionID:             1,
 		Type:                  types.AuctionTypeFixedPrice,
 		Auctioneer:            sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 		SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -233,7 +233,7 @@ func TestShouldAuctionStarted(t *testing.T) {
 
 func TestShouldAuctionClosed(t *testing.T) {
 	auction := types.BaseAuction{
-		Id:                    1,
+		AuctionID:             1,
 		Type:                  types.AuctionTypeFixedPrice,
 		Auctioneer:            sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 		SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -266,42 +266,42 @@ func TestShouldAuctionClosed(t *testing.T) {
 
 func TestSellingReserveAddress(t *testing.T) {
 	for _, tc := range []struct {
-		auctionId uint64
+		auctionID uint64
 		expected  string
 	}{
 		{1, "cosmos1wl90665mfk3pgg095qhmlgha934exjvv437acgq42zw0sg94flestth4zu"},
 		{2, "cosmos197ewwasd96k2fh3nx5m76zvqxpzjcxuyq65rwgw0aa2edmwafgfqfa5qqz"},
 	} {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, tc.expected, types.SellingReserveAddress(tc.auctionId).String())
+			require.Equal(t, tc.expected, types.SellingReserveAddress(tc.auctionID).String())
 		})
 	}
 }
 
 func TestPayingReserveAddress(t *testing.T) {
 	for _, tc := range []struct {
-		auctionId uint64
+		auctionID uint64
 		expected  string
 	}{
 		{1, "cosmos17gk7a5ys8pxuexl7tvyk3pc9tdmqjjek03zjemez4eqvqdxlu92qdhphm2"},
 		{2, "cosmos1s3cspws3lsqfvtjcz9jvpx7kjm93npmwjq8p4xfu3fcjj5jz9pks20uja6"},
 	} {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, tc.expected, types.PayingReserveAddress(tc.auctionId).String())
+			require.Equal(t, tc.expected, types.PayingReserveAddress(tc.auctionID).String())
 		})
 	}
 }
 
 func TestVestingReserveAddress(t *testing.T) {
 	for _, tc := range []struct {
-		auctionId uint64
+		auctionID uint64
 		expected  string
 	}{
 		{1, "cosmos1q4x4k4qsr4jwrrugnplhlj52mfd9f8jn5ck7r4ykdpv9wczvz4dqe8vrvt"},
 		{2, "cosmos1pye9kv5f8s9n8uxnr0uznsn3klq57vqz8h2ya6u0v4w5666lqdfqjrw0qu"},
 	} {
 		t.Run("", func(t *testing.T) {
-			require.Equal(t, tc.expected, types.VestingReserveAddress(tc.auctionId).String())
+			require.Equal(t, tc.expected, types.VestingReserveAddress(tc.auctionID).String())
 		})
 	}
 }

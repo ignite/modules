@@ -47,7 +47,7 @@ func (h MultiFundraisingHooks) BeforeFixedPriceAuctionCreated(
 
 func (h MultiFundraisingHooks) AfterFixedPriceAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	sellingCoin sdk.Coin,
@@ -59,7 +59,7 @@ func (h MultiFundraisingHooks) AfterFixedPriceAuctionCreated(
 	for i := range h {
 		if err := h[i].AfterFixedPriceAuctionCreated(
 			ctx,
-			auctionId,
+			auctionID,
 			auctioneer,
 			startPrice,
 			sellingCoin,
@@ -109,7 +109,7 @@ func (h MultiFundraisingHooks) BeforeBatchAuctionCreated(
 
 func (h MultiFundraisingHooks) AfterBatchAuctionCreated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	startPrice math.LegacyDec,
 	minBidPrice math.LegacyDec,
@@ -124,7 +124,7 @@ func (h MultiFundraisingHooks) AfterBatchAuctionCreated(
 	for i := range h {
 		if err := h[i].AfterBatchAuctionCreated(
 			ctx,
-			auctionId,
+			auctionID,
 			auctioneer,
 			startPrice,
 			minBidPrice,
@@ -144,11 +144,11 @@ func (h MultiFundraisingHooks) AfterBatchAuctionCreated(
 
 func (h MultiFundraisingHooks) BeforeAuctionCanceled(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 ) error {
 	for i := range h {
-		if err := h[i].BeforeAuctionCanceled(ctx, auctionId, auctioneer); err != nil {
+		if err := h[i].BeforeAuctionCanceled(ctx, auctionID, auctioneer); err != nil {
 			return err
 		}
 	}
@@ -157,15 +157,15 @@ func (h MultiFundraisingHooks) BeforeAuctionCanceled(
 
 func (h MultiFundraisingHooks) BeforeBidPlaced(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType BidType,
 	price math.LegacyDec,
 	coin sdk.Coin,
 ) error {
 	for i := range h {
-		if err := h[i].BeforeBidPlaced(ctx, auctionId, bidId, bidder, bidType, price, coin); err != nil {
+		if err := h[i].BeforeBidPlaced(ctx, auctionID, bidID, bidder, bidType, price, coin); err != nil {
 			return err
 		}
 	}
@@ -174,15 +174,15 @@ func (h MultiFundraisingHooks) BeforeBidPlaced(
 
 func (h MultiFundraisingHooks) BeforeBidModified(
 	ctx context.Context,
-	auctionId uint64,
-	bidId uint64,
+	auctionID uint64,
+	bidID uint64,
 	bidder string,
 	bidType BidType,
 	price math.LegacyDec,
 	coin sdk.Coin,
 ) error {
 	for i := range h {
-		if err := h[i].BeforeBidModified(ctx, auctionId, bidId, bidder, bidType, price, coin); err != nil {
+		if err := h[i].BeforeBidModified(ctx, auctionID, bidID, bidder, bidType, price, coin); err != nil {
 			return err
 		}
 	}
@@ -203,12 +203,12 @@ func (h MultiFundraisingHooks) BeforeAllowedBiddersAdded(
 
 func (h MultiFundraisingHooks) BeforeAllowedBidderUpdated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	bidder sdk.AccAddress,
 	maxBidAmount math.Int,
 ) error {
 	for i := range h {
-		if err := h[i].BeforeAllowedBidderUpdated(ctx, auctionId, bidder, maxBidAmount); err != nil {
+		if err := h[i].BeforeAllowedBidderUpdated(ctx, auctionID, bidder, maxBidAmount); err != nil {
 			return err
 		}
 	}
@@ -217,12 +217,12 @@ func (h MultiFundraisingHooks) BeforeAllowedBidderUpdated(
 
 func (h MultiFundraisingHooks) BeforeSellingCoinsAllocated(
 	ctx context.Context,
-	auctionId uint64,
+	auctionID uint64,
 	allocationMap map[string]math.Int,
 	refundMap map[string]math.Int,
 ) error {
 	for i := range h {
-		if err := h[i].BeforeSellingCoinsAllocated(ctx, auctionId, allocationMap, refundMap); err != nil {
+		if err := h[i].BeforeSellingCoinsAllocated(ctx, auctionID, allocationMap, refundMap); err != nil {
 			return err
 		}
 	}

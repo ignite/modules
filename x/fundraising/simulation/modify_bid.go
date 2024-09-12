@@ -38,7 +38,7 @@ func SimulateMsgModifyBid(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), fmt.Sprintf("incorrect auction type or status %v", auction)), nil, nil
 		}
 
-		bids, err := k.GetBidsByAuctionId(ctx, auction.GetId())
+		bids, err := k.GetBidsByAuctionID(ctx, auction.GetId())
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "failed to get bids"), nil, nil
 		}
@@ -54,9 +54,9 @@ func SimulateMsgModifyBid(
 		spendable := bk.SpendableCoins(ctx, account.GetAddress())
 
 		msg = types.NewMsgModifyBid(
-			bid.AuctionId,
+			bid.AuctionID,
 			account.GetAddress().String(),
-			bid.Id,
+			bid.BidID,
 			bid.Price,
 			bid.Coin.AddAmount(math.OneInt()),
 		)

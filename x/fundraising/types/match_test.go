@@ -41,7 +41,7 @@ func TestMatch(t *testing.T) {
 		}
 		return types.Bid{
 			// Omitted fields are not important when testing types.Match
-			Id:        id,
+			BidID:     id,
 			Bidder:    bidder,
 			Type:      typ,
 			Price:     price,
@@ -63,7 +63,7 @@ func TestMatch(t *testing.T) {
 		matchPrice          math.LegacyDec
 		matched             bool
 		matchedAmt          math.Int
-		matchedBidIds       []uint64 // should be sorted
+		matchedBidIDs       []uint64 // should be sorted
 		matchResultByBidder map[string]*types.BidderMatchResult
 	}{
 		{
@@ -134,11 +134,11 @@ func TestMatch(t *testing.T) {
 			require.Equal(t, tc.matched, matched)
 			if matched {
 				require.True(math.IntEq(t, tc.matchedAmt, matchRes.MatchedAmount))
-				var matchedBidIds []uint64
+				var matchedBidIDs []uint64
 				for _, bid := range matchRes.MatchedBids {
-					matchedBidIds = append(matchedBidIds, bid.Id)
+					matchedBidIDs = append(matchedBidIDs, bid.BidID)
 				}
-				require.Equal(t, tc.matchedBidIds, matchedBidIds)
+				require.Equal(t, tc.matchedBidIDs, matchedBidIDs)
 				require.Equal(t, tc.matchResultByBidder, matchRes.MatchResultByBidder)
 			}
 		})

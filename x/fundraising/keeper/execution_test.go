@@ -118,7 +118,7 @@ func (s *KeeperTestSuite) TestEndBlockerVestingStatus() {
 	s.ctx = s.ctx.WithBlockTime(auction.VestingSchedules[len(auction.VestingSchedules)-1].ReleaseTime.AddDate(0, 0, 1))
 	s.Require().NoError(s.keeper.BeginBlocker(s.ctx))
 
-	queues, err := s.keeper.GetVestingQueuesByAuctionId(s.ctx, auction.GetId())
+	queues, err := s.keeper.GetVestingQueuesByAuctionID(s.ctx, auction.GetId())
 	s.Require().NoError(err)
 	s.Require().Len(queues, 2)
 	s.Require().True(queues[0].Released)
@@ -145,14 +145,14 @@ func (s *KeeperTestSuite) TestExecuteStartedAuction_BatchAuction() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, ba.GetStatus())
 
-	s.placeBidBatchWorth(ba.Id, s.addr(1), parseDec("10"), parseCoin("100000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchWorth(ba.Id, s.addr(2), parseDec("9"), parseCoin("150000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchWorth(ba.Id, s.addr(3), parseDec("5.5"), parseCoin("250000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.Id, s.addr(4), parseDec("6"), parseCoin("400000000denom1"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.Id, s.addr(6), parseDec("4.5"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.Id, s.addr(7), parseDec("3.8"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionID, s.addr(1), parseDec("10"), parseCoin("100000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionID, s.addr(2), parseDec("9"), parseCoin("150000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionID, s.addr(3), parseDec("5.5"), parseCoin("250000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionID, s.addr(4), parseDec("6"), parseCoin("400000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionID, s.addr(6), parseDec("4.5"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionID, s.addr(7), parseDec("3.8"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
 
-	auction, err := s.keeper.Auction.Get(s.ctx, ba.Id)
+	auction, err := s.keeper.Auction.Get(s.ctx, ba.AuctionID)
 	s.Require().NoError(err)
 
 	err = s.keeper.ExecuteStartedStatus(s.ctx, auction)

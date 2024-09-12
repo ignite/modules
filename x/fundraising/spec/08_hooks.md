@@ -20,7 +20,7 @@ BeforeFixedPriceAuctionCreated(
 
 AfterFixedPriceAuctionCreated(
     ctx sdk.Context,
-    auctionId uint64,
+    auctionID uint64,
     auctioneer string,
     startPrice sdk.Dec,
     sellingCoin sdk.Coin,
@@ -46,7 +46,7 @@ BeforeBatchAuctionCreated(
 
 AfterBatchAuctionCreated(
     ctx sdk.Context,
-    auctionId uint64,
+    auctionID uint64,
     auctioneer string,
     startPrice sdk.Dec,
     minBidPrice sdk.Dec,
@@ -61,14 +61,14 @@ AfterBatchAuctionCreated(
 
 BeforeAuctionCanceled(
     ctx sdk.Context,
-    auctionId uint64,
+    auctionID uint64,
     auctioneer string,
 )
 
 BeforeBidPlaced(
     ctx sdk.Context,
-    auctionId uint64,
-    bidId uint64,
+    auctionID uint64,
+    bidID uint64,
     bidder string,
     bidType BidType,
     price sdk.Dec,
@@ -77,8 +77,8 @@ BeforeBidPlaced(
 
 BeforeBidModified(
     ctx sdk.Context,
-    auctionId uint64,
-    bidId uint64,
+    auctionID uint64,
+    bidID uint64,
     bidder string,
     bidType BidType,
     price sdk.Dec,
@@ -92,7 +92,7 @@ BeforeAllowedBiddersAdded(
 
 BeforeAllowedBidderUpdated(
     ctx sdk.Context,
-    auctionId uint64,
+    auctionID uint64,
     bidder sdk.AccAddress,
     maxBidAmount math.Int,
 )

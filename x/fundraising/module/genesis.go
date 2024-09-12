@@ -48,39 +48,39 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 		if err != nil {
 			return err
 		}
-		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionId, bidder), elem); err != nil {
+		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionID, bidder), elem); err != nil {
 			return err
 		}
 	}
 
 	// Set all the bid
 	for _, elem := range genState.BidList {
-		_, err := k.Auction.Get(ctx, elem.AuctionId)
+		_, err := k.Auction.Get(ctx, elem.AuctionID)
 		if errors.Is(err, collections.ErrNotFound) {
-			return fmt.Errorf("bid auction %d is not found", elem.AuctionId)
+			return fmt.Errorf("bid auction %d is not found", elem.AuctionID)
 		}
 
-		bidID, err := k.GetNextBidIdWithUpdate(ctx, elem.AuctionId)
+		elem.BidID, err = k.GetNextBidIDWithUpdate(ctx, elem.AuctionID)
 		if err != nil {
 			return err
 		}
-		elem.Id = bidID
-		if err := k.Bid.Set(ctx, collections.Join(elem.AuctionId, elem.Id), elem); err != nil {
+
+		if err := k.Bid.Set(ctx, collections.Join(elem.AuctionID, elem.BidID), elem); err != nil {
 			return err
 		}
 	}
 
 	// Set all the vestingQueue
 	for _, elem := range genState.VestingQueueList {
-		_, err := k.Auction.Get(ctx, elem.AuctionId)
+		_, err := k.Auction.Get(ctx, elem.AuctionID)
 		if errors.Is(err, collections.ErrNotFound) {
-			return fmt.Errorf("vesting queue auction %d is not found", elem.AuctionId)
+			return fmt.Errorf("vesting queue auction %d is not found", elem.AuctionID)
 		}
 
 		if err := k.VestingQueue.Set(
 			ctx,
 			collections.Join(
-				elem.AuctionId,
+				elem.AuctionID,
 				elem.ReleaseTime,
 			),
 			elem); err != nil {
@@ -135,7 +135,7 @@ func ExportGenesis(ctx context.Context, k keeper.Keeper) (*types.GenesisState, e
 	err = k.Auction.Walk(ctx, nil, func(key uint64, elem types.AuctionI) (bool, error) {
 		auctionAny, err := types.PackAuction(elem)
 		if err != nil {
-			panic(err)
+			return false, err
 		}
 		genesis.AuctionList = append(genesis.AuctionList, auctionAny)
 		return false, nil

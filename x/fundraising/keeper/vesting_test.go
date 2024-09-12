@@ -87,7 +87,7 @@ func (s *KeeperTestSuite) TestApplyVestingSchedules_RemainingCoin() {
 	vestingReserveAddr := auction.GetVestingReserveAddress()
 	vestingReserveCoin := s.getBalance(vestingReserveAddr, auction.PayingCoinDenom)
 
-	vqs, err := s.keeper.GetVestingQueuesByAuctionId(s.ctx, auction.GetId())
+	vqs, err := s.keeper.GetVestingQueuesByAuctionID(s.ctx, auction.GetId())
 	s.Require().NoError(err)
 
 	for _, vq := range vqs {
