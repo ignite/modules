@@ -24,5 +24,5 @@ var (
 	ErrAuctionNotFound             = sdkerrors.Register(ModuleName, 1114, "auction not found")
 	ErrBidNotFound                 = sdkerrors.Register(ModuleName, 1115, "bid not found")
 	ErrAllowedBidderNotFound       = sdkerrors.Register(ModuleName, 1116, "allowed bidder not found")
-	ErrVestingQueueNotFound        = sdkerrors.Register(ModuleName, 1116, "vesting queue not found")
+	ErrVestingQueueNotFound        = sdkerrors.Register(ModuleName, 1117, "vesting queue not found")
 )
