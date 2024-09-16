@@ -16,10 +16,6 @@ const (
 	MemStoreKey = "mem_claim"
 )
 
-func KeyPrefix(p string) []byte {
-	return []byte(p)
-}
-
 var (
 	// ParamsKey is the prefix to retrieve all Params
 	ParamsKey = collections.NewPrefix("p_claim")
