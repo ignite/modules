@@ -2,20 +2,18 @@
 package fundraisingv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
 	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var _ protoreflect.List = (*_Params_1_list)(nil)
@@ -155,21 +153,17 @@ func (x *Params) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_Params_messageType fastReflection_Params_messageType
-	_                                  protoreflect.MessageType = fastReflection_Params_messageType{}
-)
+var _fastReflection_Params_messageType fastReflection_Params_messageType
+var _ protoreflect.MessageType = fastReflection_Params_messageType{}
 
 type fastReflection_Params_messageType struct{}
 
 func (x fastReflection_Params_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_Params)(nil)
 }
-
 func (x fastReflection_Params_messageType) New() protoreflect.Message {
 	return new(fastReflection_Params)
 }
-
 func (x fastReflection_Params_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_Params
 }
@@ -840,14 +834,11 @@ func file_modules_fundraising_v1_params_proto_rawDescGZIP() []byte {
 	return file_modules_fundraising_v1_params_proto_rawDescData
 }
 
-var (
-	file_modules_fundraising_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_modules_fundraising_v1_params_proto_goTypes  = []interface{}{
-		(*Params)(nil),       // 0: modules.fundraising.v1.Params
-		(*v1beta1.Coin)(nil), // 1: cosmos.base.v1beta1.Coin
-	}
-)
-
+var file_modules_fundraising_v1_params_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_modules_fundraising_v1_params_proto_goTypes = []interface{}{
+	(*Params)(nil),       // 0: modules.fundraising.v1.Params
+	(*v1beta1.Coin)(nil), // 1: cosmos.base.v1beta1.Coin
+}
 var file_modules_fundraising_v1_params_proto_depIdxs = []int32{
 	1, // 0: modules.fundraising.v1.Params.auctionCreationFee:type_name -> cosmos.base.v1beta1.Coin
 	1, // 1: modules.fundraising.v1.Params.placeBidFee:type_name -> cosmos.base.v1beta1.Coin

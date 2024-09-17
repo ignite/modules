@@ -2,13 +2,8 @@
 package fundraisingv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
@@ -16,6 +11,9 @@ import (
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var _ protoreflect.List = (*_GenesisState_2_list)(nil)
@@ -261,21 +259,17 @@ func (x *GenesisState) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_GenesisState_messageType fastReflection_GenesisState_messageType
-	_                                        protoreflect.MessageType = fastReflection_GenesisState_messageType{}
-)
+var _fastReflection_GenesisState_messageType fastReflection_GenesisState_messageType
+var _ protoreflect.MessageType = fastReflection_GenesisState_messageType{}
 
 type fastReflection_GenesisState_messageType struct{}
 
 func (x fastReflection_GenesisState_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_GenesisState)(nil)
 }
-
 func (x fastReflection_GenesisState_messageType) New() protoreflect.Message {
 	return new(fastReflection_GenesisState)
 }
-
 func (x fastReflection_GenesisState_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_GenesisState
 }
@@ -1175,18 +1169,15 @@ func file_modules_fundraising_v1_genesis_proto_rawDescGZIP() []byte {
 	return file_modules_fundraising_v1_genesis_proto_rawDescData
 }
 
-var (
-	file_modules_fundraising_v1_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_modules_fundraising_v1_genesis_proto_goTypes  = []interface{}{
-		(*GenesisState)(nil),  // 0: modules.fundraising.v1.GenesisState
-		(*Params)(nil),        // 1: modules.fundraising.v1.Params
-		(*anypb.Any)(nil),     // 2: google.protobuf.Any
-		(*AllowedBidder)(nil), // 3: modules.fundraising.v1.AllowedBidder
-		(*Bid)(nil),           // 4: modules.fundraising.v1.Bid
-		(*VestingQueue)(nil),  // 5: modules.fundraising.v1.VestingQueue
-	}
-)
-
+var file_modules_fundraising_v1_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_modules_fundraising_v1_genesis_proto_goTypes = []interface{}{
+	(*GenesisState)(nil),  // 0: modules.fundraising.v1.GenesisState
+	(*Params)(nil),        // 1: modules.fundraising.v1.Params
+	(*anypb.Any)(nil),     // 2: google.protobuf.Any
+	(*AllowedBidder)(nil), // 3: modules.fundraising.v1.AllowedBidder
+	(*Bid)(nil),           // 4: modules.fundraising.v1.Bid
+	(*VestingQueue)(nil),  // 5: modules.fundraising.v1.VestingQueue
+}
 var file_modules_fundraising_v1_genesis_proto_depIdxs = []int32{
 	1, // 0: modules.fundraising.v1.GenesisState.params:type_name -> modules.fundraising.v1.Params
 	2, // 1: modules.fundraising.v1.GenesisState.auctionList:type_name -> google.protobuf.Any

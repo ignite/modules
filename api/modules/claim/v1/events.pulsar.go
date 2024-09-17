@@ -3,14 +3,13 @@ package claimv1
 
 import (
 	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -46,21 +45,17 @@ func (x *EventMissionCompleted) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_EventMissionCompleted_messageType fastReflection_EventMissionCompleted_messageType
-	_                                                 protoreflect.MessageType = fastReflection_EventMissionCompleted_messageType{}
-)
+var _fastReflection_EventMissionCompleted_messageType fastReflection_EventMissionCompleted_messageType
+var _ protoreflect.MessageType = fastReflection_EventMissionCompleted_messageType{}
 
 type fastReflection_EventMissionCompleted_messageType struct{}
 
 func (x fastReflection_EventMissionCompleted_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_EventMissionCompleted)(nil)
 }
-
 func (x fastReflection_EventMissionCompleted_messageType) New() protoreflect.Message {
 	return new(fastReflection_EventMissionCompleted)
 }
-
 func (x fastReflection_EventMissionCompleted_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_EventMissionCompleted
 }
@@ -518,21 +513,17 @@ func (x *EventMissionClaimed) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_EventMissionClaimed_messageType fastReflection_EventMissionClaimed_messageType
-	_                                               protoreflect.MessageType = fastReflection_EventMissionClaimed_messageType{}
-)
+var _fastReflection_EventMissionClaimed_messageType fastReflection_EventMissionClaimed_messageType
+var _ protoreflect.MessageType = fastReflection_EventMissionClaimed_messageType{}
 
 type fastReflection_EventMissionClaimed_messageType struct{}
 
 func (x fastReflection_EventMissionClaimed_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_EventMissionClaimed)(nil)
 }
-
 func (x fastReflection_EventMissionClaimed_messageType) New() protoreflect.Message {
 	return new(fastReflection_EventMissionClaimed)
 }
-
 func (x fastReflection_EventMissionClaimed_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_EventMissionClaimed
 }
@@ -1098,14 +1089,11 @@ func file_modules_claim_v1_events_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_events_proto_rawDescData
 }
 
-var (
-	file_modules_claim_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-	file_modules_claim_v1_events_proto_goTypes  = []interface{}{
-		(*EventMissionCompleted)(nil), // 0: modules.claim.v1.EventMissionCompleted
-		(*EventMissionClaimed)(nil),   // 1: modules.claim.v1.EventMissionClaimed
-	}
-)
-
+var file_modules_claim_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_modules_claim_v1_events_proto_goTypes = []interface{}{
+	(*EventMissionCompleted)(nil), // 0: modules.claim.v1.EventMissionCompleted
+	(*EventMissionClaimed)(nil),   // 1: modules.claim.v1.EventMissionClaimed
+}
 var file_modules_claim_v1_events_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

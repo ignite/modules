@@ -3,16 +3,15 @@ package mintv1
 
 import (
 	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -48,21 +47,17 @@ func (x *Minter) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_Minter_messageType fastReflection_Minter_messageType
-	_                                  protoreflect.MessageType = fastReflection_Minter_messageType{}
-)
+var _fastReflection_Minter_messageType fastReflection_Minter_messageType
+var _ protoreflect.MessageType = fastReflection_Minter_messageType{}
 
 type fastReflection_Minter_messageType struct{}
 
 func (x fastReflection_Minter_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_Minter)(nil)
 }
-
 func (x fastReflection_Minter_messageType) New() protoreflect.Message {
 	return new(fastReflection_Minter)
 }
-
 func (x fastReflection_Minter_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_Minter
 }
@@ -536,21 +531,17 @@ func (x *WeightedAddress) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_WeightedAddress_messageType fastReflection_WeightedAddress_messageType
-	_                                           protoreflect.MessageType = fastReflection_WeightedAddress_messageType{}
-)
+var _fastReflection_WeightedAddress_messageType fastReflection_WeightedAddress_messageType
+var _ protoreflect.MessageType = fastReflection_WeightedAddress_messageType{}
 
 type fastReflection_WeightedAddress_messageType struct{}
 
 func (x fastReflection_WeightedAddress_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_WeightedAddress)(nil)
 }
-
 func (x fastReflection_WeightedAddress_messageType) New() protoreflect.Message {
 	return new(fastReflection_WeightedAddress)
 }
-
 func (x fastReflection_WeightedAddress_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_WeightedAddress
 }
@@ -1026,21 +1017,17 @@ func (x *DistributionProportions) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_DistributionProportions_messageType fastReflection_DistributionProportions_messageType
-	_                                                   protoreflect.MessageType = fastReflection_DistributionProportions_messageType{}
-)
+var _fastReflection_DistributionProportions_messageType fastReflection_DistributionProportions_messageType
+var _ protoreflect.MessageType = fastReflection_DistributionProportions_messageType{}
 
 type fastReflection_DistributionProportions_messageType struct{}
 
 func (x fastReflection_DistributionProportions_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_DistributionProportions)(nil)
 }
-
 func (x fastReflection_DistributionProportions_messageType) New() protoreflect.Message {
 	return new(fastReflection_DistributionProportions)
 }
-
 func (x fastReflection_DistributionProportions_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_DistributionProportions
 }
@@ -1776,15 +1763,12 @@ func file_modules_mint_v1_minter_proto_rawDescGZIP() []byte {
 	return file_modules_mint_v1_minter_proto_rawDescData
 }
 
-var (
-	file_modules_mint_v1_minter_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-	file_modules_mint_v1_minter_proto_goTypes  = []interface{}{
-		(*Minter)(nil),                  // 0: modules.mint.v1.Minter
-		(*WeightedAddress)(nil),         // 1: modules.mint.v1.WeightedAddress
-		(*DistributionProportions)(nil), // 2: modules.mint.v1.DistributionProportions
-	}
-)
-
+var file_modules_mint_v1_minter_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_modules_mint_v1_minter_proto_goTypes = []interface{}{
+	(*Minter)(nil),                  // 0: modules.mint.v1.Minter
+	(*WeightedAddress)(nil),         // 1: modules.mint.v1.WeightedAddress
+	(*DistributionProportions)(nil), // 2: modules.mint.v1.DistributionProportions
+}
 var file_modules_mint_v1_minter_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

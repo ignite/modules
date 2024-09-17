@@ -24,20 +24,11 @@ func (k Keeper) GetVestingQueue(ctx context.Context, auctionID uint64, releaseTi
 // VestingQueues returns all VestingQueue.
 func (k Keeper) VestingQueues(ctx context.Context) ([]types.VestingQueue, error) {
 	vestingQueues := make([]types.VestingQueue, 0)
-	err := k.IterateVestingQueues(ctx, func(_ collections.Pair[uint64, time.Time], bid types.VestingQueue) (bool, error) {
+	err := k.VestingQueue.Walk(ctx, nil, func(_ collections.Pair[uint64, time.Time], bid types.VestingQueue) (bool, error) {
 		vestingQueues = append(vestingQueues, bid)
 		return false, nil
 	})
 	return vestingQueues, err
-}
-
-// IterateVestingQueues iterates over all the VestingQueues and performs a callback function.
-func (k Keeper) IterateVestingQueues(ctx context.Context, cb func(collections.Pair[uint64, time.Time], types.VestingQueue) (bool, error)) error {
-	err := k.VestingQueue.Walk(ctx, nil, cb)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // GetVestingQueuesByAuctionID returns all vesting queues associated with the auction id that are registered in the store.

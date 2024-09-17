@@ -2,20 +2,18 @@
 package claimv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
 	_ "cosmossdk.io/api/cosmos/msg/v1"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -51,21 +49,17 @@ func (x *MsgUpdateParams) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgUpdateParams_messageType fastReflection_MsgUpdateParams_messageType
-	_                                           protoreflect.MessageType = fastReflection_MsgUpdateParams_messageType{}
-)
+var _fastReflection_MsgUpdateParams_messageType fastReflection_MsgUpdateParams_messageType
+var _ protoreflect.MessageType = fastReflection_MsgUpdateParams_messageType{}
 
 type fastReflection_MsgUpdateParams_messageType struct{}
 
 func (x fastReflection_MsgUpdateParams_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgUpdateParams)(nil)
 }
-
 func (x fastReflection_MsgUpdateParams_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgUpdateParams)
 }
-
 func (x fastReflection_MsgUpdateParams_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgUpdateParams
 }
@@ -521,7 +515,9 @@ func (x *fastReflection_MsgUpdateParams) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var md_MsgUpdateParamsResponse protoreflect.MessageDescriptor
+var (
+	md_MsgUpdateParamsResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_claim_v1_tx_proto_init()
@@ -548,21 +544,17 @@ func (x *MsgUpdateParamsResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgUpdateParamsResponse_messageType fastReflection_MsgUpdateParamsResponse_messageType
-	_                                                   protoreflect.MessageType = fastReflection_MsgUpdateParamsResponse_messageType{}
-)
+var _fastReflection_MsgUpdateParamsResponse_messageType fastReflection_MsgUpdateParamsResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgUpdateParamsResponse_messageType{}
 
 type fastReflection_MsgUpdateParamsResponse_messageType struct{}
 
 func (x fastReflection_MsgUpdateParamsResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgUpdateParamsResponse)(nil)
 }
-
 func (x fastReflection_MsgUpdateParamsResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgUpdateParamsResponse)
 }
-
 func (x fastReflection_MsgUpdateParamsResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgUpdateParamsResponse
 }
@@ -912,21 +904,17 @@ func (x *MsgClaim) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgClaim_messageType fastReflection_MsgClaim_messageType
-	_                                    protoreflect.MessageType = fastReflection_MsgClaim_messageType{}
-)
+var _fastReflection_MsgClaim_messageType fastReflection_MsgClaim_messageType
+var _ protoreflect.MessageType = fastReflection_MsgClaim_messageType{}
 
 type fastReflection_MsgClaim_messageType struct{}
 
 func (x fastReflection_MsgClaim_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgClaim)(nil)
 }
-
 func (x fastReflection_MsgClaim_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgClaim)
 }
-
 func (x fastReflection_MsgClaim_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgClaim
 }
@@ -1382,21 +1370,17 @@ func (x *MsgClaimResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgClaimResponse_messageType fastReflection_MsgClaimResponse_messageType
-	_                                            protoreflect.MessageType = fastReflection_MsgClaimResponse_messageType{}
-)
+var _fastReflection_MsgClaimResponse_messageType fastReflection_MsgClaimResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgClaimResponse_messageType{}
 
 type fastReflection_MsgClaimResponse_messageType struct{}
 
 func (x fastReflection_MsgClaimResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgClaimResponse)(nil)
 }
-
 func (x fastReflection_MsgClaimResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgClaimResponse)
 }
-
 func (x fastReflection_MsgClaimResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgClaimResponse
 }
@@ -2018,17 +2002,14 @@ func file_modules_claim_v1_tx_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_tx_proto_rawDescData
 }
 
-var (
-	file_modules_claim_v1_tx_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-	file_modules_claim_v1_tx_proto_goTypes  = []interface{}{
-		(*MsgUpdateParams)(nil),         // 0: modules.claim.v1.MsgUpdateParams
-		(*MsgUpdateParamsResponse)(nil), // 1: modules.claim.v1.MsgUpdateParamsResponse
-		(*MsgClaim)(nil),                // 2: modules.claim.v1.MsgClaim
-		(*MsgClaimResponse)(nil),        // 3: modules.claim.v1.MsgClaimResponse
-		(*Params)(nil),                  // 4: modules.claim.v1.Params
-	}
-)
-
+var file_modules_claim_v1_tx_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_modules_claim_v1_tx_proto_goTypes = []interface{}{
+	(*MsgUpdateParams)(nil),         // 0: modules.claim.v1.MsgUpdateParams
+	(*MsgUpdateParamsResponse)(nil), // 1: modules.claim.v1.MsgUpdateParamsResponse
+	(*MsgClaim)(nil),                // 2: modules.claim.v1.MsgClaim
+	(*MsgClaimResponse)(nil),        // 3: modules.claim.v1.MsgClaimResponse
+	(*Params)(nil),                  // 4: modules.claim.v1.Params
+}
 var file_modules_claim_v1_tx_proto_depIdxs = []int32{
 	4, // 0: modules.claim.v1.MsgUpdateParams.params:type_name -> modules.claim.v1.Params
 	0, // 1: modules.claim.v1.Msg.UpdateParams:input_type -> modules.claim.v1.MsgUpdateParams

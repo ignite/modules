@@ -63,20 +63,11 @@ func (k Keeper) GetBidsByBidder(ctx context.Context, bidderAddr sdk.AccAddress) 
 // Bids returns all Bid.
 func (k Keeper) Bids(ctx context.Context) ([]types.Bid, error) {
 	bids := make([]types.Bid, 0)
-	err := k.IterateBids(ctx, func(_ collections.Pair[uint64, uint64], bid types.Bid) (bool, error) {
+	err := k.Bid.Walk(ctx, nil, func(_ collections.Pair[uint64, uint64], bid types.Bid) (bool, error) {
 		bids = append(bids, bid)
 		return false, nil
 	})
 	return bids, err
-}
-
-// IterateBids iterates over all the Bids and performs a callback function.
-func (k Keeper) IterateBids(ctx context.Context, cb func(collections.Pair[uint64, uint64], types.Bid) (bool, error)) error {
-	err := k.Bid.Walk(ctx, nil, cb)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // PlaceBid places a bid for the selling coin of the auction.
