@@ -26,7 +26,7 @@ var (
 type Error = sdkerrors.Error
 
 // Codespace is the codespace for all errors defined in this package
-const Codespace = "ignite"
+const Codespace = "ignite-modules"
 
 var (
 	// ErrTxDecode is returned if we cannot parse a transaction
