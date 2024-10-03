@@ -2,15 +2,10 @@
 package fundraisingv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
 	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
 	_ "cosmossdk.io/api/cosmos/msg/v1"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
@@ -18,6 +13,9 @@ import (
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -53,21 +51,17 @@ func (x *MsgUpdateParams) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgUpdateParams_messageType fastReflection_MsgUpdateParams_messageType
-	_                                           protoreflect.MessageType = fastReflection_MsgUpdateParams_messageType{}
-)
+var _fastReflection_MsgUpdateParams_messageType fastReflection_MsgUpdateParams_messageType
+var _ protoreflect.MessageType = fastReflection_MsgUpdateParams_messageType{}
 
 type fastReflection_MsgUpdateParams_messageType struct{}
 
 func (x fastReflection_MsgUpdateParams_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgUpdateParams)(nil)
 }
-
 func (x fastReflection_MsgUpdateParams_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgUpdateParams)
 }
-
 func (x fastReflection_MsgUpdateParams_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgUpdateParams
 }
@@ -523,7 +517,9 @@ func (x *fastReflection_MsgUpdateParams) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var md_MsgUpdateParamsResponse protoreflect.MessageDescriptor
+var (
+	md_MsgUpdateParamsResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -550,21 +546,17 @@ func (x *MsgUpdateParamsResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgUpdateParamsResponse_messageType fastReflection_MsgUpdateParamsResponse_messageType
-	_                                                   protoreflect.MessageType = fastReflection_MsgUpdateParamsResponse_messageType{}
-)
+var _fastReflection_MsgUpdateParamsResponse_messageType fastReflection_MsgUpdateParamsResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgUpdateParamsResponse_messageType{}
 
 type fastReflection_MsgUpdateParamsResponse_messageType struct{}
 
 func (x fastReflection_MsgUpdateParamsResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgUpdateParamsResponse)(nil)
 }
-
 func (x fastReflection_MsgUpdateParamsResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgUpdateParamsResponse)
 }
-
 func (x fastReflection_MsgUpdateParamsResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgUpdateParamsResponse
 }
@@ -975,21 +967,17 @@ func (x *MsgCreateFixedPriceAuction) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCreateFixedPriceAuction_messageType fastReflection_MsgCreateFixedPriceAuction_messageType
-	_                                                      protoreflect.MessageType = fastReflection_MsgCreateFixedPriceAuction_messageType{}
-)
+var _fastReflection_MsgCreateFixedPriceAuction_messageType fastReflection_MsgCreateFixedPriceAuction_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCreateFixedPriceAuction_messageType{}
 
 type fastReflection_MsgCreateFixedPriceAuction_messageType struct{}
 
 func (x fastReflection_MsgCreateFixedPriceAuction_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCreateFixedPriceAuction)(nil)
 }
-
 func (x fastReflection_MsgCreateFixedPriceAuction_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCreateFixedPriceAuction)
 }
-
 func (x fastReflection_MsgCreateFixedPriceAuction_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCreateFixedPriceAuction
 }
@@ -1808,7 +1796,9 @@ func (x *fastReflection_MsgCreateFixedPriceAuction) ProtoMethods() *protoiface.M
 	}
 }
 
-var md_MsgCreateFixedPriceAuctionResponse protoreflect.MessageDescriptor
+var (
+	md_MsgCreateFixedPriceAuctionResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -1835,21 +1825,17 @@ func (x *MsgCreateFixedPriceAuctionResponse) slowProtoReflect() protoreflect.Mes
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCreateFixedPriceAuctionResponse_messageType fastReflection_MsgCreateFixedPriceAuctionResponse_messageType
-	_                                                              protoreflect.MessageType = fastReflection_MsgCreateFixedPriceAuctionResponse_messageType{}
-)
+var _fastReflection_MsgCreateFixedPriceAuctionResponse_messageType fastReflection_MsgCreateFixedPriceAuctionResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCreateFixedPriceAuctionResponse_messageType{}
 
 type fastReflection_MsgCreateFixedPriceAuctionResponse_messageType struct{}
 
 func (x fastReflection_MsgCreateFixedPriceAuctionResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCreateFixedPriceAuctionResponse)(nil)
 }
-
 func (x fastReflection_MsgCreateFixedPriceAuctionResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCreateFixedPriceAuctionResponse)
 }
-
 func (x fastReflection_MsgCreateFixedPriceAuctionResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCreateFixedPriceAuctionResponse
 }
@@ -2266,21 +2252,17 @@ func (x *MsgCreateBatchAuction) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCreateBatchAuction_messageType fastReflection_MsgCreateBatchAuction_messageType
-	_                                                 protoreflect.MessageType = fastReflection_MsgCreateBatchAuction_messageType{}
-)
+var _fastReflection_MsgCreateBatchAuction_messageType fastReflection_MsgCreateBatchAuction_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCreateBatchAuction_messageType{}
 
 type fastReflection_MsgCreateBatchAuction_messageType struct{}
 
 func (x fastReflection_MsgCreateBatchAuction_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCreateBatchAuction)(nil)
 }
-
 func (x fastReflection_MsgCreateBatchAuction_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCreateBatchAuction)
 }
-
 func (x fastReflection_MsgCreateBatchAuction_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCreateBatchAuction
 }
@@ -3269,7 +3251,9 @@ func (x *fastReflection_MsgCreateBatchAuction) ProtoMethods() *protoiface.Method
 	}
 }
 
-var md_MsgCreateBatchAuctionResponse protoreflect.MessageDescriptor
+var (
+	md_MsgCreateBatchAuctionResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -3296,21 +3280,17 @@ func (x *MsgCreateBatchAuctionResponse) slowProtoReflect() protoreflect.Message 
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCreateBatchAuctionResponse_messageType fastReflection_MsgCreateBatchAuctionResponse_messageType
-	_                                                         protoreflect.MessageType = fastReflection_MsgCreateBatchAuctionResponse_messageType{}
-)
+var _fastReflection_MsgCreateBatchAuctionResponse_messageType fastReflection_MsgCreateBatchAuctionResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCreateBatchAuctionResponse_messageType{}
 
 type fastReflection_MsgCreateBatchAuctionResponse_messageType struct{}
 
 func (x fastReflection_MsgCreateBatchAuctionResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCreateBatchAuctionResponse)(nil)
 }
-
 func (x fastReflection_MsgCreateBatchAuctionResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCreateBatchAuctionResponse)
 }
-
 func (x fastReflection_MsgCreateBatchAuctionResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCreateBatchAuctionResponse
 }
@@ -3660,21 +3640,17 @@ func (x *MsgCancelAuction) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCancelAuction_messageType fastReflection_MsgCancelAuction_messageType
-	_                                            protoreflect.MessageType = fastReflection_MsgCancelAuction_messageType{}
-)
+var _fastReflection_MsgCancelAuction_messageType fastReflection_MsgCancelAuction_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCancelAuction_messageType{}
 
 type fastReflection_MsgCancelAuction_messageType struct{}
 
 func (x fastReflection_MsgCancelAuction_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCancelAuction)(nil)
 }
-
 func (x fastReflection_MsgCancelAuction_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCancelAuction)
 }
-
 func (x fastReflection_MsgCancelAuction_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCancelAuction
 }
@@ -4099,7 +4075,9 @@ func (x *fastReflection_MsgCancelAuction) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var md_MsgCancelAuctionResponse protoreflect.MessageDescriptor
+var (
+	md_MsgCancelAuctionResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -4126,21 +4104,17 @@ func (x *MsgCancelAuctionResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgCancelAuctionResponse_messageType fastReflection_MsgCancelAuctionResponse_messageType
-	_                                                    protoreflect.MessageType = fastReflection_MsgCancelAuctionResponse_messageType{}
-)
+var _fastReflection_MsgCancelAuctionResponse_messageType fastReflection_MsgCancelAuctionResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgCancelAuctionResponse_messageType{}
 
 type fastReflection_MsgCancelAuctionResponse_messageType struct{}
 
 func (x fastReflection_MsgCancelAuctionResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgCancelAuctionResponse)(nil)
 }
-
 func (x fastReflection_MsgCancelAuctionResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgCancelAuctionResponse)
 }
-
 func (x fastReflection_MsgCancelAuctionResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgCancelAuctionResponse
 }
@@ -4496,21 +4470,17 @@ func (x *MsgPlaceBid) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgPlaceBid_messageType fastReflection_MsgPlaceBid_messageType
-	_                                       protoreflect.MessageType = fastReflection_MsgPlaceBid_messageType{}
-)
+var _fastReflection_MsgPlaceBid_messageType fastReflection_MsgPlaceBid_messageType
+var _ protoreflect.MessageType = fastReflection_MsgPlaceBid_messageType{}
 
 type fastReflection_MsgPlaceBid_messageType struct{}
 
 func (x fastReflection_MsgPlaceBid_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgPlaceBid)(nil)
 }
-
 func (x fastReflection_MsgPlaceBid_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgPlaceBid)
 }
-
 func (x fastReflection_MsgPlaceBid_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgPlaceBid
 }
@@ -5120,7 +5090,9 @@ func (x *fastReflection_MsgPlaceBid) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var md_MsgPlaceBidResponse protoreflect.MessageDescriptor
+var (
+	md_MsgPlaceBidResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -5147,21 +5119,17 @@ func (x *MsgPlaceBidResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgPlaceBidResponse_messageType fastReflection_MsgPlaceBidResponse_messageType
-	_                                               protoreflect.MessageType = fastReflection_MsgPlaceBidResponse_messageType{}
-)
+var _fastReflection_MsgPlaceBidResponse_messageType fastReflection_MsgPlaceBidResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgPlaceBidResponse_messageType{}
 
 type fastReflection_MsgPlaceBidResponse_messageType struct{}
 
 func (x fastReflection_MsgPlaceBidResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgPlaceBidResponse)(nil)
 }
-
 func (x fastReflection_MsgPlaceBidResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgPlaceBidResponse)
 }
-
 func (x fastReflection_MsgPlaceBidResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgPlaceBidResponse
 }
@@ -5517,21 +5485,17 @@ func (x *MsgModifyBid) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgModifyBid_messageType fastReflection_MsgModifyBid_messageType
-	_                                        protoreflect.MessageType = fastReflection_MsgModifyBid_messageType{}
-)
+var _fastReflection_MsgModifyBid_messageType fastReflection_MsgModifyBid_messageType
+var _ protoreflect.MessageType = fastReflection_MsgModifyBid_messageType{}
 
 type fastReflection_MsgModifyBid_messageType struct{}
 
 func (x fastReflection_MsgModifyBid_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgModifyBid)(nil)
 }
-
 func (x fastReflection_MsgModifyBid_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgModifyBid)
 }
-
 func (x fastReflection_MsgModifyBid_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgModifyBid
 }
@@ -6141,7 +6105,9 @@ func (x *fastReflection_MsgModifyBid) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var md_MsgModifyBidResponse protoreflect.MessageDescriptor
+var (
+	md_MsgModifyBidResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -6168,21 +6134,17 @@ func (x *MsgModifyBidResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgModifyBidResponse_messageType fastReflection_MsgModifyBidResponse_messageType
-	_                                                protoreflect.MessageType = fastReflection_MsgModifyBidResponse_messageType{}
-)
+var _fastReflection_MsgModifyBidResponse_messageType fastReflection_MsgModifyBidResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgModifyBidResponse_messageType{}
 
 type fastReflection_MsgModifyBidResponse_messageType struct{}
 
 func (x fastReflection_MsgModifyBidResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgModifyBidResponse)(nil)
 }
-
 func (x fastReflection_MsgModifyBidResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgModifyBidResponse)
 }
-
 func (x fastReflection_MsgModifyBidResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgModifyBidResponse
 }
@@ -6532,21 +6494,17 @@ func (x *MsgAddAllowedBidder) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgAddAllowedBidder_messageType fastReflection_MsgAddAllowedBidder_messageType
-	_                                               protoreflect.MessageType = fastReflection_MsgAddAllowedBidder_messageType{}
-)
+var _fastReflection_MsgAddAllowedBidder_messageType fastReflection_MsgAddAllowedBidder_messageType
+var _ protoreflect.MessageType = fastReflection_MsgAddAllowedBidder_messageType{}
 
 type fastReflection_MsgAddAllowedBidder_messageType struct{}
 
 func (x fastReflection_MsgAddAllowedBidder_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgAddAllowedBidder)(nil)
 }
-
 func (x fastReflection_MsgAddAllowedBidder_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgAddAllowedBidder)
 }
-
 func (x fastReflection_MsgAddAllowedBidder_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgAddAllowedBidder
 }
@@ -6986,7 +6944,9 @@ func (x *fastReflection_MsgAddAllowedBidder) ProtoMethods() *protoiface.Methods 
 	}
 }
 
-var md_MsgAddAllowedBidderResponse protoreflect.MessageDescriptor
+var (
+	md_MsgAddAllowedBidderResponse protoreflect.MessageDescriptor
+)
 
 func init() {
 	file_modules_fundraising_v1_tx_proto_init()
@@ -7013,21 +6973,17 @@ func (x *MsgAddAllowedBidderResponse) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_MsgAddAllowedBidderResponse_messageType fastReflection_MsgAddAllowedBidderResponse_messageType
-	_                                                       protoreflect.MessageType = fastReflection_MsgAddAllowedBidderResponse_messageType{}
-)
+var _fastReflection_MsgAddAllowedBidderResponse_messageType fastReflection_MsgAddAllowedBidderResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgAddAllowedBidderResponse_messageType{}
 
 type fastReflection_MsgAddAllowedBidderResponse_messageType struct{}
 
 func (x fastReflection_MsgAddAllowedBidderResponse_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_MsgAddAllowedBidderResponse)(nil)
 }
-
 func (x fastReflection_MsgAddAllowedBidderResponse_messageType) New() protoreflect.Message {
 	return new(fastReflection_MsgAddAllowedBidderResponse)
 }
-
 func (x fastReflection_MsgAddAllowedBidderResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_MsgAddAllowedBidderResponse
 }
@@ -8334,32 +8290,29 @@ func file_modules_fundraising_v1_tx_proto_rawDescGZIP() []byte {
 	return file_modules_fundraising_v1_tx_proto_rawDescData
 }
 
-var (
-	file_modules_fundraising_v1_tx_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-	file_modules_fundraising_v1_tx_proto_goTypes  = []interface{}{
-		(*MsgUpdateParams)(nil),                    // 0: modules.fundraising.v1.MsgUpdateParams
-		(*MsgUpdateParamsResponse)(nil),            // 1: modules.fundraising.v1.MsgUpdateParamsResponse
-		(*MsgCreateFixedPriceAuction)(nil),         // 2: modules.fundraising.v1.MsgCreateFixedPriceAuction
-		(*MsgCreateFixedPriceAuctionResponse)(nil), // 3: modules.fundraising.v1.MsgCreateFixedPriceAuctionResponse
-		(*MsgCreateBatchAuction)(nil),              // 4: modules.fundraising.v1.MsgCreateBatchAuction
-		(*MsgCreateBatchAuctionResponse)(nil),      // 5: modules.fundraising.v1.MsgCreateBatchAuctionResponse
-		(*MsgCancelAuction)(nil),                   // 6: modules.fundraising.v1.MsgCancelAuction
-		(*MsgCancelAuctionResponse)(nil),           // 7: modules.fundraising.v1.MsgCancelAuctionResponse
-		(*MsgPlaceBid)(nil),                        // 8: modules.fundraising.v1.MsgPlaceBid
-		(*MsgPlaceBidResponse)(nil),                // 9: modules.fundraising.v1.MsgPlaceBidResponse
-		(*MsgModifyBid)(nil),                       // 10: modules.fundraising.v1.MsgModifyBid
-		(*MsgModifyBidResponse)(nil),               // 11: modules.fundraising.v1.MsgModifyBidResponse
-		(*MsgAddAllowedBidder)(nil),                // 12: modules.fundraising.v1.MsgAddAllowedBidder
-		(*MsgAddAllowedBidderResponse)(nil),        // 13: modules.fundraising.v1.MsgAddAllowedBidderResponse
-		(*Params)(nil),                             // 14: modules.fundraising.v1.Params
-		(*v1beta1.Coin)(nil),                       // 15: cosmos.base.v1beta1.Coin
-		(*VestingSchedule)(nil),                    // 16: modules.fundraising.v1.VestingSchedule
-		(*timestamppb.Timestamp)(nil),              // 17: google.protobuf.Timestamp
-		(BidType)(0),                               // 18: modules.fundraising.v1.BidType
-		(*AllowedBidder)(nil),                      // 19: modules.fundraising.v1.AllowedBidder
-	}
-)
-
+var file_modules_fundraising_v1_tx_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_modules_fundraising_v1_tx_proto_goTypes = []interface{}{
+	(*MsgUpdateParams)(nil),                    // 0: modules.fundraising.v1.MsgUpdateParams
+	(*MsgUpdateParamsResponse)(nil),            // 1: modules.fundraising.v1.MsgUpdateParamsResponse
+	(*MsgCreateFixedPriceAuction)(nil),         // 2: modules.fundraising.v1.MsgCreateFixedPriceAuction
+	(*MsgCreateFixedPriceAuctionResponse)(nil), // 3: modules.fundraising.v1.MsgCreateFixedPriceAuctionResponse
+	(*MsgCreateBatchAuction)(nil),              // 4: modules.fundraising.v1.MsgCreateBatchAuction
+	(*MsgCreateBatchAuctionResponse)(nil),      // 5: modules.fundraising.v1.MsgCreateBatchAuctionResponse
+	(*MsgCancelAuction)(nil),                   // 6: modules.fundraising.v1.MsgCancelAuction
+	(*MsgCancelAuctionResponse)(nil),           // 7: modules.fundraising.v1.MsgCancelAuctionResponse
+	(*MsgPlaceBid)(nil),                        // 8: modules.fundraising.v1.MsgPlaceBid
+	(*MsgPlaceBidResponse)(nil),                // 9: modules.fundraising.v1.MsgPlaceBidResponse
+	(*MsgModifyBid)(nil),                       // 10: modules.fundraising.v1.MsgModifyBid
+	(*MsgModifyBidResponse)(nil),               // 11: modules.fundraising.v1.MsgModifyBidResponse
+	(*MsgAddAllowedBidder)(nil),                // 12: modules.fundraising.v1.MsgAddAllowedBidder
+	(*MsgAddAllowedBidderResponse)(nil),        // 13: modules.fundraising.v1.MsgAddAllowedBidderResponse
+	(*Params)(nil),                             // 14: modules.fundraising.v1.Params
+	(*v1beta1.Coin)(nil),                       // 15: cosmos.base.v1beta1.Coin
+	(*VestingSchedule)(nil),                    // 16: modules.fundraising.v1.VestingSchedule
+	(*timestamppb.Timestamp)(nil),              // 17: google.protobuf.Timestamp
+	(BidType)(0),                               // 18: modules.fundraising.v1.BidType
+	(*AllowedBidder)(nil),                      // 19: modules.fundraising.v1.AllowedBidder
+}
 var file_modules_fundraising_v1_tx_proto_depIdxs = []int32{
 	14, // 0: modules.fundraising.v1.MsgUpdateParams.params:type_name -> modules.fundraising.v1.Params
 	15, // 1: modules.fundraising.v1.MsgCreateFixedPriceAuction.sellingCoin:type_name -> cosmos.base.v1beta1.Coin

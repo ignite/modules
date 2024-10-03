@@ -35,20 +35,11 @@ func (k Keeper) GetAuction(ctx context.Context, auctionID uint64) (types.Auction
 // Auctions returns all Actions.
 func (k Keeper) Auctions(ctx context.Context) ([]types.AuctionI, error) {
 	auctions := make([]types.AuctionI, 0)
-	err := k.IterateAuctions(ctx, func(_ uint64, auction types.AuctionI) (bool, error) {
+	err := k.Auction.Walk(ctx, nil, func(_ uint64, auction types.AuctionI) (bool, error) {
 		auctions = append(auctions, auction)
 		return false, nil
 	})
 	return auctions, err
-}
-
-// IterateAuctions iterates over all the Auctions and performs a callback function.
-func (k Keeper) IterateAuctions(ctx context.Context, cb func(uint64, types.AuctionI) (bool, error)) error {
-	err := k.Auction.Walk(ctx, nil, cb)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // AddAllowedBidders is a function that is implemented for an external module.

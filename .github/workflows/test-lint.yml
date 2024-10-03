@@ -34,7 +34,7 @@ jobs:
 
       - uses: golangci/golangci-lint-action@v6
         with:
-          version: v1.58.0
+          version: v1.61.0
           args: --issues-exit-code=0 -e SA1019 --timeout 10m
           github-token: ${{ secrets.github_token }}
         if: env.GIT_DIFF

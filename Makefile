@@ -84,7 +84,7 @@ govulncheck:
 	@echo Running govulncheck...
 	@go run golang.org/x/vuln/cmd/govulncheck ./...
 
-FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go' -not -name '*.pb.gw.go'
+FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go' -not -name '*.pb.gw.go' -not -path './api/*'
 
 ## format: Run gofumpt and goimports.
 format:

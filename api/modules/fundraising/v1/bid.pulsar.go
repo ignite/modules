@@ -2,20 +2,18 @@
 package fundraisingv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
 	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
-
+	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -61,21 +59,17 @@ func (x *Bid) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_Bid_messageType fastReflection_Bid_messageType
-	_                               protoreflect.MessageType = fastReflection_Bid_messageType{}
-)
+var _fastReflection_Bid_messageType fastReflection_Bid_messageType
+var _ protoreflect.MessageType = fastReflection_Bid_messageType{}
 
 type fastReflection_Bid_messageType struct{}
 
 func (x fastReflection_Bid_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_Bid)(nil)
 }
-
 func (x fastReflection_Bid_messageType) New() protoreflect.Message {
 	return new(fastReflection_Bid)
 }
-
 func (x fastReflection_Bid_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_Bid
 }
@@ -1085,17 +1079,14 @@ func file_modules_fundraising_v1_bid_proto_rawDescGZIP() []byte {
 	return file_modules_fundraising_v1_bid_proto_rawDescData
 }
 
-var (
-	file_modules_fundraising_v1_bid_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-	file_modules_fundraising_v1_bid_proto_msgTypes  = make([]protoimpl.MessageInfo, 1)
-	file_modules_fundraising_v1_bid_proto_goTypes   = []interface{}{
-		(BidType)(0),         // 0: modules.fundraising.v1.BidType
-		(AddressType)(0),     // 1: modules.fundraising.v1.AddressType
-		(*Bid)(nil),          // 2: modules.fundraising.v1.Bid
-		(*v1beta1.Coin)(nil), // 3: cosmos.base.v1beta1.Coin
-	}
-)
-
+var file_modules_fundraising_v1_bid_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_modules_fundraising_v1_bid_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_modules_fundraising_v1_bid_proto_goTypes = []interface{}{
+	(BidType)(0),         // 0: modules.fundraising.v1.BidType
+	(AddressType)(0),     // 1: modules.fundraising.v1.AddressType
+	(*Bid)(nil),          // 2: modules.fundraising.v1.Bid
+	(*v1beta1.Coin)(nil), // 3: cosmos.base.v1beta1.Coin
+}
 var file_modules_fundraising_v1_bid_proto_depIdxs = []int32{
 	0, // 0: modules.fundraising.v1.Bid.type:type_name -> modules.fundraising.v1.BidType
 	3, // 1: modules.fundraising.v1.Bid.coin:type_name -> cosmos.base.v1beta1.Coin

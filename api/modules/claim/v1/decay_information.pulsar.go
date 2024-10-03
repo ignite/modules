@@ -2,19 +2,17 @@
 package claimv1
 
 import (
-	fmt "fmt"
-	io "io"
-	reflect "reflect"
-	sync "sync"
-
 	_ "cosmossdk.io/api/amino"
-
+	fmt "fmt"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	io "io"
+	reflect "reflect"
+	sync "sync"
 )
 
 var (
@@ -52,21 +50,17 @@ func (x *DecayInformation) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var (
-	_fastReflection_DecayInformation_messageType fastReflection_DecayInformation_messageType
-	_                                            protoreflect.MessageType = fastReflection_DecayInformation_messageType{}
-)
+var _fastReflection_DecayInformation_messageType fastReflection_DecayInformation_messageType
+var _ protoreflect.MessageType = fastReflection_DecayInformation_messageType{}
 
 type fastReflection_DecayInformation_messageType struct{}
 
 func (x fastReflection_DecayInformation_messageType) Zero() protoreflect.Message {
 	return (*fastReflection_DecayInformation)(nil)
 }
-
 func (x fastReflection_DecayInformation_messageType) New() protoreflect.Message {
 	return new(fastReflection_DecayInformation)
 }
-
 func (x fastReflection_DecayInformation_messageType) Descriptor() protoreflect.MessageDescriptor {
 	return md_DecayInformation
 }
@@ -705,14 +699,11 @@ func file_modules_claim_v1_decay_information_proto_rawDescGZIP() []byte {
 	return file_modules_claim_v1_decay_information_proto_rawDescData
 }
 
-var (
-	file_modules_claim_v1_decay_information_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-	file_modules_claim_v1_decay_information_proto_goTypes  = []interface{}{
-		(*DecayInformation)(nil),      // 0: modules.claim.v1.DecayInformation
-		(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
-	}
-)
-
+var file_modules_claim_v1_decay_information_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_modules_claim_v1_decay_information_proto_goTypes = []interface{}{
+	(*DecayInformation)(nil),      // 0: modules.claim.v1.DecayInformation
+	(*timestamppb.Timestamp)(nil), // 1: google.protobuf.Timestamp
+}
 var file_modules_claim_v1_decay_information_proto_depIdxs = []int32{
 	1, // 0: modules.claim.v1.DecayInformation.decayStart:type_name -> google.protobuf.Timestamp
 	1, // 1: modules.claim.v1.DecayInformation.decayEnd:type_name -> google.protobuf.Timestamp
