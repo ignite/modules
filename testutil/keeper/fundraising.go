@@ -19,11 +19,11 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ignite/modules/x/fundraising/keeper"
 	"github.com/ignite/modules/x/fundraising/types"
+	minttypes "github.com/ignite/modules/x/mint/types"
 )
 
 func FundraisingKeeper(t testing.TB) (keeper.Keeper, context.Context, address.Codec) {

@@ -6,10 +6,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 
 	"github.com/ignite/modules/x/fundraising/keeper"
 	"github.com/ignite/modules/x/fundraising/types"
+	minttypes "github.com/ignite/modules/x/mint/types"
 )
 
 var testCoinDenoms = []string{
