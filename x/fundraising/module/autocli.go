@@ -19,8 +19,8 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Short:     "Shows the parameters of the module",
 				},
 				{
-					RpcMethod:      "ListAllowedBidder [auction-id]",
-					Use:            "list-allowed-bidder",
+					RpcMethod:      "ListAllowedBidder",
+					Use:            "list-allowed-bidder [auction-id]",
 					Short:          "List all AllowedBidder",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auctionID"}},
 				},
