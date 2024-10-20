@@ -70,7 +70,7 @@ func (s *KeeperTestSuite) TestEndBlockerStartedStatus() {
 	s.Require().True(coinEq(totalBidCoin, payingReserve))
 
 	// Modify the current block time a day after the end time
-	s.ctx = s.ctx.WithBlockTime(auction.GetEndTimes()[0].AddDate(0, 0, 1))
+	s.ctx = s.ctx.WithBlockTime(auction.GetEndTime()[0].AddDate(0, 0, 1))
 	s.Require().NoError(s.keeper.BeginBlocker(s.ctx))
 
 	// The remaining selling coin must be returned to the auctioneer
@@ -108,7 +108,7 @@ func (s *KeeperTestSuite) TestEndBlockerVestingStatus() {
 	totalBidCoin := bid1.Coin.Add(bid2.Coin).Add(bid3.Coin)
 
 	// Modify the current block time a day after the end time
-	s.ctx = s.ctx.WithBlockTime(auction.GetEndTimes()[0].AddDate(0, 0, 1))
+	s.ctx = s.ctx.WithBlockTime(auction.GetEndTime()[0].AddDate(0, 0, 1))
 	s.Require().NoError(s.keeper.BeginBlocker(s.ctx))
 
 	vestingReserve := s.getBalance(auction.GetVestingReserveAddress(), auction.GetPayingCoinDenom())
@@ -145,14 +145,14 @@ func (s *KeeperTestSuite) TestExecuteStartedAuction_BatchAuction() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, ba.GetStatus())
 
-	s.placeBidBatchWorth(ba.AuctionID, s.addr(1), parseDec("10"), parseCoin("100000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchWorth(ba.AuctionID, s.addr(2), parseDec("9"), parseCoin("150000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchWorth(ba.AuctionID, s.addr(3), parseDec("5.5"), parseCoin("250000000denom2"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.AuctionID, s.addr(4), parseDec("6"), parseCoin("400000000denom1"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.AuctionID, s.addr(6), parseDec("4.5"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
-	s.placeBidBatchMany(ba.AuctionID, s.addr(7), parseDec("3.8"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionId, s.addr(1), parseDec("10"), parseCoin("100000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionId, s.addr(2), parseDec("9"), parseCoin("150000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchWorth(ba.AuctionId, s.addr(3), parseDec("5.5"), parseCoin("250000000denom2"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionId, s.addr(4), parseDec("6"), parseCoin("400000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionId, s.addr(6), parseDec("4.5"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
+	s.placeBidBatchMany(ba.AuctionId, s.addr(7), parseDec("3.8"), parseCoin("150000000denom1"), math.NewInt(1000000000), true)
 
-	auction, err := s.keeper.Auction.Get(s.ctx, ba.AuctionID)
+	auction, err := s.keeper.Auction.Get(s.ctx, ba.AuctionId)
 	s.Require().NoError(err)
 
 	err = s.keeper.ExecuteStartedStatus(s.ctx, auction)

@@ -93,12 +93,7 @@ func (p Params) Validate() error {
 	return validateWeightedAddresses(p.FundedAddresses)
 }
 
-func validateMintDenom(i interface{}) error {
-	v, ok := i.(string)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
+func validateMintDenom(v string) error {
 	if strings.TrimSpace(v) == "" {
 		return errors.New("mint denom cannot be blank")
 	}
@@ -106,28 +101,17 @@ func validateMintDenom(i interface{}) error {
 	return sdk.ValidateDenom(v)
 }
 
-func validateDec(i interface{}) error {
-	v, ok := i.(math.LegacyDec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
+func validateDec(v math.LegacyDec) error {
 	if v.IsNegative() {
 		return fmt.Errorf("cannot be negative: %s", v)
 	}
 	if v.GT(math.LegacyOneDec()) {
 		return fmt.Errorf("dec too large: %s", v)
 	}
-
 	return nil
 }
 
-func validateBlocksPerYear(i interface{}) error {
-	v, ok := i.(uint64)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
+func validateBlocksPerYear(v uint64) error {
 	if v == 0 {
 		return fmt.Errorf("blocks per year must be positive: %d", v)
 	}
@@ -135,12 +119,7 @@ func validateBlocksPerYear(i interface{}) error {
 	return nil
 }
 
-func validateDistributionProportions(i interface{}) error {
-	v, ok := i.(DistributionProportions)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
+func validateDistributionProportions(v DistributionProportions) error {
 	if v.Staking.IsNegative() {
 		return errors.New("staking distribution ratio should not be negative")
 	}
@@ -162,12 +141,7 @@ func validateDistributionProportions(i interface{}) error {
 	return nil
 }
 
-func validateWeightedAddresses(i interface{}) error {
-	v, ok := i.([]WeightedAddress)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
+func validateWeightedAddresses(v []WeightedAddress) error {
 	if len(v) == 0 {
 		return nil
 	}

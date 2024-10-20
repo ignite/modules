@@ -60,24 +60,24 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		AirdropSupply: types.AirdropSupply{Supply: sdk.NewCoin(airdropDenom, totalSupply)},
 		MissionList: []types.Mission{
 			{
-				MissionID:   0,
+				MissionId:   0,
 				Description: "initial claim",
 				Weight:      dec1,
 			},
 			{
-				MissionID:   1,
+				MissionId:   1,
 				Description: "mission 1",
 				Weight:      dec2,
 			},
 			{
-				MissionID:   2,
+				MissionId:   2,
 				Description: "mission 2",
 				Weight:      dec2,
 			},
 		},
 		InitialClaim: types.InitialClaim{
 			Enabled:   true,
-			MissionID: 0,
+			MissionId: 0,
 		},
 		ClaimRecordList: claimRecords,
 		// this line is used by starport scaffolding # simapp/module/genesisState

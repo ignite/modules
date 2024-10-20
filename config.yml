@@ -30,45 +30,45 @@ client:
 genesis:
   app_state:
     claim:
-      airdropSupply:
+      airdrop_supply:
         supply:
           amount: "1000"
           denom: drop
-      claimRecordList:
+      claim_record_list:
         - address: cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9
           claimable: "400"
         - address: cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er
           claimable: "500"
         - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
           claimable: "100"
-      initialClaim:
+      initial_claim:
         enabled: true
-        missionID: "0"
-      missionCount: 3
-      missionList:
+        mission_id: "0"
+      mission_count: 3
+      mission_list:
         - description: initial claim
-          missionID: "0"
+          mission_id: "0"
           weight: "0.2"
         - description: staking
-          missionID: "1"
+          mission_id: "1"
           weight: "0.5"
         - description: voting
-          missionID: "2"
+          mission_id: "2"
           weight: "0.3"
     mint:
       params:
-        distributionProportions:
-          communityPool: "0.300000000000000000"
-          fundedAddresses: "0.400000000000000000"
+        distribution_proportions:
+          community_pool: "0.300000000000000000"
+          funded_addresses: "0.400000000000000000"
           staking: "0.300000000000000000"
-        fundedAddresses:
+        funded_addresses:
           - address: cosmos1ezptsm3npn54qx9vvpah4nymre59ykr9967vj9
             weight: "0.400000000000000000"
           - address: cosmos1aqn8ynvr3jmq67879qulzrwhchq5dtrvh6h4er
             weight: "0.300000000000000000"
           - address: cosmos1pkdk6m2nh77nlaep84cylmkhjder3areczme3w
             weight: "0.300000000000000000"
-        mintDenom: stake
+        mint_denom: stake
   chain_id: testapp-0
 validators:
   - name: alice

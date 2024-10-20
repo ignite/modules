@@ -22,7 +22,7 @@ func Mission(r *rand.Rand) claim.Mission {
 	weight := sdkmath.LegacyNewDec(r.Int63n(max)).Quo(maxInt)
 
 	return claim.Mission{
-		MissionID:   Uint64(r),
+		MissionId:   Uint64(r),
 		Description: String(r, 20),
 		Weight:      weight,
 	}

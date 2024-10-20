@@ -12,14 +12,14 @@ option go_package = "github.com/ignite/modules/x/fundraising/types";
 message Bid {
   option (gogoproto.goproto_getters) = false;
 
-  // auctionID specifies the id of the auction
-  uint64 auctionID = 1;
+  // auction_id specifies the id of the auction
+  uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
   string bidder = 2;
 
-  // bidID specifies an index of a bid for the bidder
-  uint64 bidID = 3;
+  // bid_id specifies an index of a bid for the bidder
+  uint64 bid_id = 3;
 
   // type specifies the bid type; type 1 is fixed price, 2 is how-much-worth, 3
   // is how-many-coins
@@ -43,9 +43,9 @@ message Bid {
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin"
   ];
 
-  // isMatched specifies the bid that is a winning bid and enables the bidder
+  // is_matched specifies the bid that is a winning bid and enables the bidder
   // to purchase the selling coin
-  bool isMatched = 7;
+  bool is_matched = 7;
 }
 
 // BidType enumerates the valid types of a bid.

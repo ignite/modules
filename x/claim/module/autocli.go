@@ -39,7 +39,7 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Use:            "get-mission [mission-id]",
 					Short:          "Gets a Mission by id",
 					Alias:          []string{"show-mission"},
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "missionID"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "mission_id"}},
 				},
 				{
 					RpcMethod: "GetInitialClaim",
@@ -69,7 +69,7 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod:      "Claim",
 					Use:            "claim [mission-id]",
 					Short:          "Claim the airdrop allocation by mission id",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "missionID"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "mission_id"}},
 				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},

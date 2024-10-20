@@ -27,16 +27,16 @@ func TestGenesis(t *testing.T) {
 		},
 		MissionList: []types.Mission{
 			{
-				MissionID: 0,
+				MissionId: 0,
 			},
 			{
-				MissionID: 1,
+				MissionId: 1,
 			},
 		},
 		MissionCount: 2,
 		InitialClaim: types.InitialClaim{
 			Enabled:   true,
-			MissionID: 64,
+			MissionId: 64,
 		},
 		AirdropSupply: types.AirdropSupply{
 			Supply: sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(20)),

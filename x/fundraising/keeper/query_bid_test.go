@@ -25,8 +25,8 @@ func createNBid(keeper keeper.Keeper, ctx context.Context, n int) ([]types.Bid, 
 	auctionID := uint64(0)
 	for i := range items {
 		bidID := uint64(i)
-		items[i].AuctionID = auctionID
-		items[i].BidID = bidID
+		items[i].AuctionId = auctionID
+		items[i].BidId = bidID
 		items[i].Bidder = sample.Address(r)
 		items[i].Coin = sdk.NewCoin("coin", math.NewInt(int64(i)))
 		items[i].Price = math.LegacyNewDec(int64(i))
@@ -56,17 +56,17 @@ func TestBidQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetBidRequest{AuctionID: 0, BidID: msgs[0].BidID},
+			request:  &types.QueryGetBidRequest{AuctionId: 0, BidId: msgs[0].BidId},
 			response: &types.QueryGetBidResponse{Bid: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetBidRequest{AuctionID: 0, BidID: msgs[1].BidID},
+			request:  &types.QueryGetBidRequest{AuctionId: 0, BidId: msgs[1].BidId},
 			response: &types.QueryGetBidResponse{Bid: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetBidRequest{AuctionID: 0, BidID: uint64(len(msgs))},
+			request: &types.QueryGetBidRequest{AuctionId: 0, BidId: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

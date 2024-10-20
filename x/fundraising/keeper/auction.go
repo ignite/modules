@@ -196,7 +196,7 @@ func (k Keeper) ReleaseVestingPayingCoin(ctx context.Context, auction types.Auct
 
 			vestingQueue.SetReleased(true)
 			if err := k.VestingQueue.Set(ctx, collections.Join(
-				vestingQueue.AuctionID,
+				vestingQueue.AuctionId,
 				vestingQueue.ReleaseTime,
 			), vestingQueue); err != nil {
 				return err
@@ -288,10 +288,10 @@ func (k Keeper) ExtendRound(ctx context.Context, ba *types.BatchAuction) error {
 		return err
 	}
 	extendedPeriod := params.ExtendedPeriod
-	nextEndTime := ba.GetEndTimes()[len(ba.GetEndTimes())-1].AddDate(0, 0, int(extendedPeriod))
-	endTimes := append(ba.GetEndTimes(), nextEndTime)
+	nextEndTime := ba.GetEndTime()[len(ba.GetEndTime())-1].AddDate(0, 0, int(extendedPeriod))
+	endTime := append(ba.GetEndTime(), nextEndTime)
 
-	_ = ba.SetEndTimes(endTimes)
+	_ = ba.SetEndTime(endTime)
 
 	return k.Auction.Set(ctx, ba.GetId(), ba)
 }
@@ -337,7 +337,7 @@ func (k Keeper) CloseBatchAuction(ctx context.Context, auction types.AuctionI) e
 
 	// Close the auction when maximum extended round + 1 is the same as the length of end times
 	// If the value of MaxExtendedRound is 0, it means that an auctioneer does not want have an extended round
-	if ba.MaxExtendedRound+1 == uint32(len(auction.GetEndTimes())) {
+	if ba.MaxExtendedRound+1 == uint32(len(auction.GetEndTime())) {
 		if err := k.AllocateSellingCoin(ctx, auction, mInfo); err != nil {
 			return err
 		}
@@ -454,7 +454,7 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 		auction.PayingCoinDenom,
 		auction.VestingSchedules,
 		auction.StartTime,
-		auction.EndTimes[0],
+		auction.EndTime[0],
 	); err != nil {
 		return nil, err
 	}
@@ -466,14 +466,14 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 	// Call hook after storing an auction
 	if err := k.AfterFixedPriceAuctionCreated(
 		ctx,
-		auction.AuctionID,
+		auction.AuctionId,
 		auction.Auctioneer,
 		auction.StartPrice,
 		auction.SellingCoin,
 		auction.PayingCoinDenom,
 		auction.VestingSchedules,
 		auction.StartTime,
-		auction.EndTimes[0],
+		auction.EndTime[0],
 	); err != nil {
 		return nil, err
 	}
@@ -534,8 +534,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		return nil, sdkerrors.Wrap(err, "failed to reserve selling coin")
 	}
 
-	endTimes := []time.Time{msg.EndTime} // it is an array data type to handle BatchAuction
-
+	endTime := []time.Time{msg.EndTime} // it is an array data type to handle BatchAuction
 	ba := types.NewBaseAuction(
 		nextId,
 		types.AuctionTypeBatch,
@@ -548,7 +547,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		types.VestingReserveAddress(nextId).String(),
 		msg.VestingSchedules,
 		msg.StartTime,
-		endTimes,
+		endTime,
 		types.AuctionStatusStandBy,
 	)
 
@@ -577,7 +576,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		auction.MaxExtendedRound,
 		auction.ExtendedRoundRate,
 		auction.StartTime,
-		auction.EndTimes[0],
+		auction.EndTime[0],
 	); err != nil {
 		return nil, err
 	}
@@ -589,7 +588,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 	// Call hook after storing an auction
 	if err := k.AfterBatchAuctionCreated(
 		ctx,
-		auction.AuctionID,
+		auction.AuctionId,
 		auction.Auctioneer,
 		auction.StartPrice,
 		auction.MinBidPrice,
@@ -599,7 +598,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		auction.MaxExtendedRound,
 		auction.ExtendedRoundRate,
 		auction.StartTime,
-		auction.EndTimes[0],
+		auction.EndTime[0],
 	); err != nil {
 		return nil, err
 	}
@@ -630,7 +629,7 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 // CancelAuction handles types.MsgCancelAuction and cancels the auction.
 // An auction can only be canceled when it is not started yet.
 func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) error {
-	auction, err := k.Auction.Get(ctx, msg.AuctionID)
+	auction, err := k.Auction.Get(ctx, msg.AuctionId)
 	if err != nil {
 		return err
 	}
@@ -654,7 +653,7 @@ func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) 
 	}
 
 	// Call hook before cancelling the auction
-	if err := k.BeforeAuctionCanceled(ctx, msg.AuctionID, msg.Auctioneer); err != nil {
+	if err := k.BeforeAuctionCanceled(ctx, msg.AuctionId, msg.Auctioneer); err != nil {
 		return err
 	}
 

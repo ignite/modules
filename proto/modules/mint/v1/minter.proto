@@ -14,8 +14,8 @@ message Minter {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
-  // annualProvisions defines the current annual expected provisions
-  string annualProvisions = 2 [
+  // annual_provisions defines the current annual expected provisions
+  string annual_provisions = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
@@ -39,16 +39,16 @@ message DistributionProportions {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
-  // fundedAddresses defines the proportion of the minted minted_denom that is
+  // funded_addresses defines the proportion of the minted minted_denom that is
   // to the set of funded addresses.
-  string fundedAddresses = 2 [
+  string funded_addresses = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
-  // communityPool defines the proportion of the minted minted_denom that is
+  // community_pool defines the proportion of the minted minted_denom that is
   // to be allocated to the community pool.
-  string communityPool = 3 [
+  string community_pool = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"

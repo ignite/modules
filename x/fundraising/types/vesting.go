@@ -51,7 +51,7 @@ func ValidateVestingSchedules(schedules []VestingSchedule, endTime time.Time) er
 // NewVestingQueue returns a new VestingQueue.
 func NewVestingQueue(auctionID uint64, auctioneer sdk.AccAddress, payingCoin sdk.Coin, releaseTime time.Time, released bool) VestingQueue {
 	return VestingQueue{
-		AuctionID:   auctionID,
+		AuctionId:   auctionID,
 		Auctioneer:  auctioneer.String(),
 		PayingCoin:  payingCoin,
 		ReleaseTime: releaseTime,

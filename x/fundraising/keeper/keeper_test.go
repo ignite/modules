@@ -177,7 +177,7 @@ func (s *KeeperTestSuite) placeBidFixedPrice(
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionID: auctionID,
+		AuctionId: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeFixedPrice,
 		Price:     price,
@@ -204,7 +204,7 @@ func (s *KeeperTestSuite) placeBidBatchWorth(
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionID: auctionID,
+		AuctionId: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeBatchWorth,
 		Price:     price,
@@ -237,7 +237,7 @@ func (s *KeeperTestSuite) placeBidBatchMany(
 	s.Require().NoError(err)
 
 	b, err := s.keeper.PlaceBid(s.ctx, &types.MsgPlaceBid{
-		AuctionID: auctionID,
+		AuctionId: auctionID,
 		Bidder:    bidder.String(),
 		BidType:   types.BidTypeBatchMany,
 		Price:     price,
@@ -296,7 +296,7 @@ func (s *KeeperTestSuite) fullString(auctionID uint64, mInfo keeper.MatchingInfo
 		reserveAmt := bid.ConvertToPayingAmount(payingCoinDenom)
 		bidAmt := bid.ConvertToSellingAmount(payingCoinDenom)
 
-		_, _ = fmt.Fprintf(&b, "| %28s | %2d | %21s | %20s | %22s | %22s |\n", bid.Bidder, bid.BidID, bid.Price.String(), bid.Type, reserveAmt, bidAmt)
+		_, _ = fmt.Fprintf(&b, "| %28s | %2d | %21s | %20s | %22s | %22s |\n", bid.Bidder, bid.BidId, bid.Price.String(), bid.Type, reserveAmt, bidAmt)
 	}
 	b.WriteString("+-----------------------------------------------+----+-----------------------+----------------------+------------------------+------------------------+\n\n")
 

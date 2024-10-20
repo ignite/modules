@@ -43,7 +43,7 @@ func (q queryServer) GetAllowedBidder(ctx context.Context, req *types.QueryGetAl
 		return nil, status.Error(codes.InvalidArgument, "invalid bidder")
 	}
 
-	val, err := q.k.AllowedBidder.Get(ctx, collections.Join(req.AuctionID, bidder))
+	val, err := q.k.AllowedBidder.Get(ctx, collections.Join(req.AuctionId, bidder))
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "not found")

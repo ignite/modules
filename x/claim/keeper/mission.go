@@ -46,7 +46,7 @@ func (k Keeper) CompleteMission(
 
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	err = sdkCtx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
-		MissionID: missionID,
+		MissionId: missionID,
 		Address:   address,
 	})
 	if err != nil {
@@ -148,7 +148,7 @@ func (k Keeper) ClaimMission(
 	}
 
 	return claimed, sdkCtx.EventManager().EmitTypedEvent(&types.EventMissionClaimed{
-		MissionID: missionID,
+		MissionId: missionID,
 		Claimer:   claimRecord.Address,
 	})
 }
@@ -159,7 +159,7 @@ func (k Keeper) SetMission(ctx context.Context, mission types.Mission) (uint64, 
 	if err != nil {
 		return 0, err
 	}
-	mission.MissionID = missionID
+	mission.MissionId = missionID
 	return missionID, k.Mission.Set(ctx, missionID, mission)
 }
 

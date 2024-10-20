@@ -37,10 +37,10 @@ func NewBaseAuction(
 	sellingPoolAddr string, payingPoolAddr string,
 	startPrice math.LegacyDec, sellingCoin sdk.Coin, payingCoinDenom string,
 	vestingPoolAddr string, vestingSchedules []VestingSchedule,
-	startTime time.Time, endTimes []time.Time, status AuctionStatus,
+	startTime time.Time, endTime []time.Time, status AuctionStatus,
 ) *BaseAuction {
 	return &BaseAuction{
-		AuctionID:             auctionID,
+		AuctionId:             auctionID,
 		Type:                  typ,
 		Auctioneer:            auctioneerAddr,
 		SellingReserveAddress: sellingPoolAddr,
@@ -51,17 +51,17 @@ func NewBaseAuction(
 		VestingReserveAddress: vestingPoolAddr,
 		VestingSchedules:      vestingSchedules,
 		StartTime:             startTime,
-		EndTimes:              endTimes,
+		EndTime:               endTime,
 		Status:                status,
 	}
 }
 
 func (ba BaseAuction) GetId() uint64 { //nolint:golint
-	return ba.AuctionID
+	return ba.AuctionId
 }
 
 func (ba *BaseAuction) SetId(auctionID uint64) error { //nolint:golint
-	ba.AuctionID = auctionID
+	ba.AuctionId = auctionID
 	return nil
 }
 
@@ -171,12 +171,12 @@ func (ba *BaseAuction) SetStartTime(t time.Time) error {
 	return nil
 }
 
-func (ba BaseAuction) GetEndTimes() []time.Time {
-	return ba.EndTimes
+func (ba BaseAuction) GetEndTime() []time.Time {
+	return ba.EndTime
 }
 
-func (ba *BaseAuction) SetEndTimes(t []time.Time) error {
-	ba.EndTimes = t
+func (ba *BaseAuction) SetEndTime(t []time.Time) error {
+	ba.EndTime = t
 	return nil
 }
 
@@ -218,7 +218,7 @@ func (ba BaseAuction) Validate() error {
 	if err := sdk.ValidateDenom(ba.PayingCoinDenom); err != nil {
 		return sdkerrors.Wrapf(errors.ErrInvalidRequest, "invalid paying coin denom: %v", err)
 	}
-	if err := ValidateVestingSchedules(ba.VestingSchedules, ba.EndTimes[len(ba.EndTimes)-1]); err != nil {
+	if err := ValidateVestingSchedules(ba.VestingSchedules, ba.EndTime[len(ba.EndTime)-1]); err != nil {
 		return err
 	}
 	return nil
@@ -231,7 +231,7 @@ func (ba BaseAuction) ShouldAuctionStarted(t time.Time) bool {
 
 // ShouldAuctionClosed returns true if the end time is equal or before the given time t.
 func (ba BaseAuction) ShouldAuctionClosed(t time.Time) bool {
-	ts := ba.GetEndTimes()
+	ts := ba.GetEndTime()
 	return !ts[len(ts)-1].After(t) // LastEndTime <= Time
 }
 
@@ -292,8 +292,8 @@ type AuctionI interface {
 	GetStartTime() time.Time
 	SetStartTime(time.Time) error
 
-	GetEndTimes() []time.Time
-	SetEndTimes([]time.Time) error
+	GetEndTime() []time.Time
+	SetEndTime([]time.Time) error
 
 	GetStatus() AuctionStatus
 	SetStatus(AuctionStatus) error

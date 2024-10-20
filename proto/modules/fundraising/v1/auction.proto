@@ -18,8 +18,8 @@ message BaseAuction {
 
   option (cosmos_proto.implements_interface) = "AuctionI";
 
-  // auctionID specifies index of the auction
-  uint64 auctionID = 1;
+  // auction_id specifies index of the auction
+  uint64 auction_id = 1;
 
   // type specifies the auction type
   // type 1 is fixed price and 2 is batch auction
@@ -28,49 +28,49 @@ message BaseAuction {
   // auctioneer specifies the bech32-encoded address that creates the auction
   string auctioneer = 3;
 
-  // sellingReserveAddress specifies the bech32-encoded address that has all
+  // selling_reserve_address specifies the bech32-encoded address that has all
   // the selling coin
-  string sellingReserveAddress = 4;
+  string selling_reserve_address = 4;
 
-  // payingReserveAddress specifies the bech32-encoded address that has all
+  // paying_reserve_address specifies the bech32-encoded address that has all
   // the paying coin
-  string payingReserveAddress = 5;
+  string paying_reserve_address = 5;
 
-  // startPrice specifies the starting price of the auction
+  // start_price specifies the starting price of the auction
   // it is determined by the proportion of the price of paying coin denom
-  string startPrice = 6 [
+  string start_price = 6 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 
-  // sellingCoin specifies the selling coin for the auction
-  cosmos.base.v1beta1.Coin sellingCoin = 7 [
+  // selling_coin specifies the selling coin for the auction
+  cosmos.base.v1beta1.Coin selling_coin = 7 [
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true,
     (amino.encoding) = "legacy_coins",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin"
   ];
 
-  // payingCoinDenom specifies the paying coin denom that bidders use to bid
+  // paying_coin_denom specifies the paying coin denom that bidders use to bid
   // for
-  string payingCoinDenom = 8;
+  string paying_coin_denom = 8;
 
-  // vestingReserveAddress specifies the bech32-encoded vesting address that
+  // vesting_reserve_address specifies the bech32-encoded vesting address that
   // holds vesting amounts of coin
-  string vestingReserveAddress = 9;
+  string vesting_reserve_address = 9;
 
-  // vestingSchedules specifies the vesting schedules for the auction
-  repeated VestingSchedule vestingSchedules = 10 [(gogoproto.nullable) = false];
+  // vesting_schedules specifies the vesting schedules for the auction
+  repeated VestingSchedule vesting_schedules = 10 [(gogoproto.nullable) = false];
 
-  // startTime specifies the start time of the plan
-  google.protobuf.Timestamp startTime = 11 [
+  // start_time specifies the start time of the plan
+  google.protobuf.Timestamp start_time = 11 [
     (gogoproto.stdtime) = true,
     (gogoproto.nullable) = false
   ];
 
-  // endTimes specifies the end time of the plan
-  repeated google.protobuf.Timestamp endTimes = 12 [
+  // end_time specifies the end time of the plan
+  repeated google.protobuf.Timestamp end_time = 12 [
     (gogoproto.stdtime) = true,
     (gogoproto.nullable) = false
   ];
@@ -85,10 +85,10 @@ message BaseAuction {
 message FixedPriceAuction {
   option (gogoproto.goproto_getters) = false;
 
-  BaseAuction baseAuction = 1 [(gogoproto.embed) = true];
+  BaseAuction base_auction = 1 [(gogoproto.embed) = true];
 
-  // remainingSellingCoin specifies the remaining amount of selling coin to sell
-  cosmos.base.v1beta1.Coin remainingSellingCoin = 2 [
+  // remaining_selling_coin specifies the remaining amount of selling coin to sell
+  cosmos.base.v1beta1.Coin remaining_selling_coin = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin"
   ];
@@ -103,28 +103,28 @@ message FixedPriceAuction {
 message BatchAuction {
   option (gogoproto.goproto_getters) = false;
 
-  BaseAuction baseAuction = 1 [(gogoproto.embed) = true];
+  BaseAuction base_auction = 1 [(gogoproto.embed) = true];
 
-  // minBidPrice specifies the minimum bid price
-  string minBidPrice = 2 [
+  // min_bid_price specifies the minimum bid price
+  string min_bid_price = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 
-  // matchedPrice specifies the matched price of the auction
-  string matchedPrice = 3 [
+  // matched_price specifies the matched price of the auction
+  string matched_price = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
 
-  // maxExtendedRound specifies a maximum number of extended rounds
-  uint32 maxExtendedRound = 4;
+  // max_extended_round specifies a maximum number of extended rounds
+  uint32 max_extended_round = 4;
 
-  // extendedRoundRate specifies the rate that decides if the auction needs
+  // extended_round_rate specifies the rate that decides if the auction needs
   // another round
-  string extendedRoundRate = 5 [
+  string extended_round_rate = 5 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
@@ -163,8 +163,8 @@ enum AuctionStatus {
 
 // VestingSchedule defines the vesting schedule for the owner of an auction.
 message VestingSchedule {
-  // releaseTime specifies the time for distribution of the vesting coin
-  google.protobuf.Timestamp releaseTime = 1 [
+  // release_time specifies the time for distribution of the vesting coin
+  google.protobuf.Timestamp release_time = 1 [
     (gogoproto.stdtime) = true,
     (gogoproto.nullable) = false
   ];

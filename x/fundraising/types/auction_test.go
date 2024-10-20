@@ -53,7 +53,7 @@ func TestUnpackAuction(t *testing.T) {
 	auction2, err := types.UnpackAuction(&any2)
 	require.NoError(t, err)
 
-	require.Equal(t, auction.AuctionID, auction2.GetId())
+	require.Equal(t, auction.AuctionId, auction2.GetId())
 	require.Equal(t, auction.Type, auction2.GetType())
 	require.Equal(t, auction.Auctioneer, auction2.GetAuctioneer().String())
 	require.Equal(t, auction.SellingCoin, auction2.GetSellingCoin())
@@ -65,7 +65,7 @@ func TestUnpackAuction(t *testing.T) {
 	require.Equal(t, auction.VestingReserveAddress, auction2.GetVestingReserveAddress().String())
 	require.Equal(t, auction.VestingSchedules, auction2.GetVestingSchedules())
 	require.Equal(t, auction.StartTime.UTC(), auction2.GetStartTime().UTC())
-	require.Equal(t, auction.EndTimes[0].UTC(), auction2.GetEndTimes()[0].UTC())
+	require.Equal(t, auction.EndTime[0].UTC(), auction2.GetEndTime()[0].UTC())
 	require.Equal(t, auction.Status, auction2.GetStatus())
 
 	require.NoError(t, auction2.SetId(5))
@@ -79,7 +79,7 @@ func TestUnpackAuction(t *testing.T) {
 	require.NoError(t, auction2.SetPayingCoinDenom("denom6"))
 	require.NoError(t, auction2.SetStartTime(types.MustParseRFC3339("2022-10-01T00:00:00Z")))
 	require.NoError(t, auction2.SetVestingSchedules([]types.VestingSchedule{{ReleaseTime: types.MustParseRFC3339("2023-01-01T00:00:00Z"), Weight: math.LegacyOneDec()}}))
-	require.NoError(t, auction2.SetEndTimes([]time.Time{types.MustParseRFC3339("2022-11-01T00:00:00Z")}))
+	require.NoError(t, auction2.SetEndTime([]time.Time{types.MustParseRFC3339("2022-11-01T00:00:00Z")}))
 	require.NoError(t, auction2.SetStatus(types.AuctionStatusStarted))
 
 	require.True(t, auction2.GetId() == 5)
@@ -200,7 +200,7 @@ func TestUnpackAuctions(t *testing.T) {
 
 func TestShouldAuctionStarted(t *testing.T) {
 	auction := types.BaseAuction{
-		AuctionID:             1,
+		AuctionId:             1,
 		Type:                  types.AuctionTypeFixedPrice,
 		Auctioneer:            sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 		SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -211,7 +211,7 @@ func TestShouldAuctionStarted(t *testing.T) {
 		VestingReserveAddress: types.VestingReserveAddress(1).String(),
 		VestingSchedules:      []types.VestingSchedule{},
 		StartTime:             types.MustParseRFC3339("2021-12-01T00:00:00Z"),
-		EndTimes:              []time.Time{types.MustParseRFC3339("2021-12-15T00:00:00Z")},
+		EndTime:               []time.Time{types.MustParseRFC3339("2021-12-15T00:00:00Z")},
 		Status:                types.AuctionStatusStandBy,
 	}
 
@@ -233,7 +233,7 @@ func TestShouldAuctionStarted(t *testing.T) {
 
 func TestShouldAuctionClosed(t *testing.T) {
 	auction := types.BaseAuction{
-		AuctionID:             1,
+		AuctionId:             1,
 		Type:                  types.AuctionTypeFixedPrice,
 		Auctioneer:            sdk.AccAddress(crypto.AddressHash([]byte("Auctioneer"))).String(),
 		SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -244,7 +244,7 @@ func TestShouldAuctionClosed(t *testing.T) {
 		VestingReserveAddress: types.VestingReserveAddress(1).String(),
 		VestingSchedules:      []types.VestingSchedule{},
 		StartTime:             types.MustParseRFC3339("2021-12-01T00:00:00Z"),
-		EndTimes:              []time.Time{types.MustParseRFC3339("2021-12-15T00:00:00Z")},
+		EndTime:               []time.Time{types.MustParseRFC3339("2021-12-15T00:00:00Z")},
 		Status:                types.AuctionStatusStandBy,
 	}
 

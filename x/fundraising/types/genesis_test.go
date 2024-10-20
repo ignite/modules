@@ -17,7 +17,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	validAddr := sdk.AccAddress(crypto.AddressHash([]byte("validAddr")))
 	validAuction := types.NewFixedPriceAuction(
 		&types.BaseAuction{
-			AuctionID:             1,
+			AuctionId:             1,
 			Type:                  types.AuctionTypeFixedPrice,
 			Auctioneer:            validAddr.String(),
 			SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -37,28 +37,28 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 			},
 			StartTime: types.MustParseRFC3339("2022-01-01T00:00:00Z"),
-			EndTimes:  []time.Time{types.MustParseRFC3339("2022-12-01T00:00:00Z")},
+			EndTime:   []time.Time{types.MustParseRFC3339("2022-12-01T00:00:00Z")},
 			Status:    types.AuctionStatusStarted,
 		},
 		sdk.NewInt64Coin("denom1", 1_000_000_000_000),
 	)
 
 	validAllowedBidder := types.AllowedBidder{
-		AuctionID:    1,
+		AuctionId:    1,
 		Bidder:       validAddr.String(),
 		MaxBidAmount: math.NewInt(10_000_000),
 	}
 
 	validBid := types.Bid{
-		AuctionID: 1,
-		BidID:     1,
+		AuctionId: 1,
+		BidId:     1,
 		Bidder:    validAddr.String(),
 		Price:     math.LegacyMustNewDecFromStr("0.5"),
 		Coin:      sdk.NewInt64Coin("denom2", 50_000_000),
 	}
 
 	validVestingQueue := types.VestingQueue{
-		AuctionID:   1,
+		AuctionId:   1,
 		Auctioneer:  validAddr.String(),
 		PayingCoin:  sdk.NewInt64Coin("denom2", 100_000_000),
 		ReleaseTime: types.MustParseRFC3339("2022-12-20T00:00:00Z"),
@@ -100,7 +100,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						AuctionID:             1,
+						AuctionId:             1,
 						Type:                  types.AuctionTypeNil,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -120,7 +120,7 @@ func TestGenesisState_Validate(t *testing.T) {
 							},
 						},
 						StartTime: types.MustParseRFC3339("2021-12-10T00:00:00Z"),
-						EndTimes:  []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
+						EndTime:   []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
 						Status:    types.AuctionStatusStarted,
 					},
 					sdk.NewInt64Coin("denom1", 1_000_000_000_000),
@@ -135,7 +135,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						AuctionID:             1,
+						AuctionId:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -155,7 +155,7 @@ func TestGenesisState_Validate(t *testing.T) {
 							},
 						},
 						StartTime: types.MustParseRFC3339("2021-12-10T00:00:00Z"),
-						EndTimes:  []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
+						EndTime:   []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
 						Status:    types.AuctionStatusStarted,
 					},
 					sdk.NewInt64Coin("denom1", 1_000_000_000_000),
@@ -170,7 +170,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						AuctionID:             1,
+						AuctionId:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            validAddr.String(),
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -190,7 +190,7 @@ func TestGenesisState_Validate(t *testing.T) {
 							},
 						},
 						StartTime: types.MustParseRFC3339("2021-12-10T00:00:00Z"),
-						EndTimes:  []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
+						EndTime:   []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
 						Status:    types.AuctionStatusStarted,
 					},
 					sdk.NewInt64Coin("denom1", 1_000_000_000_000),
@@ -205,7 +205,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				auctionAny, _ := types.PackAuction(types.NewFixedPriceAuction(
 					&types.BaseAuction{
-						AuctionID:             1,
+						AuctionId:             1,
 						Type:                  types.AuctionTypeFixedPrice,
 						Auctioneer:            "invalid",
 						SellingReserveAddress: types.SellingReserveAddress(1).String(),
@@ -225,7 +225,7 @@ func TestGenesisState_Validate(t *testing.T) {
 							},
 						},
 						StartTime: types.MustParseRFC3339("2021-12-10T00:00:00Z"),
-						EndTimes:  []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
+						EndTime:   []time.Time{types.MustParseRFC3339("2022-12-20T00:00:00Z")},
 						Status:    types.AuctionStatusStarted,
 					},
 					sdk.NewInt64Coin("denom1", 1_000_000_000_000),
@@ -240,8 +240,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionID: 1,
-						BidID:     1,
+						AuctionId: 1,
+						BidId:     1,
 						Bidder:    "invalid",
 						Price:     math.LegacyMustNewDecFromStr("0.5"),
 						Coin:      sdk.NewInt64Coin("denom2", 50_000_000),
@@ -255,8 +255,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionID: 1,
-						BidID:     1,
+						AuctionId: 1,
+						BidId:     1,
 						Bidder:    validAddr.String(),
 						Price:     math.LegacyMustNewDecFromStr("0.5"),
 						Coin:      sdk.NewInt64Coin("denom2", 0),
@@ -270,8 +270,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.BidList = []types.Bid{
 					{
-						AuctionID: 1,
-						BidID:     1,
+						AuctionId: 1,
+						BidId:     1,
 						Bidder:    validAddr.String(),
 						Price:     math.LegacyMustNewDecFromStr("0"),
 						Coin:      sdk.NewInt64Coin("denom2", 100_000),
@@ -285,7 +285,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			configure: func(genState *types.GenesisState) {
 				genState.AllowedBidderList = []types.AllowedBidder{
 					{
-						AuctionID:    1,
+						AuctionId:    1,
 						Bidder:       validAddr.String(),
 						MaxBidAmount: math.NewInt(0),
 					},
@@ -300,7 +300,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				genState.Params = params
 				genState.VestingQueueList = []types.VestingQueue{
 					{
-						AuctionID:   2,
+						AuctionId:   2,
 						Auctioneer:  "",
 						PayingCoin:  sdk.NewInt64Coin("denom2", 100_000_000),
 						ReleaseTime: types.MustParseRFC3339("2022-12-20T00:00:00Z"),

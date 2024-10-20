@@ -60,7 +60,7 @@ func AirdropSupplyInvariant(k Keeper) sdk.Invariant {
 
 		missionMap := make(map[uint64]types.Mission)
 		for _, mission := range missions {
-			missionMap[mission.MissionID] = mission
+			missionMap[mission.MissionId] = mission
 		}
 
 		if err := types.CheckAirdropSupply(airdropSupply, missionMap, claimRecords); err != nil {
@@ -86,9 +86,9 @@ func ClaimRecordInvariant(k Keeper) sdk.Invariant {
 
 		for _, claimRecord := range claimRecords {
 			for _, mission := range missions {
-				if !claimRecord.IsMissionCompleted(mission.MissionID) &&
-					claimRecord.IsMissionClaimed(mission.MissionID) {
-					return fmt.Sprintf("mission %d claimed but not completed", mission.MissionID), true
+				if !claimRecord.IsMissionCompleted(mission.MissionId) &&
+					claimRecord.IsMissionClaimed(mission.MissionId) {
+					return fmt.Sprintf("mission %d claimed but not completed", mission.MissionId), true
 				}
 			}
 		}
@@ -111,7 +111,7 @@ func ClaimRecordMissionInvariant(k Keeper) sdk.Invariant {
 
 		missionMap := make(map[uint64]struct{})
 		for _, mission := range missions {
-			missionMap[mission.MissionID] = struct{}{}
+			missionMap[mission.MissionId] = struct{}{}
 		}
 		for _, claimRecord := range claimRecords {
 			for _, mission := range claimRecord.CompletedMissions {

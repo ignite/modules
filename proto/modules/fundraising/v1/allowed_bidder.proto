@@ -13,14 +13,14 @@ message AllowedBidder {
 
   option (gogoproto.goproto_getters) = false;
 
-  // auctionID specifies the id of the auction
-  uint64 auctionID = 1;
+  // auction_id specifies the id of the auction
+  uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
   string bidder = 2;
 
-  // maxBidAmount specifies the maximum bid amount that the bidder can bid
-  string maxBidAmount = 3 [
+  // max_bid_amount specifies the maximum bid amount that the bidder can bid
+  string max_bid_amount = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (cosmos_proto.scalar) = "cosmos.Int"
