@@ -16,7 +16,6 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 // GenesisState defines the claim module's genesis state.
 message GenesisState {
   AirdropSupply airdrop_supply = 1 [(gogoproto.nullable) = false];
-
   repeated ClaimRecord claim_record_list = 2 [(gogoproto.nullable) = false];
   repeated Mission mission_list = 3 [(gogoproto.nullable) = false];
   uint64 mission_count = 4;
