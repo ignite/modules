@@ -9,7 +9,7 @@ option go_package = "github.com/ignite/modules/x/mint/types";
 
 // EventMint is emitted when new coins are minted by the minter
 message EventMint {
-  string bondedRatio = 1 [
+  string bonded_ratio = 1 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
@@ -19,7 +19,7 @@ message EventMint {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"
   ];
-  string annualProvisions = 3 [
+  string annual_provisions = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (cosmos_proto.scalar) = "cosmos.Dec"

@@ -14,8 +14,8 @@ message Params {
   option (amino.name) = "modules/x/claim/Params";
   option (gogoproto.equal) = true;
 
-  DecayInformation decayInformation = 1 [(gogoproto.nullable) = false];
-  google.protobuf.Timestamp airdropStart = 2 [
+  DecayInformation decay_information = 1 [(gogoproto.nullable) = false];
+  google.protobuf.Timestamp airdrop_start = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true
   ];

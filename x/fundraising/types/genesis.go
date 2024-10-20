@@ -26,7 +26,7 @@ func (gs GenesisState) Validate() error {
 	allowedBidderIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.AllowedBidderList {
-		index := fmt.Sprint(elem.AuctionID)
+		index := fmt.Sprint(elem.AuctionId)
 		if _, ok := allowedBidderIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for allowedBidder")
 		}
@@ -40,7 +40,7 @@ func (gs GenesisState) Validate() error {
 	vestingQueueIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.VestingQueueList {
-		index := fmt.Sprint(elem.AuctionID)
+		index := fmt.Sprint(elem.AuctionId)
 		if _, ok := vestingQueueIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for vestingQueue")
 		}
@@ -53,10 +53,10 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated ID in bid
 	bidIDMap := make(map[uint64]bool)
 	for _, elem := range gs.BidList {
-		if _, ok := bidIDMap[elem.BidID]; ok {
+		if _, ok := bidIDMap[elem.BidId]; ok {
 			return fmt.Errorf("duplicated id for bid")
 		}
-		bidIDMap[elem.BidID] = true
+		bidIDMap[elem.BidId] = true
 
 		if err := elem.Validate(); err != nil {
 			return err

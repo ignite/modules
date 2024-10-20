@@ -5,5 +5,5 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 
 message InitialClaim {
   bool enabled = 1;
-  uint64 missionID = 2;
+  uint64 mission_id = 2;
 }

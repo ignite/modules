@@ -8,9 +8,9 @@ import (
 // NewBid returns a new Bid.
 func NewBid(auctionID uint64, bidder sdk.AccAddress, bidID uint64, bidType BidType, price math.LegacyDec, coin sdk.Coin, isMatched bool) Bid {
 	return Bid{
-		AuctionID: auctionID,
+		AuctionId: auctionID,
 		Bidder:    bidder.String(),
-		BidID:     bidID,
+		BidId:     bidID,
 		Type:      bidType,
 		Price:     price,
 		Coin:      coin,

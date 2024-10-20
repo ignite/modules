@@ -60,7 +60,7 @@ func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisSta
 	// add missions
 	for i := 0; i < 5; i++ {
 		mission := claim.Mission{
-			MissionID: uint64(i),
+			MissionId: uint64(i),
 			Weight:    sdkmath.LegacyNewDec(r.Int63()),
 		}
 		nullify.Fill(&mission)

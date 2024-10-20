@@ -13,6 +13,6 @@ message ClaimRecord {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (cosmos_proto.scalar) = "cosmos.Int"
   ];
-  repeated uint64 completedMissions = 3;
-  repeated uint64 claimedMissions = 4;
+  repeated uint64 completed_missions = 3;
+  repeated uint64 claimed_missions = 4;
 }

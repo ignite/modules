@@ -30,11 +30,11 @@ func init() {
 
 func TestGenesis(t *testing.T) {
 	auctionAny1, _ := types.PackAuction(types.NewFixedPriceAuction(
-		&types.BaseAuction{AuctionID: 1},
+		&types.BaseAuction{AuctionId: 1},
 		sdk.NewInt64Coin("denom1", 1_000),
 	))
 	auctionAny2, _ := types.PackAuction(types.NewFixedPriceAuction(
-		&types.BaseAuction{AuctionID: 2},
+		&types.BaseAuction{AuctionId: 2},
 		sdk.NewInt64Coin("denom2", 2_000),
 	))
 
@@ -43,28 +43,28 @@ func TestGenesis(t *testing.T) {
 
 		AllowedBidderList: []types.AllowedBidder{
 			{
-				AuctionID: 0,
+				AuctionId: 0,
 				Bidder:    sample.Address(r),
 			},
 			{
-				AuctionID: 1,
+				AuctionId: 1,
 				Bidder:    sample.Address(r),
 			},
 		},
 		VestingQueueList: []types.VestingQueue{
 			{
-				AuctionID: 0,
+				AuctionId: 0,
 			},
 			{
-				AuctionID: 1,
+				AuctionId: 1,
 			},
 		},
 		BidList: []types.Bid{
 			{
-				BidID: 0,
+				BidId: 0,
 			},
 			{
-				BidID: 1,
+				BidId: 1,
 			},
 		},
 		AuctionList: []*codectypes.Any{auctionAny1, auctionAny2},

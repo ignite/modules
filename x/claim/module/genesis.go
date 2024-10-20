@@ -17,7 +17,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	}
 	// Set all the mission
 	for _, elem := range genState.MissionList {
-		if err := k.Mission.Set(ctx, elem.MissionID, elem); err != nil {
+		if err := k.Mission.Set(ctx, elem.MissionId, elem); err != nil {
 			panic(err)
 		}
 	}

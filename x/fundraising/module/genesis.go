@@ -48,39 +48,39 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 		if err != nil {
 			return err
 		}
-		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionID, bidder), elem); err != nil {
+		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionId, bidder), elem); err != nil {
 			return err
 		}
 	}
 
 	// Set all the bid
 	for _, elem := range genState.BidList {
-		_, err := k.Auction.Get(ctx, elem.AuctionID)
+		_, err := k.Auction.Get(ctx, elem.AuctionId)
 		if errors.Is(err, collections.ErrNotFound) {
-			return fmt.Errorf("bid auction %d is not found", elem.AuctionID)
+			return fmt.Errorf("bid auction %d is not found", elem.AuctionId)
 		}
 
-		elem.BidID, err = k.GetNextBidIDWithUpdate(ctx, elem.AuctionID)
+		elem.BidId, err = k.GetNextBidIDWithUpdate(ctx, elem.AuctionId)
 		if err != nil {
 			return err
 		}
 
-		if err := k.Bid.Set(ctx, collections.Join(elem.AuctionID, elem.BidID), elem); err != nil {
+		if err := k.Bid.Set(ctx, collections.Join(elem.AuctionId, elem.BidId), elem); err != nil {
 			return err
 		}
 	}
 
 	// Set all the vestingQueue
 	for _, elem := range genState.VestingQueueList {
-		_, err := k.Auction.Get(ctx, elem.AuctionID)
+		_, err := k.Auction.Get(ctx, elem.AuctionId)
 		if errors.Is(err, collections.ErrNotFound) {
-			return fmt.Errorf("vesting queue auction %d is not found", elem.AuctionID)
+			return fmt.Errorf("vesting queue auction %d is not found", elem.AuctionId)
 		}
 
 		if err := k.VestingQueue.Set(
 			ctx,
 			collections.Join(
-				elem.AuctionID,
+				elem.AuctionId,
 				elem.ReleaseTime,
 			),
 			elem); err != nil {

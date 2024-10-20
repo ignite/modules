@@ -19,7 +19,7 @@ func TestClaimRecordInvariant(t *testing.T) {
 
 		missionID := uint64(10)
 		err := tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "test mission",
 			Weight:      sdkmath.LegacyNewDec(int64(missionID)),
 		})
@@ -42,7 +42,7 @@ func TestClaimRecordInvariant(t *testing.T) {
 
 		missionID := uint64(10)
 		err := tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "test mission",
 			Weight:      sdkmath.LegacyNewDec(100),
 		})
@@ -73,7 +73,7 @@ func TestClaimRecordInvariant(t *testing.T) {
 
 		missionID := uint64(10)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "test mission",
 			Weight:      sdkmath.LegacyNewDec(100),
 		})
@@ -98,7 +98,7 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 
 		missionID := uint64(0)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "mission 0",
 			Weight:      sdkmath.LegacyZeroDec(),
 		})
@@ -106,7 +106,7 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 
 		missionID = uint64(1)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "mission 1",
 			Weight:      sdkmath.LegacyZeroDec(),
 		})
@@ -128,7 +128,7 @@ func TestClaimRecordMissionInvariant(t *testing.T) {
 
 		missionID := uint64(1)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "mission 1",
 			Weight:      sdkmath.LegacyZeroDec(),
 		})
@@ -174,7 +174,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		missionID := uint64(0)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "",
 			Weight:      sdkmath.LegacyZeroDec(),
 		})
@@ -182,7 +182,7 @@ func TestAirdropSupplyInvariant(t *testing.T) {
 
 		missionID = uint64(1)
 		err = tk.ClaimKeeper.Mission.Set(ctx, missionID, types.Mission{
-			MissionID:   missionID,
+			MissionId:   missionID,
 			Description: "",
 			Weight:      sdkmath.LegacyZeroDec(),
 		})

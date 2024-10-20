@@ -12,7 +12,7 @@ import (
 func NewMsgCancelAuction(auctioneer string, auctionID uint64) *MsgCancelAuction {
 	return &MsgCancelAuction{
 		Auctioneer: auctioneer,
-		AuctionID:  auctionID,
+		AuctionId:  auctionID,
 	}
 }
 
@@ -146,7 +146,7 @@ func NewMsgPlaceBid(
 ) *MsgPlaceBid {
 	return &MsgPlaceBid{
 		Bidder:    bidder,
-		AuctionID: auctionID,
+		AuctionId: auctionID,
 		BidType:   bidType,
 		Price:     price,
 		Coin:      coin,
@@ -179,7 +179,7 @@ func (msg MsgPlaceBid) ValidateBasic() error {
 
 func NewMsgAddAllowedBidder(auctionID uint64, allowedBidder AllowedBidder) *MsgAddAllowedBidder {
 	return &MsgAddAllowedBidder{
-		AuctionID:     auctionID,
+		AuctionId:     auctionID,
 		AllowedBidder: allowedBidder,
 	}
 }
@@ -212,8 +212,8 @@ func NewMsgModifyBid(
 ) *MsgModifyBid {
 	return &MsgModifyBid{
 		Bidder:    bidder,
-		AuctionID: auctionID,
-		BidID:     bidID,
+		AuctionId: auctionID,
+		BidId:     bidID,
 		Price:     price,
 		Coin:      coin,
 	}

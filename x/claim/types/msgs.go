@@ -9,7 +9,7 @@ import (
 func NewMsgClaim(claimer string, missionID uint64) *MsgClaim {
 	return &MsgClaim{
 		Claimer:   claimer,
-		MissionID: missionID,
+		MissionId: missionID,
 	}
 }
 

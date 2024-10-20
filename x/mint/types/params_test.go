@@ -158,18 +158,13 @@ func TestParamsValidate(t *testing.T) {
 func TestValidateMintDenom(t *testing.T) {
 	tests := []struct {
 		name    string
-		denom   interface{}
+		denom   string
 		isValid bool
 	}{
 		{
 			name:    "should validate valid mint denom",
 			denom:   DefaultMintDenom,
 			isValid: true,
-		},
-		{
-			name:    "should prevent validate mint denom with invalid interface",
-			denom:   10,
-			isValid: false,
 		},
 		{
 			name:    "should prevent validate empty mint denom",
@@ -197,18 +192,13 @@ func TestValidateMintDenom(t *testing.T) {
 func TestValidateDec(t *testing.T) {
 	tests := []struct {
 		name    string
-		value   interface{}
+		value   sdkmath.LegacyDec
 		isValid bool
 	}{
 		{
 			name:    "should validate valid dec",
 			value:   DefaultInflationRateChange,
 			isValid: true,
-		},
-		{
-			name:    "should prevent validate dec with invalid interface",
-			value:   "string",
-			isValid: false,
 		},
 		{
 			name:    "should prevent validate dec with negative value",
@@ -236,18 +226,13 @@ func TestValidateDec(t *testing.T) {
 func TestValidateBlocksPerYear(t *testing.T) {
 	tests := []struct {
 		name    string
-		value   interface{}
+		value   uint64
 		isValid bool
 	}{
 		{
 			name:    "should validate valid blocks per year",
 			value:   DefaultBlocksPerYear,
 			isValid: true,
-		},
-		{
-			name:    "should prevent validate blocks per year with invalid interface",
-			value:   "string",
-			isValid: false,
 		},
 		{
 			name:    "should prevent validate blocks per year with zero value",
@@ -270,18 +255,13 @@ func TestValidateBlocksPerYear(t *testing.T) {
 func TestValidateDistributionProportions(t *testing.T) {
 	tests := []struct {
 		name             string
-		distrProportions interface{}
+		distrProportions DistributionProportions
 		isValid          bool
 	}{
 		{
 			name:             "should validate valid distribution proportions",
 			distrProportions: DefaultDistributionProportions,
 			isValid:          true,
-		},
-		{
-			name:             "should prevent validate distribution proportions with invalid interface",
-			distrProportions: "string",
-			isValid:          false,
 		},
 		{
 			name: "should prevent validate distribution proportions with negative staking ratio",
@@ -338,7 +318,7 @@ func TestValidateWeightedAddresses(t *testing.T) {
 
 	tests := []struct {
 		name              string
-		weightedAddresses interface{}
+		weightedAddresses []WeightedAddress
 		isValid           bool
 	}{
 		{
@@ -359,11 +339,6 @@ func TestValidateWeightedAddresses(t *testing.T) {
 			name:              "should validate valid empty weighted addresses",
 			weightedAddresses: DefaultFundedAddresses,
 			isValid:           true,
-		},
-		{
-			name:              "should prevent validate weighed addresses with invalid interface",
-			weightedAddresses: "string",
-			isValid:           false,
 		},
 		{
 			name: "should prevent validate weighed addresses with invalid SDK address",

@@ -14,27 +14,27 @@ message Params {
   option (amino.name) = "fundraising/x/fundraising/Params";
   option (gogoproto.equal) = true;
 
-  // auctionCreationFee specifies the fee for auction creation.
+  // auction_creation_fee specifies the fee for auction creation.
   // this prevents from spamming attack and it is collected in the community
   // pool
-  repeated cosmos.base.v1beta1.Coin auctionCreationFee = 1 [
+  repeated cosmos.base.v1beta1.Coin auction_creation_fee = 1 [
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true,
     (amino.encoding) = "legacy_coins",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 
-  // placeBidFee specifies the fee for placing a bid for an auction.
+  // place_bid_fee specifies the fee for placing a bid for an auction.
   // this prevents from spamming attack and it is collected in the community
   // pool
-  repeated cosmos.base.v1beta1.Coin placeBidFee = 2 [
+  repeated cosmos.base.v1beta1.Coin place_bid_fee = 2 [
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true,
     (amino.encoding) = "legacy_coins",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 
-  // extendedPeriod specifies the extended period that determines how long
+  // extended_period specifies the extended period that determines how long
   // the extended auction round lasts
-  uint32 extendedPeriod = 3;
+  uint32 extended_period = 3;
 }

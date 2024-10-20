@@ -49,7 +49,7 @@ When an auctioneer creates a batch auction, it must determine the following para
 - `SellingCoin`: the denom and total amount of selling coins to be auctioned,
 - `PayingCoinDenom`: the denom of coins to be used for payment,
 - `StartTime`: when the auction starts,
-- `EndTimes`: when the auction ends including the possible extended rounds,
+- `EndTime`: when the auction ends including the possible extended rounds,
 - `VestingSchedules`: the vesting schedules to allocate the sold amounts of paying coins to the auctioneer,
 - `MinBidPrice`: the minimum bid price that the bidders must place a bid with,
 - `MaxExtendedRound`: the maximum number of additional round for bidding,
@@ -61,7 +61,7 @@ In order to provide more opportunity to bidders in case of auction sniping, the 
 
 ### What a bidder can/cannot do:
 
-A bidder only listed in `AllowedBidders` can do the following behaviors during the auction period between `StartTime` and `EndTimes`.
+A bidder only listed in `AllowedBidders` can do the following behaviors during the auction period between `StartTime` and `EndTime`.
 1. Place a new bid
     - This auction provides two options for bidder to choose: 1) How-Much-Worth-To-Buy and 2) How-Many-Coins-To-Buy
         - (`BidType` of `BidTypeBatchWorth`) How-Much-Worth-To-Buy (fixed `PayingCoin`/varying `SellingCoin`): A bidder places a bid with a fixed amount of the paying coins and, if it wins, the bidder gets the selling coins, where the amount of the selling coins varies depending on the matched price determined after the auction period ends.
@@ -76,7 +76,7 @@ A bidder cannot do the following behaviors during the auction period.
 
 ### When the auction ends:
 
-The auction will end when the last time of `EndTimes` is arrived.
+The auction will end when the last time of `EndTime` is arrived.
 
 ### How `MatchedPrice` is determined:
 

@@ -21,7 +21,7 @@ func createNMission(keeper keeper.Keeper, ctx context.Context, n int) []types.Mi
 	items := make([]types.Mission, n)
 	for i := range items {
 		iu := uint64(i)
-		items[i].MissionID = iu
+		items[i].MissionId = iu
 		items[i].Weight = sdkmath.LegacyZeroDec()
 		_ = keeper.Mission.Set(ctx, iu, items[i])
 		_ = keeper.MissionSeq.Set(ctx, iu)
@@ -41,17 +41,17 @@ func TestMissionQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetMissionRequest{MissionID: msgs[0].MissionID},
+			request:  &types.QueryGetMissionRequest{MissionId: msgs[0].MissionId},
 			response: &types.QueryGetMissionResponse{Mission: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetMissionRequest{MissionID: msgs[1].MissionID},
+			request:  &types.QueryGetMissionRequest{MissionId: msgs[1].MissionId},
 			response: &types.QueryGetMissionResponse{Mission: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetMissionRequest{MissionID: uint64(len(msgs))},
+			request: &types.QueryGetMissionRequest{MissionId: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

@@ -27,13 +27,13 @@ func (k msgServer) Claim(ctx context.Context, msg *types.MsgClaim) (*types.MsgCl
 	if err != nil && errors.IsOf(err, collections.ErrNotFound) {
 		return nil, err
 	} else if err == nil {
-		if initialClaim.MissionID == msg.MissionID {
+		if initialClaim.MissionId == msg.MissionId {
 			if !initialClaim.Enabled {
 				return nil, types.ErrInitialClaimNotEnabled
 			}
 			// if is an initial claim, automatically add to completed missions
 			// the `ClaimMission` will update the claim record later
-			claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, msg.MissionID)
+			claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, msg.MissionId)
 		}
 	}
 
@@ -52,7 +52,7 @@ func (k msgServer) Claim(ctx context.Context, msg *types.MsgClaim) (*types.MsgCl
 			airdropStart.String(),
 		)
 	}
-	claimed, err := k.ClaimMission(ctx, claimRecord, msg.MissionID)
+	claimed, err := k.ClaimMission(ctx, claimRecord, msg.MissionId)
 	if err != nil {
 		return nil, err
 	}

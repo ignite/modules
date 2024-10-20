@@ -48,11 +48,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    fiftyPercent,
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    fiftyPercent,
 					},
 				},
@@ -60,7 +60,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: sdk.NewCoin("foo", claimAmts[0].Add(claimAmts[1]))},
 				InitialClaim: types.InitialClaim{
 					Enabled:   false,
-					MissionID: 21,
+					MissionId: 21,
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
@@ -72,7 +72,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -115,11 +115,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
@@ -146,11 +146,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    tc.Dec(t, "0.4"),
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
@@ -177,11 +177,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    tc.Dec(t, "0.4"),
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
@@ -208,11 +208,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
@@ -237,7 +237,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -245,7 +245,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
-					MissionID: 0,
+					MissionId: 0,
 				},
 			},
 			valid: true,
@@ -266,7 +266,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -291,7 +291,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -317,7 +317,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -342,7 +342,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -367,11 +367,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    tc.Dec(t, "0.4"),
 					},
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    tc.Dec(t, "0.6"),
 					},
 				},
@@ -397,7 +397,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				MissionList: []types.Mission{
 					{
-						MissionID: 1,
+						MissionId: 1,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -413,7 +413,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: sdk.Coin{}},
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},
@@ -427,11 +427,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    fiftyPercent,
 					},
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    fiftyPercent,
 					},
 				},
@@ -445,11 +445,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    fiftyPercent,
 					},
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyZeroDec(),
 					},
 				},
@@ -474,7 +474,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				AirdropSupply: types.AirdropSupply{Supply: tc.Coin(t, "20foo")},
 				InitialClaim: types.InitialClaim{
 					Enabled:   true,
-					MissionID: 0,
+					MissionId: 0,
 				},
 			},
 			valid: false,
@@ -489,7 +489,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				}, time.Unix(0, 0)),
 				MissionList: []types.Mission{
 					{
-						MissionID: 0,
+						MissionId: 0,
 						Weight:    sdkmath.LegacyOneDec(),
 					},
 				},

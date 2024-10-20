@@ -24,7 +24,7 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should accept weigth 0",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
+				MissionId:   sample.Uint64(r),
 				Description: sample.String(r, 30),
 				Weight:      tc.Dec(t, "0"),
 			},
@@ -33,7 +33,7 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should accept weight 1",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
+				MissionId:   sample.Uint64(r),
 				Description: sample.String(r, 30),
 				Weight:      tc.Dec(t, "1"),
 			},
@@ -42,7 +42,7 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should prevent weight greater than 1",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
+				MissionId:   sample.Uint64(r),
 				Description: sample.String(r, 30),
 				Weight:      tc.Dec(t, "1.0000001"),
 			},
@@ -51,7 +51,7 @@ func TestMission_Validate(t *testing.T) {
 		{
 			name: "should prevent weight less than 0",
 			mission: claim.Mission{
-				MissionID:   sample.Uint64(r),
+				MissionId:   sample.Uint64(r),
 				Description: sample.String(r, 30),
 				Weight:      tc.Dec(t, "-0.0000001"),
 			},

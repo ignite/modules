@@ -27,12 +27,12 @@ var _ = strconv.IntSize
 func createNVestingQueue(keeper keeper.Keeper, ctx context.Context, n int) []types.VestingQueue {
 	items := make([]types.VestingQueue, n)
 	for i := range items {
-		items[i].AuctionID = uint64(i)
+		items[i].AuctionId = uint64(i)
 		items[i].ReleaseTime = time.Now().UTC()
 		items[i].PayingCoin = sdk.NewCoin("coin", math.NewInt(int64(i)))
 		items[i].Auctioneer = sample.Address(r)
 
-		_ = keeper.VestingQueue.Set(ctx, collections.Join(items[i].AuctionID, items[i].ReleaseTime), items[i])
+		_ = keeper.VestingQueue.Set(ctx, collections.Join(items[i].AuctionId, items[i].ReleaseTime), items[i])
 	}
 	return items
 }

@@ -13,15 +13,15 @@ import (
 )
 
 var (
-	md_EventMissionCompleted           protoreflect.MessageDescriptor
-	fd_EventMissionCompleted_missionID protoreflect.FieldDescriptor
-	fd_EventMissionCompleted_address   protoreflect.FieldDescriptor
+	md_EventMissionCompleted            protoreflect.MessageDescriptor
+	fd_EventMissionCompleted_mission_id protoreflect.FieldDescriptor
+	fd_EventMissionCompleted_address    protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_modules_claim_v1_events_proto_init()
 	md_EventMissionCompleted = File_modules_claim_v1_events_proto.Messages().ByName("EventMissionCompleted")
-	fd_EventMissionCompleted_missionID = md_EventMissionCompleted.Fields().ByName("missionID")
+	fd_EventMissionCompleted_mission_id = md_EventMissionCompleted.Fields().ByName("mission_id")
 	fd_EventMissionCompleted_address = md_EventMissionCompleted.Fields().ByName("address")
 }
 
@@ -90,9 +90,9 @@ func (x *fastReflection_EventMissionCompleted) Interface() protoreflect.ProtoMes
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_EventMissionCompleted) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.MissionID != uint64(0) {
-		value := protoreflect.ValueOfUint64(x.MissionID)
-		if !f(fd_EventMissionCompleted_missionID, value) {
+	if x.MissionId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MissionId)
+		if !f(fd_EventMissionCompleted_mission_id, value) {
 			return
 		}
 	}
@@ -117,8 +117,8 @@ func (x *fastReflection_EventMissionCompleted) Range(f func(protoreflect.FieldDe
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_EventMissionCompleted) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
-		return x.MissionID != uint64(0)
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
+		return x.MissionId != uint64(0)
 	case "modules.claim.v1.EventMissionCompleted.address":
 		return x.Address != ""
 	default:
@@ -137,8 +137,8 @@ func (x *fastReflection_EventMissionCompleted) Has(fd protoreflect.FieldDescript
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionCompleted) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
-		x.MissionID = uint64(0)
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
+		x.MissionId = uint64(0)
 	case "modules.claim.v1.EventMissionCompleted.address":
 		x.Address = ""
 	default:
@@ -157,8 +157,8 @@ func (x *fastReflection_EventMissionCompleted) Clear(fd protoreflect.FieldDescri
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_EventMissionCompleted) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
-		value := x.MissionID
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
+		value := x.MissionId
 		return protoreflect.ValueOfUint64(value)
 	case "modules.claim.v1.EventMissionCompleted.address":
 		value := x.Address
@@ -183,8 +183,8 @@ func (x *fastReflection_EventMissionCompleted) Get(descriptor protoreflect.Field
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionCompleted) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
-		x.MissionID = value.Uint()
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
+		x.MissionId = value.Uint()
 	case "modules.claim.v1.EventMissionCompleted.address":
 		x.Address = value.Interface().(string)
 	default:
@@ -207,8 +207,8 @@ func (x *fastReflection_EventMissionCompleted) Set(fd protoreflect.FieldDescript
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionCompleted) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
-		panic(fmt.Errorf("field missionID of message modules.claim.v1.EventMissionCompleted is not mutable"))
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
+		panic(fmt.Errorf("field mission_id of message modules.claim.v1.EventMissionCompleted is not mutable"))
 	case "modules.claim.v1.EventMissionCompleted.address":
 		panic(fmt.Errorf("field address of message modules.claim.v1.EventMissionCompleted is not mutable"))
 	default:
@@ -224,7 +224,7 @@ func (x *fastReflection_EventMissionCompleted) Mutable(fd protoreflect.FieldDesc
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_EventMissionCompleted) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionCompleted.missionID":
+	case "modules.claim.v1.EventMissionCompleted.mission_id":
 		return protoreflect.ValueOfUint64(uint64(0))
 	case "modules.claim.v1.EventMissionCompleted.address":
 		return protoreflect.ValueOfString("")
@@ -297,8 +297,8 @@ func (x *fastReflection_EventMissionCompleted) ProtoMethods() *protoiface.Method
 		var n int
 		var l int
 		_ = l
-		if x.MissionID != 0 {
-			n += 1 + runtime.Sov(uint64(x.MissionID))
+		if x.MissionId != 0 {
+			n += 1 + runtime.Sov(uint64(x.MissionId))
 		}
 		l = len(x.Address)
 		if l > 0 {
@@ -340,8 +340,8 @@ func (x *fastReflection_EventMissionCompleted) ProtoMethods() *protoiface.Method
 			i--
 			dAtA[i] = 0x12
 		}
-		if x.MissionID != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.MissionID))
+		if x.MissionId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MissionId))
 			i--
 			dAtA[i] = 0x8
 		}
@@ -396,9 +396,9 @@ func (x *fastReflection_EventMissionCompleted) ProtoMethods() *protoiface.Method
 			switch fieldNum {
 			case 1:
 				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MissionID", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MissionId", wireType)
 				}
-				x.MissionID = 0
+				x.MissionId = 0
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
@@ -408,7 +408,7 @@ func (x *fastReflection_EventMissionCompleted) ProtoMethods() *protoiface.Method
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					x.MissionID |= uint64(b&0x7F) << shift
+					x.MissionId |= uint64(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
@@ -481,15 +481,15 @@ func (x *fastReflection_EventMissionCompleted) ProtoMethods() *protoiface.Method
 }
 
 var (
-	md_EventMissionClaimed           protoreflect.MessageDescriptor
-	fd_EventMissionClaimed_missionID protoreflect.FieldDescriptor
-	fd_EventMissionClaimed_claimer   protoreflect.FieldDescriptor
+	md_EventMissionClaimed            protoreflect.MessageDescriptor
+	fd_EventMissionClaimed_mission_id protoreflect.FieldDescriptor
+	fd_EventMissionClaimed_claimer    protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_modules_claim_v1_events_proto_init()
 	md_EventMissionClaimed = File_modules_claim_v1_events_proto.Messages().ByName("EventMissionClaimed")
-	fd_EventMissionClaimed_missionID = md_EventMissionClaimed.Fields().ByName("missionID")
+	fd_EventMissionClaimed_mission_id = md_EventMissionClaimed.Fields().ByName("mission_id")
 	fd_EventMissionClaimed_claimer = md_EventMissionClaimed.Fields().ByName("claimer")
 }
 
@@ -558,9 +558,9 @@ func (x *fastReflection_EventMissionClaimed) Interface() protoreflect.ProtoMessa
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_EventMissionClaimed) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.MissionID != uint64(0) {
-		value := protoreflect.ValueOfUint64(x.MissionID)
-		if !f(fd_EventMissionClaimed_missionID, value) {
+	if x.MissionId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MissionId)
+		if !f(fd_EventMissionClaimed_mission_id, value) {
 			return
 		}
 	}
@@ -585,8 +585,8 @@ func (x *fastReflection_EventMissionClaimed) Range(f func(protoreflect.FieldDesc
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_EventMissionClaimed) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
-		return x.MissionID != uint64(0)
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
+		return x.MissionId != uint64(0)
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		return x.Claimer != ""
 	default:
@@ -605,8 +605,8 @@ func (x *fastReflection_EventMissionClaimed) Has(fd protoreflect.FieldDescriptor
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionClaimed) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
-		x.MissionID = uint64(0)
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
+		x.MissionId = uint64(0)
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		x.Claimer = ""
 	default:
@@ -625,8 +625,8 @@ func (x *fastReflection_EventMissionClaimed) Clear(fd protoreflect.FieldDescript
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_EventMissionClaimed) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
-		value := x.MissionID
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
+		value := x.MissionId
 		return protoreflect.ValueOfUint64(value)
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		value := x.Claimer
@@ -651,8 +651,8 @@ func (x *fastReflection_EventMissionClaimed) Get(descriptor protoreflect.FieldDe
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionClaimed) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
-		x.MissionID = value.Uint()
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
+		x.MissionId = value.Uint()
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		x.Claimer = value.Interface().(string)
 	default:
@@ -675,8 +675,8 @@ func (x *fastReflection_EventMissionClaimed) Set(fd protoreflect.FieldDescriptor
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_EventMissionClaimed) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
-		panic(fmt.Errorf("field missionID of message modules.claim.v1.EventMissionClaimed is not mutable"))
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
+		panic(fmt.Errorf("field mission_id of message modules.claim.v1.EventMissionClaimed is not mutable"))
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		panic(fmt.Errorf("field claimer of message modules.claim.v1.EventMissionClaimed is not mutable"))
 	default:
@@ -692,7 +692,7 @@ func (x *fastReflection_EventMissionClaimed) Mutable(fd protoreflect.FieldDescri
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_EventMissionClaimed) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "modules.claim.v1.EventMissionClaimed.missionID":
+	case "modules.claim.v1.EventMissionClaimed.mission_id":
 		return protoreflect.ValueOfUint64(uint64(0))
 	case "modules.claim.v1.EventMissionClaimed.claimer":
 		return protoreflect.ValueOfString("")
@@ -765,8 +765,8 @@ func (x *fastReflection_EventMissionClaimed) ProtoMethods() *protoiface.Methods 
 		var n int
 		var l int
 		_ = l
-		if x.MissionID != 0 {
-			n += 1 + runtime.Sov(uint64(x.MissionID))
+		if x.MissionId != 0 {
+			n += 1 + runtime.Sov(uint64(x.MissionId))
 		}
 		l = len(x.Claimer)
 		if l > 0 {
@@ -808,8 +808,8 @@ func (x *fastReflection_EventMissionClaimed) ProtoMethods() *protoiface.Methods 
 			i--
 			dAtA[i] = 0x12
 		}
-		if x.MissionID != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.MissionID))
+		if x.MissionId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MissionId))
 			i--
 			dAtA[i] = 0x8
 		}
@@ -864,9 +864,9 @@ func (x *fastReflection_EventMissionClaimed) ProtoMethods() *protoiface.Methods 
 			switch fieldNum {
 			case 1:
 				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MissionID", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MissionId", wireType)
 				}
-				x.MissionID = 0
+				x.MissionId = 0
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
@@ -876,7 +876,7 @@ func (x *fastReflection_EventMissionClaimed) ProtoMethods() *protoiface.Methods 
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					x.MissionID |= uint64(b&0x7F) << shift
+					x.MissionId |= uint64(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
@@ -966,7 +966,7 @@ type EventMissionCompleted struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MissionID uint64 `protobuf:"varint,1,opt,name=missionID,proto3" json:"missionID,omitempty"`
+	MissionId uint64 `protobuf:"varint,1,opt,name=mission_id,json=missionId,proto3" json:"mission_id,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
@@ -990,9 +990,9 @@ func (*EventMissionCompleted) Descriptor() ([]byte, []int) {
 	return file_modules_claim_v1_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *EventMissionCompleted) GetMissionID() uint64 {
+func (x *EventMissionCompleted) GetMissionId() uint64 {
 	if x != nil {
-		return x.MissionID
+		return x.MissionId
 	}
 	return 0
 }
@@ -1009,7 +1009,7 @@ type EventMissionClaimed struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MissionID uint64 `protobuf:"varint,1,opt,name=missionID,proto3" json:"missionID,omitempty"`
+	MissionId uint64 `protobuf:"varint,1,opt,name=mission_id,json=missionId,proto3" json:"mission_id,omitempty"`
 	Claimer   string `protobuf:"bytes,2,opt,name=claimer,proto3" json:"claimer,omitempty"`
 }
 
@@ -1033,9 +1033,9 @@ func (*EventMissionClaimed) Descriptor() ([]byte, []int) {
 	return file_modules_claim_v1_events_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *EventMissionClaimed) GetMissionID() uint64 {
+func (x *EventMissionClaimed) GetMissionId() uint64 {
 	if x != nil {
-		return x.MissionID
+		return x.MissionId
 	}
 	return 0
 }
@@ -1053,28 +1053,28 @@ var file_modules_claim_v1_events_proto_rawDesc = []byte{
 	0x0a, 0x1d, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2f,
 	0x76, 0x31, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
 	0x10, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x76,
-	0x31, 0x22, 0x4f, 0x0a, 0x15, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x4d, 0x69, 0x73, 0x73, 0x69, 0x6f,
-	0x6e, 0x43, 0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x6d, 0x69,
-	0x73, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x6d,
-	0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72,
-	0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65,
-	0x73, 0x73, 0x22, 0x4d, 0x0a, 0x13, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x4d, 0x69, 0x73, 0x73, 0x69,
-	0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x65, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x6d, 0x69, 0x73,
-	0x73, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x6d, 0x69,
-	0x73, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d,
-	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x65,
-	0x72, 0x42, 0xb0, 0x01, 0x0a, 0x14, 0x63, 0x6f, 0x6d, 0x2e, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65,
-	0x73, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x45, 0x76, 0x65, 0x6e,
-	0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x29, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6d, 0x6f, 0x64, 0x75,
-	0x6c, 0x65, 0x73, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2f, 0x76, 0x31, 0x3b, 0x63, 0x6c, 0x61,
-	0x69, 0x6d, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4d, 0x43, 0x58, 0xaa, 0x02, 0x10, 0x4d, 0x6f, 0x64,
-	0x75, 0x6c, 0x65, 0x73, 0x2e, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x10,
-	0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x5c, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x5c, 0x56, 0x31,
-	0xe2, 0x02, 0x1c, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x5c, 0x43, 0x6c, 0x61, 0x69, 0x6d,
-	0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea,
-	0x02, 0x12, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x3a, 0x3a, 0x43, 0x6c, 0x61, 0x69, 0x6d,
-	0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x31, 0x22, 0x50, 0x0a, 0x15, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x4d, 0x69, 0x73, 0x73, 0x69, 0x6f,
+	0x6e, 0x43, 0x6f, 0x6d, 0x70, 0x6c, 0x65, 0x74, 0x65, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x69,
+	0x73, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
+	0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64,
+	0x72, 0x65, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72,
+	0x65, 0x73, 0x73, 0x22, 0x4e, 0x0a, 0x13, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x4d, 0x69, 0x73, 0x73,
+	0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x65, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x69,
+	0x73, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
+	0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6c, 0x61,
+	0x69, 0x6d, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x69,
+	0x6d, 0x65, 0x72, 0x42, 0xb0, 0x01, 0x0a, 0x14, 0x63, 0x6f, 0x6d, 0x2e, 0x6d, 0x6f, 0x64, 0x75,
+	0x6c, 0x65, 0x73, 0x2e, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x45, 0x76,
+	0x65, 0x6e, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x29, 0x63, 0x6f, 0x73,
+	0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6d, 0x6f,
+	0x64, 0x75, 0x6c, 0x65, 0x73, 0x2f, 0x63, 0x6c, 0x61, 0x69, 0x6d, 0x2f, 0x76, 0x31, 0x3b, 0x63,
+	0x6c, 0x61, 0x69, 0x6d, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4d, 0x43, 0x58, 0xaa, 0x02, 0x10, 0x4d,
+	0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x2e, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x2e, 0x56, 0x31, 0xca,
+	0x02, 0x10, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x5c, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x5c,
+	0x56, 0x31, 0xe2, 0x02, 0x1c, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x5c, 0x43, 0x6c, 0x61,
+	0x69, 0x6d, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74,
+	0x61, 0xea, 0x02, 0x12, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x73, 0x3a, 0x3a, 0x43, 0x6c, 0x61,
+	0x69, 0x6d, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (

@@ -217,13 +217,13 @@ func (s *KeeperTestSuite) TestHooks() {
 	// Cancel the auction
 	err := s.keeper.CancelAuction(s.ctx, &types.MsgCancelAuction{
 		Auctioneer: standByAuction.Auctioneer,
-		AuctionID:  standByAuction.AuctionID,
+		AuctionId:  standByAuction.AuctionId,
 	})
 	s.Require().NoError(err)
 	s.Require().True(fundraisingHooksReceiver.BeforeAuctionCanceledValid)
 
 	// Get already started batch auction
-	auction, err := s.keeper.Auction.Get(s.ctx, batchAuction.AuctionID)
+	auction, err := s.keeper.Auction.Get(s.ctx, batchAuction.AuctionId)
 	s.Require().NoError(err)
 
 	// Add allowed bidder
@@ -243,8 +243,8 @@ func (s *KeeperTestSuite) TestHooks() {
 	// Modify the bid
 	s.fundAddr(bid.GetBidder(), sdk.NewCoins(parseCoin("1_000_000denom4")))
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
-		AuctionID: bid.AuctionID,
-		BidID:     bid.BidID,
+		AuctionId: bid.AuctionId,
+		BidId:     bid.BidId,
 		Bidder:    bid.Bidder,
 		Price:     bid.Price,
 		Coin:      parseCoin("6_000_000denom4"),

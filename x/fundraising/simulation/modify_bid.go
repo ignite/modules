@@ -54,9 +54,9 @@ func SimulateMsgModifyBid(
 		spendable := bk.SpendableCoins(ctx, account.GetAddress())
 
 		msg = types.NewMsgModifyBid(
-			bid.AuctionID,
+			bid.AuctionId,
 			account.GetAddress().String(),
-			bid.BidID,
+			bid.BidId,
 			bid.Price,
 			bid.Coin.AddAmount(math.OneInt()),
 		)

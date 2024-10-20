@@ -41,7 +41,7 @@ func TestMatch(t *testing.T) {
 		}
 		return types.Bid{
 			// Omitted fields are not important when testing types.Match
-			BidID:     id,
+			BidId:     id,
 			Bidder:    bidder,
 			Type:      typ,
 			Price:     price,
@@ -136,7 +136,7 @@ func TestMatch(t *testing.T) {
 				require.True(math.IntEq(t, tc.matchedAmt, matchRes.MatchedAmount))
 				var matchedBidIDs []uint64
 				for _, bid := range matchRes.MatchedBids {
-					matchedBidIDs = append(matchedBidIDs, bid.BidID)
+					matchedBidIDs = append(matchedBidIDs, bid.BidId)
 				}
 				require.Equal(t, tc.matchedBidIDs, matchedBidIDs)
 				require.Equal(t, tc.matchResultByBidder, matchRes.MatchResultByBidder)

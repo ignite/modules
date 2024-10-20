@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -20,29 +19,10 @@ func DefaultParams() Params {
 
 // Validate validates the set of params.
 func (p Params) Validate() error {
-	if err := validateDecayInformation(p.DecayInformation); err != nil {
-		return err
-	}
-	if err := validateAirdropStart(p.AirdropStart); err != nil {
-		return err
-	}
-
-	return nil
+	return validateDecayInformation(p.DecayInformation)
 }
 
 // validateDecayInformation validates the DecayInformation param
-func validateDecayInformation(v interface{}) error {
-	decayInfo, ok := v.(DecayInformation)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
+func validateDecayInformation(decayInfo DecayInformation) error {
 	return decayInfo.Validate()
-}
-
-func validateAirdropStart(i interface{}) error {
-	if _, ok := i.(time.Time); !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-	return nil
 }

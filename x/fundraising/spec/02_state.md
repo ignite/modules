@@ -47,8 +47,8 @@ type AuctionI interface {
 	GetStartTime() time.Time
 	SetStartTime(time.Time) error
 
-	GetEndTimes() []time.Time
-	SetEndTimes([]time.Time) error
+	GetEndTime() []time.Time
+	SetEndTime([]time.Time) error
 
 	GetStatus() AuctionStatus
 	SetStatus(AuctionStatus) error
@@ -80,7 +80,7 @@ type BaseAuction struct {
 	VestingReserveAddress string            // the reserve account that releases the accumulated paying coins based on the schedules
 	VestingSchedules      []VestingSchedule // the vesting schedules for the auction
 	StartTime             time.Time         // the start time of the auction
-	EndTimes              []time.Time       // the end times of the auction; it is an array since extended round(s) can occur
+	EndTime              []time.Time       // the end times of the auction; it is an array since extended round(s) can occur
 	Status                AuctionStatus     // the auction status
 }
 ```

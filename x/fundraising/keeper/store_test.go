@@ -76,20 +76,20 @@ func (s *KeeperTestSuite) TestAllowedBidderByAuction() {
 	)
 	s.Require().Equal(auction.GetStatus(), types.AuctionStatusStandBy)
 
-	allowedBidders, err := s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionID)
+	allowedBidders, err := s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionId)
 	s.Require().NoError(err)
 	s.Require().Len(allowedBidders, 0)
 
 	// Add new allowed bidders
 	newAllowedBidders := []types.AllowedBidder{
-		{AuctionID: 1, Bidder: s.addr(1).String(), MaxBidAmount: parseInt("100000")},
-		{AuctionID: 1, Bidder: s.addr(2).String(), MaxBidAmount: parseInt("100000")},
-		{AuctionID: 1, Bidder: s.addr(3).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionId: 1, Bidder: s.addr(1).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionId: 1, Bidder: s.addr(2).String(), MaxBidAmount: parseInt("100000")},
+		{AuctionId: 1, Bidder: s.addr(3).String(), MaxBidAmount: parseInt("100000")},
 	}
-	err = s.keeper.AddAllowedBidders(s.ctx, auction.AuctionID, newAllowedBidders)
+	err = s.keeper.AddAllowedBidders(s.ctx, auction.AuctionId, newAllowedBidders)
 	s.Require().NoError(err)
 
-	allowedBidders, err = s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionID)
+	allowedBidders, err = s.keeper.GetAllowedBiddersByAuction(s.ctx, auction.AuctionId)
 	s.Require().NoError(err)
 	s.Require().Len(allowedBidders, 3)
 }
@@ -107,13 +107,13 @@ func (s *KeeperTestSuite) TestLastBidID() {
 	)
 	s.Require().Equal(types.AuctionStatusStarted, auction.GetStatus())
 
-	bidID, err := s.keeper.BidSeq.Get(s.ctx, auction.AuctionID)
+	bidID, err := s.keeper.BidSeq.Get(s.ctx, auction.AuctionId)
 	s.Require().Error(err)
 	s.Require().Equal(uint64(0), bidID)
 
-	s.placeBidFixedPrice(auction.AuctionID, s.addr(1), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
-	s.placeBidFixedPrice(auction.AuctionID, s.addr(2), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
-	s.placeBidFixedPrice(auction.AuctionID, s.addr(3), math.LegacyOneDec(), parseCoin("15000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionId, s.addr(1), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionId, s.addr(2), math.LegacyOneDec(), parseCoin("20000000denom2"), true)
+	s.placeBidFixedPrice(auction.AuctionId, s.addr(3), math.LegacyOneDec(), parseCoin("15000000denom2"), true)
 
 	bidsById, err := s.keeper.GetBidsByAuctionID(s.ctx, auction.GetId())
 	s.Require().NoError(err)
@@ -190,14 +190,14 @@ func (s *KeeperTestSuite) TestVestingQueue() {
 	err := s.keeper.VestingQueue.Set(
 		s.ctx,
 		collections.Join(
-			vestingQueue.AuctionID,
+			vestingQueue.AuctionId,
 			vestingQueue.ReleaseTime,
 		),
 		vestingQueue,
 	)
 	s.Require().NoError(err)
 
-	vq, err := s.keeper.VestingQueue.Get(s.ctx, collections.Join(vestingQueue.AuctionID, vestingQueue.ReleaseTime))
+	vq, err := s.keeper.VestingQueue.Get(s.ctx, collections.Join(vestingQueue.AuctionId, vestingQueue.ReleaseTime))
 	s.Require().NoError(err)
 	s.Require().EqualValues(vestingQueue, vq)
 }
@@ -221,7 +221,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		payingAmt := math.LegacyNewDecFromInt(reserveCoin.Amount).MulTruncate(vs.Weight).TruncateInt()
 
 		vestingQueue := types.VestingQueue{
-			AuctionID:   uint64(1),
+			AuctionId:   uint64(1),
 			Auctioneer:  s.addr(1).String(),
 			PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 			ReleaseTime: vs.ReleaseTime,
@@ -230,7 +230,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		err := s.keeper.VestingQueue.Set(
 			s.ctx,
 			collections.Join(
-				vestingQueue.AuctionID,
+				vestingQueue.AuctionId,
 				vestingQueue.ReleaseTime,
 			),
 			vestingQueue,
@@ -260,7 +260,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		payingAmt := math.LegacyNewDecFromInt(reserveCoin.Amount).MulTruncate(vs.Weight).TruncateInt()
 
 		vestingQueue := types.VestingQueue{
-			AuctionID:   uint64(2),
+			AuctionId:   uint64(2),
 			Auctioneer:  s.addr(2).String(),
 			PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 			ReleaseTime: vs.ReleaseTime,
@@ -269,7 +269,7 @@ func (s *KeeperTestSuite) TestVestingQueueIterator() {
 		err := s.keeper.VestingQueue.Set(
 			s.ctx,
 			collections.Join(
-				vestingQueue.AuctionID,
+				vestingQueue.AuctionId,
 				vestingQueue.ReleaseTime,
 			),
 			vestingQueue,

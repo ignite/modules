@@ -130,7 +130,7 @@ func (s *KeeperTestSuite) TestVestingPoolReserveAmountInvariant() {
 	s.placeBidFixedPrice(auction.GetId(), s.addr(3), math.LegacyOneDec(), parseCoin("35000000denom4"), true)
 
 	// Make the auction ended
-	ctx = ctx.WithBlockTime(auction.GetEndTimes()[0].AddDate(0, 0, 1))
+	ctx = ctx.WithBlockTime(auction.GetEndTime()[0].AddDate(0, 0, 1))
 	s.Require().NoError(k.BeginBlocker(ctx))
 
 	// Make first and second vesting queues over

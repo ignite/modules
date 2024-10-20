@@ -31,7 +31,7 @@ service Query {
 
   // Queries a list of Mission items.
   rpc GetMission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-    option (google.api.http).get = "/ignite/modules/claim/mission/{missionID}";
+    option (google.api.http).get = "/ignite/modules/claim/mission/{mission_id}";
   }
   rpc ListMission(QueryAllMissionRequest) returns (QueryAllMissionResponse) {
     option (google.api.http).get = "/ignite/modules/claim/mission";
@@ -65,7 +65,7 @@ message QueryGetClaimRecordRequest {
 }
 
 message QueryGetClaimRecordResponse {
-  ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+  ClaimRecord claim_record = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllClaimRecordRequest {
@@ -73,16 +73,16 @@ message QueryAllClaimRecordRequest {
 }
 
 message QueryAllClaimRecordResponse {
-  repeated ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+  repeated ClaimRecord claim_record = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetMissionRequest {
-  uint64 missionID = 1;
+  uint64 mission_id = 1;
 }
 
 message QueryGetMissionResponse {
-  Mission Mission = 1 [(gogoproto.nullable) = false];
+  Mission mission = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllMissionRequest {
@@ -90,18 +90,18 @@ message QueryAllMissionRequest {
 }
 
 message QueryAllMissionResponse {
-  repeated Mission Mission = 1 [(gogoproto.nullable) = false];
+  repeated Mission mission = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetInitialClaimRequest {}
 
 message QueryGetInitialClaimResponse {
-  InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false];
+  InitialClaim initial_claim = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetAirdropSupplyRequest {}
 
 message QueryGetAirdropSupplyResponse {
-  AirdropSupply AirdropSupply = 1 [(gogoproto.nullable) = false];
+  AirdropSupply airdrop_supply = 1 [(gogoproto.nullable) = false];
 }

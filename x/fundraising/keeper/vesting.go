@@ -86,7 +86,7 @@ func (k Keeper) ApplyVestingSchedules(ctx context.Context, auction types.Auction
 					schedule.ReleaseTime,
 				),
 				types.VestingQueue{
-					AuctionID:   auction.GetId(),
+					AuctionId:   auction.GetId(),
 					Auctioneer:  auction.GetAuctioneer().String(),
 					PayingCoin:  sdk.NewCoin(payingCoinDenom, payingAmt),
 					ReleaseTime: schedule.ReleaseTime,

@@ -57,7 +57,7 @@ func SimulateMsgClaim(
 		}
 
 		for _, m := range missions {
-			if cr.IsMissionCompleted(m.MissionID) && !cr.IsMissionClaimed(m.MissionID) {
+			if cr.IsMissionCompleted(m.MissionId) && !cr.IsMissionClaimed(m.MissionId) {
 				hasMission = true
 				mission = m
 			}

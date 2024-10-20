@@ -11,11 +11,11 @@ option go_package = "github.com/ignite/modules/x/claim/types";
 // when claimable airdrop amount starts to decrease and when it ends
 message DecayInformation {
   bool enabled = 1;
-  google.protobuf.Timestamp decayStart = 2 [
+  google.protobuf.Timestamp decay_start = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true
   ];
-  google.protobuf.Timestamp decayEnd = 3 [
+  google.protobuf.Timestamp decay_end = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true
   ];

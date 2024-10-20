@@ -22,16 +22,16 @@ message GenesisState {
     (amino.dont_omitempty) = true
   ];
 
-  // auctionList define the auction interface for genesis state; the module
+  // auction_list define the auction interface for genesis state; the module
   // supports FixedPriceAuction or BatchAuction
-  repeated google.protobuf.Any auctionList = 2 [(cosmos_proto.accepts_interface) = "AuctionI"];
+  repeated google.protobuf.Any auction_list = 2 [(cosmos_proto.accepts_interface) = "AuctionI"];
 
-  // allowedBidderList define the allowed bidder records for the auction
-  repeated AllowedBidder allowedBidderList = 3 [(gogoproto.nullable) = false];
+  // allowed_bidder_list define the allowed bidder records for the auction
+  repeated AllowedBidder allowed_bidder_list = 3 [(gogoproto.nullable) = false];
 
-  // bidList define the bid records used for genesis state
-  repeated Bid bidList = 4 [(gogoproto.nullable) = false];
+  // bid_list define the bid records used for genesis state
+  repeated Bid bid_list = 4 [(gogoproto.nullable) = false];
 
-  // vestingQueueList define the vesting queue records used for genesis state
-  repeated VestingQueue vestingQueueList = 5 [(gogoproto.nullable) = false];
+  // vesting_queue_list define the vesting queue records used for genesis state
+  repeated VestingQueue vesting_queue_list = 5 [(gogoproto.nullable) = false];
 }

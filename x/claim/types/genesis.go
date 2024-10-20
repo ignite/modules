@@ -50,13 +50,13 @@ func (gs GenesisState) Validate() error {
 		}
 
 		weightSum = weightSum.Add(mission.Weight)
-		if _, ok := missionMap[mission.MissionID]; ok {
+		if _, ok := missionMap[mission.MissionId]; ok {
 			return errors.New("duplicated id for mission")
 		}
-		if mission.MissionID >= missionCount {
+		if mission.MissionId >= missionCount {
 			return fmt.Errorf("mission id should be lower or equal than the last id")
 		}
-		missionMap[mission.MissionID] = mission
+		missionMap[mission.MissionId] = mission
 	}
 
 	// ensure mission weight sum is 1
@@ -68,7 +68,7 @@ func (gs GenesisState) Validate() error {
 
 	// check initial claim mission exist if enabled
 	if gs.InitialClaim.Enabled {
-		if _, ok := missionMap[gs.InitialClaim.MissionID]; !ok {
+		if _, ok := missionMap[gs.InitialClaim.MissionId]; !ok {
 			return errors.New("initial claim mission doesn't exist")
 		}
 	}

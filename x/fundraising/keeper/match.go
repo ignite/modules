@@ -133,7 +133,7 @@ func (k Keeper) CalculateBatchAllocation(ctx context.Context, auction types.Auct
 
 	for _, bid := range matchRes.MatchedBids {
 		bid.SetMatched(true)
-		if err := k.Bid.Set(ctx, collections.Join(bid.AuctionID, bid.BidID), bid); err != nil {
+		if err := k.Bid.Set(ctx, collections.Join(bid.AuctionId, bid.BidId), bid); err != nil {
 			return mInfo, err
 		}
 	}
