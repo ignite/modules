@@ -475,19 +475,21 @@ func (s *KeeperTestSuite) TestInvalidEndTime() {
 	params, err := s.keeper.Params.Get(s.ctx)
 	s.Require().NoError(err)
 
+	startTime := types.MustParseRFC3339("2022-03-01T00:00:00Z")
+	endTime := types.MustParseRFC3339("2022-01-01T00:00:00Z")
 	fixedPriceAuction := types.NewMsgCreateFixedPriceAuction(
 		s.addr(0).String(),
 		parseDec("0.5"),
 		parseCoin("500_000_000_000denom1"),
 		"denom2",
 		[]types.VestingSchedule{},
-		types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-		types.MustParseRFC3339("2022-01-01T00:00:00Z"),
+		startTime,
+		endTime,
 	)
 	s.fundAddr(s.addr(0), params.AuctionCreationFee.Add(fixedPriceAuction.SellingCoin))
 
 	_, err = s.keeper.CreateFixedPriceAuction(s.ctx, fixedPriceAuction)
-	s.Require().EqualError(err, sdkerrors.Wrap(errors.ErrInvalidRequest, "end time must be set after the current time").Error())
+	s.Require().EqualError(err, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%d) must be set after the current time", endTime.Unix()).Error())
 
 	batchAuction := types.NewMsgCreateBatchAuction(
 		s.addr(1).String(),
@@ -504,7 +506,7 @@ func (s *KeeperTestSuite) TestInvalidEndTime() {
 	s.fundAddr(s.addr(1), params.AuctionCreationFee.Add(batchAuction.SellingCoin))
 
 	_, err = s.keeper.CreateBatchAuction(s.ctx, batchAuction)
-	s.Require().EqualError(err, sdkerrors.Wrap(errors.ErrInvalidRequest, "end time must be set after the current time").Error())
+	s.Require().EqualError(err, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%d) must be set after the current time", endTime.Unix()).Error())
 }
 
 func (s *KeeperTestSuite) TestAddAllowedBidders() {
