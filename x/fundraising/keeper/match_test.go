@@ -99,13 +99,15 @@ func (s *KeeperTestSuite) TestBatchAuction_Many() {
 	err = s.keeper.AllocateSellingCoin(s.ctx, auction, mInfo)
 	s.Require().NoError(err)
 
-	sellingReserveAmt := s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).Amount
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	sellingReserveAmt := s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).Amount
 	remainingAmt := auction.GetSellingCoin().Amount.Sub(mInfo.TotalMatchedAmount)
 	s.Require().True(sellingReserveAmt.Equal(remainingAmt))
 
 	err = s.keeper.RefundRemainingSellingCoin(s.ctx, auction)
 	s.Require().NoError(err)
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, math.NewInt(0))
@@ -173,7 +175,9 @@ func (s *KeeperTestSuite) TestBatchAuction_Worth() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().True(
@@ -243,7 +247,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().True(
@@ -309,7 +315,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Many_Limited() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, math.NewInt(200_000_000))
@@ -372,7 +380,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Worth_Limited() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, math.NewInt(300_000_000))
@@ -435,7 +445,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed_Limited() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().True(
@@ -567,7 +579,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed2() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, auction.SellingCoin.Amount.Sub(mInfo.TotalMatchedAmount))
@@ -709,7 +723,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed2_LimitedSame() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, auction.SellingCoin.Amount.Sub(mInfo.TotalMatchedAmount))
@@ -851,7 +867,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed2_LimitedDifferent() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, math.NewInt(300_000_000))
@@ -1048,7 +1066,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed3() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, auction.SellingCoin.Amount.Sub(mInfo.TotalMatchedAmount))
@@ -1256,7 +1276,9 @@ func (s *KeeperTestSuite) TestCalculateAllocation_Mixed3_LimitedDifferent() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom).Amount, auction.SellingCoin.Amount.Sub(mInfo.TotalMatchedAmount))

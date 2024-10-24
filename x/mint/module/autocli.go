@@ -20,14 +20,14 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod:      "Inflation",
 					Use:            "inflation",
-					Short:          "Query Inflation",
+					Short:          "Query the current minting inflation value",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{},
 				},
 
 				{
 					RpcMethod:      "AnnualProvisions",
 					Use:            "annual-provisions",
-					Short:          "Query AnnualProvisions",
+					Short:          "Query the current minting annual provisions value",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{},
 				},
 

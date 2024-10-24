@@ -66,7 +66,9 @@ func (s *KeeperTestSuite) TestEndBlockerStartedStatus() {
 	receiveAmt := math.LegacyNewDecFromInt(totalBidCoin.Amount).QuoTruncate(auction.GetStartPrice()).TruncateInt()
 	receiveCoin := sdk.NewCoin(auction.GetSellingCoin().Denom, receiveAmt)
 
-	payingReserve := s.getBalance(auction.GetPayingReserveAddress(), auction.GetPayingCoinDenom())
+	payingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetPayingReserveAddress())
+	s.Require().NoError(err)
+	payingReserve := s.getBalance(payingReserveAddress, auction.GetPayingCoinDenom())
 	s.Require().True(coinEq(totalBidCoin, payingReserve))
 
 	// Modify the current block time a day after the end time
@@ -111,7 +113,9 @@ func (s *KeeperTestSuite) TestEndBlockerVestingStatus() {
 	s.ctx = s.ctx.WithBlockTime(auction.GetEndTime()[0].AddDate(0, 0, 1))
 	s.Require().NoError(s.keeper.BeginBlocker(s.ctx))
 
-	vestingReserve := s.getBalance(auction.GetVestingReserveAddress(), auction.GetPayingCoinDenom())
+	vestingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetVestingReserveAddress())
+	s.Require().NoError(err)
+	vestingReserve := s.getBalance(vestingReserveAddress, auction.GetPayingCoinDenom())
 	s.Require().Equal(totalBidCoin, vestingReserve)
 
 	// Modify the current block time a day after the last vesting schedule

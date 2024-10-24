@@ -20,13 +20,6 @@ func (msg MsgCancelAuction) Type() string {
 	return sdk.MsgTypeURL(&MsgCancelAuction{})
 }
 
-func (msg MsgCancelAuction) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Auctioneer); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid auctioneer address: %v", err)
-	}
-	return nil
-}
-
 func NewMsgCreateBatchAuction(
 	auctioneer string,
 	startPrice math.LegacyDec,
@@ -57,10 +50,7 @@ func (msg MsgCreateBatchAuction) Type() string {
 	return sdk.MsgTypeURL(&MsgCreateBatchAuction{})
 }
 
-func (msg MsgCreateBatchAuction) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Auctioneer); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid auctioneer address: %v", err)
-	}
+func (msg MsgCreateBatchAuction) Validate() error {
 	if !msg.StartPrice.IsPositive() {
 		return sdkerrors.Wrapf(errors.ErrInvalidRequest, "start price must be positive")
 	}
@@ -112,10 +102,7 @@ func (msg MsgCreateFixedPriceAuction) Type() string {
 	return sdk.MsgTypeURL(&MsgCreateFixedPriceAuction{})
 }
 
-func (msg MsgCreateFixedPriceAuction) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Auctioneer); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid auctioneer address: %v", err)
-	}
+func (msg MsgCreateFixedPriceAuction) Validate() error {
 	if !msg.StartPrice.IsPositive() {
 		return sdkerrors.Wrapf(errors.ErrInvalidRequest, "start price must be positive")
 	}
@@ -157,10 +144,7 @@ func (msg MsgPlaceBid) Type() string {
 	return sdk.MsgTypeURL(&MsgPlaceBid{})
 }
 
-func (msg MsgPlaceBid) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Bidder); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid bidder address: %v", err)
-	}
+func (msg MsgPlaceBid) Validate() error {
 	if !msg.Price.IsPositive() {
 		return sdkerrors.Wrapf(errors.ErrInvalidRequest, "bid price must be positive value")
 	}
@@ -177,30 +161,16 @@ func (msg MsgPlaceBid) ValidateBasic() error {
 	return nil
 }
 
-func NewMsgAddAllowedBidder(auctionID uint64, allowedBidder AllowedBidder) *MsgAddAllowedBidder {
+func NewMsgAddAllowedBidder(auctionID uint64, bidder string, maxBidAmount math.Int) *MsgAddAllowedBidder {
 	return &MsgAddAllowedBidder{
-		AuctionId:     auctionID,
-		AllowedBidder: allowedBidder,
+		AuctionId:    auctionID,
+		Bidder:       bidder,
+		MaxBidAmount: maxBidAmount,
 	}
-}
-
-func (msg *MsgAddAllowedBidder) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.AllowedBidder.Bidder)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
 }
 
 func (msg MsgAddAllowedBidder) Type() string {
 	return sdk.MsgTypeURL(&MsgAddAllowedBidder{})
-}
-
-func (msg MsgAddAllowedBidder) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.AllowedBidder.Bidder); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid bidder address: %v", err)
-	}
-	return nil
 }
 
 func NewMsgModifyBid(
@@ -223,10 +193,7 @@ func (msg MsgModifyBid) Type() string {
 	return sdk.MsgTypeURL(&MsgModifyBid{})
 }
 
-func (msg MsgModifyBid) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Bidder); err != nil {
-		return sdkerrors.Wrapf(errors.ErrInvalidAddress, "invalid bidder address: %v", err)
-	}
+func (msg MsgModifyBid) Validate() error {
 	if !msg.Price.IsPositive() {
 		return sdkerrors.Wrapf(errors.ErrInvalidRequest, "bid price must be positive value")
 	}

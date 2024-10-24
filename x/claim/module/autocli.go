@@ -20,19 +20,19 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod: "ListClaimRecord",
 					Use:       "list-claim-record",
-					Short:     "List all ClaimRecord",
+					Short:     "List all claim records",
 				},
 				{
 					RpcMethod:      "GetClaimRecord",
 					Use:            "get-claim-record [address]",
-					Short:          "Gets a ClaimRecord",
+					Short:          "Gets a claim record by address",
 					Alias:          []string{"show-claim-record"},
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "address"}},
 				},
 				{
 					RpcMethod: "ListMission",
 					Use:       "list-mission",
-					Short:     "List all Mission",
+					Short:     "list all missions to claim airdrop",
 				},
 				{
 					RpcMethod:      "GetMission",
@@ -44,14 +44,15 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod: "GetInitialClaim",
 					Use:       "get-initial-claim",
-					Short:     "Gets a InitialClaim",
+					Short:     "Gets information about initial claim",
+					Long:      "Gets if initial claim is enabled and what is the mission ID completed by initial claim",
 					Alias:     []string{"show-initial-claim"},
 				},
 
 				{
 					RpcMethod: "GetAirdropSupply",
 					Use:       "get-airdrop-supply",
-					Short:     "Gets a AirdropSupply",
+					Short:     "Gets the airdrop supply",
 					Alias:     []string{"show-airdrop-supply"},
 				},
 				// this line is used by ignite scaffolding # autocli/query

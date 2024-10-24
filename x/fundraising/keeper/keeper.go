@@ -119,6 +119,11 @@ func (k Keeper) Logger() log.Logger {
 	return k.logger.With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
+// AddressCodec returns the address codec.
+func (k Keeper) AddressCodec() address.Codec {
+	return k.addressCodec
+}
+
 // PayCreationFee sends the auction creation fee to the fee collector account.
 func (k Keeper) PayCreationFee(ctx context.Context, auctioneerAddr sdk.AccAddress) error {
 	params, err := k.Params.Get(ctx)

@@ -15,36 +15,35 @@ func TestValidate_AllowedBidder(t *testing.T) {
 	testBidderAddr := sdk.AccAddress(crypto.AddressHash([]byte("TestBidder")))
 
 	testCases := []struct {
+		desc          string
 		allowedBidder types.AllowedBidder
-		expectedErr   bool
+		err           error
 	}{
 		{
-			types.NewAllowedBidder(1, testBidderAddr, math.NewInt(100_000_000)),
-			false,
+			desc:          "valid allowed bidder",
+			allowedBidder: types.NewAllowedBidder(1, testBidderAddr, math.NewInt(100_000_000)),
 		},
 		{
-			types.NewAllowedBidder(1, sdk.AccAddress{}, math.NewInt(100_000_000)),
-			true,
+			desc:          "valid allowed bidder",
+			allowedBidder: types.NewAllowedBidder(1, testBidderAddr, math.NewInt(0)),
+			err:           types.ErrInvalidMaxBidAmount,
 		},
 		{
-			types.NewAllowedBidder(1, testBidderAddr, math.NewInt(0)),
-			true,
-		},
-		{
-			types.NewAllowedBidder(1, testBidderAddr, math.ZeroInt()),
-			true,
+			desc:          "valid allowed bidder",
+			allowedBidder: types.NewAllowedBidder(1, testBidderAddr, math.ZeroInt()),
+			err:           types.ErrInvalidMaxBidAmount,
 		},
 	}
 
 	for _, tc := range testCases {
-		err := tc.allowedBidder.Validate()
-		if tc.expectedErr {
-			require.Error(t, err)
-		} else {
-			bidder, err := tc.allowedBidder.GetBidder()
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.allowedBidder.Validate()
+			if tc.err != nil {
+				require.Error(t, err)
+				require.ErrorIs(t, tc.err, err)
+				return
+			}
 			require.NoError(t, err)
-			require.Equal(t, testBidderAddr, bidder)
-			require.NoError(t, err)
-		}
+		})
 	}
 }

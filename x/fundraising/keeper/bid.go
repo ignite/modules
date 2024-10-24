@@ -87,12 +87,12 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 		}
 	}
 
-	bidder, err := sdk.AccAddressFromBech32(msg.GetBidder())
+	bidder, err := k.addressCodec.StringToBytes(msg.GetBidder())
 	if err != nil {
 		return types.Bid{}, err
 	}
 
-	_, err = k.AllowedBidder.Get(ctx, collections.Join(auction.GetId(), bidder))
+	_, err = k.AllowedBidder.Get(ctx, collections.Join(auction.GetId(), sdk.AccAddress(bidder)))
 	if err != nil {
 		return types.Bid{}, sdkerrors.Wrap(types.ErrNotAllowedBidder, err.Error())
 	}
@@ -213,8 +213,13 @@ func (k Keeper) ValidateFixedPriceBid(ctx context.Context, auction types.Auction
 		return sdkerrors.Wrapf(types.ErrInsufficientRemainingAmount, "remaining selling coin amount %s", remainingCoin)
 	}
 
+	bidder, err := k.addressCodec.StringToBytes(bid.Bidder)
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
+
 	// Get the total bid amount by the bidder
-	bids, err := k.GetBidsByBidder(ctx, bid.GetBidder())
+	bids, err := k.GetBidsByBidder(ctx, bidder)
 	if err != nil {
 		return err
 	}
@@ -226,7 +231,7 @@ func (k Keeper) ValidateFixedPriceBid(ctx context.Context, auction types.Auction
 		}
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, sdk.AccAddress(bidder)))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -251,7 +256,11 @@ func (k Keeper) ValidateBatchWorthBid(ctx context.Context, auction types.Auction
 		return types.ErrIncorrectCoinDenom
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	bidder, err := k.addressCodec.StringToBytes(bid.Bidder)
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, sdk.AccAddress(bidder)))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -276,7 +285,11 @@ func (k Keeper) ValidateBatchManyBid(ctx context.Context, auction types.AuctionI
 		return types.ErrIncorrectCoinDenom
 	}
 
-	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, bid.GetBidder()))
+	bidder, err := k.addressCodec.StringToBytes(bid.Bidder)
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
+	allowedBidder, err := k.AllowedBidder.Get(ctx, collections.Join(bid.AuctionId, sdk.AccAddress(bidder)))
 	if err != nil {
 		return sdkerrors.Wrap(err, "bidder is not found in allowed bidder list")
 	}
@@ -313,12 +326,12 @@ func (k Keeper) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) error {
 		return err
 	}
 
-	bidder, err := sdk.AccAddressFromBech32(msg.GetBidder())
+	bidder, err := k.addressCodec.StringToBytes(msg.GetBidder())
 	if err != nil {
-		return err
+		return sdkerrors.Wrap(err, "invalid address")
 	}
 
-	if !bid.GetBidder().Equals(bidder) {
+	if bid.Bidder != msg.Bidder {
 		return sdkerrors.Wrap(errcode.ErrUnauthorized, "only the bid creator can modify the bid")
 	}
 

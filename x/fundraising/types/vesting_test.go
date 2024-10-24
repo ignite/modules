@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -56,7 +57,6 @@ func TestShouldRelease(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			require.Equal(t, tc.expResult, tc.vq.ShouldRelease(now))
 		})
@@ -65,73 +65,73 @@ func TestShouldRelease(t *testing.T) {
 
 func TestValidateVestingSchedules(t *testing.T) {
 	for _, tc := range []struct {
-		name        string
-		schedules   []types.VestingSchedule
-		endTime     time.Time
-		expectedErr string
+		name      string
+		schedules []types.VestingSchedule
+		endTime   time.Time
+		err       error
 	}{
 		{
-			"happy case",
-			[]types.VestingSchedule{
+			name: "happy case",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("9999-01-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("1.0")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
 		},
 		{
-			"invalid case #1",
-			[]types.VestingSchedule{
+			name: "invalid case #1",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("9999-01-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("-1.0")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"vesting weight must be positive: invalid vesting schedules",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
+			err:     errors.New("vesting weight must be positive: invalid vesting schedules"),
 		},
 		{
-			"invalid case #2",
-			[]types.VestingSchedule{
+			name: "invalid case #2",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("2022-01-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("1.0")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"release time must be set after the end time: invalid vesting schedules",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
+			err:     errors.New("release time must be set after the end time: invalid vesting schedules"),
 		},
 		{
-			"invalid case #3",
-			[]types.VestingSchedule{
+			name: "invalid case #3",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("9999-01-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("2.0")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"vesting weight must not be greater than 1: invalid vesting schedules",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
+			err:     errors.New("vesting weight must not be greater than 1: invalid vesting schedules"),
 		},
 		{
-			"invalid case #4",
-			[]types.VestingSchedule{
+			name: "invalid case #4",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("2022-06-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.25")},
 				{ReleaseTime: types.MustParseRFC3339("2022-04-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.25")},
 				{ReleaseTime: types.MustParseRFC3339("2022-09-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.25")},
 				{ReleaseTime: types.MustParseRFC3339("2022-12-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.25")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"release time must be chronological: invalid vesting schedules",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
+			err:     errors.New("release time must be chronological: invalid vesting schedules"),
 		},
 		{
-			"invalid case #5",
-			[]types.VestingSchedule{
+			name: "invalid case #5",
+			schedules: []types.VestingSchedule{
 				{ReleaseTime: types.MustParseRFC3339("2022-05-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.5")},
 				{ReleaseTime: types.MustParseRFC3339("2022-06-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.5")},
 				{ReleaseTime: types.MustParseRFC3339("2022-07-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.5")},
 				{ReleaseTime: types.MustParseRFC3339("2022-08-01T00:00:00Z"), Weight: math.LegacyMustNewDecFromStr("0.5")},
 			},
-			types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-			"total vesting weight must be equal to 1: invalid vesting schedules",
+			endTime: types.MustParseRFC3339("2022-03-01T00:00:00Z"),
+			err:     errors.New("total vesting weight must be equal to 1: invalid vesting schedules"),
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			err := types.ValidateVestingSchedules(tc.schedules, tc.endTime)
-			if tc.expectedErr == "" {
-				require.NoError(t, err)
-			} else {
-				require.EqualError(t, err, tc.expectedErr)
+			if tc.err != nil {
+				require.Error(t, err)
+				require.EqualError(t, err, tc.err.Error())
+				return
 			}
+			require.NoError(t, err)
 		})
 	}
 }

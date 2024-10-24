@@ -49,7 +49,10 @@ func SellingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 		}
 		for _, auction := range auctions {
 			if auction.GetStatus() == types.AuctionStatusStarted {
-				sellingReserveAddr := auction.GetSellingReserveAddress()
+				sellingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetSellingReserveAddress())
+				if err != nil {
+					return "", false
+				}
 				sellingCoinDenom := auction.GetSellingCoin().Denom
 				spendable := k.bankKeeper.SpendableCoins(ctx, sellingReserveAddr)
 				sellingReserve := sdk.NewCoin(sellingCoinDenom, spendable.AmountOf(sellingCoinDenom))
@@ -59,7 +62,7 @@ func SellingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 					msg += fmt.Sprintf("\tselling reserve balance %s\n"+
 						"\tselling pool reserve: %v\n"+
 						"\ttotal selling coin: %v\n",
-						sellingReserveAddr.String(), sellingReserve, auction.GetSellingCoin())
+						sellingReserveAddr, sellingReserve, auction.GetSellingCoin())
 					count++
 				}
 			}
@@ -95,7 +98,10 @@ func PayingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 				}
 			}
 
-			payingReserveAddr := auction.GetPayingReserveAddress()
+			payingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetPayingReserveAddress())
+			if err != nil {
+				return "", false
+			}
 			payingCoinDenom := auction.GetPayingCoinDenom()
 			spendable := k.bankKeeper.SpendableCoins(ctx, payingReserveAddr)
 			payingReserve := sdk.NewCoin(payingCoinDenom, spendable.AmountOf(payingCoinDenom))
@@ -103,7 +109,7 @@ func PayingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 				msg += fmt.Sprintf("\tpaying reserve balance %s\n"+
 					"\tpaying pool reserve: %v\n"+
 					"\ttotal bid coin: %v\n",
-					payingReserveAddr.String(), payingReserve, totalBidCoin)
+					payingReserveAddr, payingReserve, totalBidCoin)
 				count++
 			}
 		}
@@ -139,7 +145,10 @@ func VestingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 				}
 			}
 
-			vestingReserveAddr := auction.GetVestingReserveAddress()
+			vestingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetVestingReserveAddress())
+			if err != nil {
+				return "", false
+			}
 			payingCoinDenom := auction.GetPayingCoinDenom()
 			spendable := k.bankKeeper.SpendableCoins(ctx, vestingReserveAddr)
 			vestingReserve := sdk.NewCoin(payingCoinDenom, spendable.AmountOf(payingCoinDenom))
@@ -147,7 +156,7 @@ func VestingPoolReserveAmountInvariant(k Keeper) sdk.Invariant {
 				msg += fmt.Sprintf("\tvesting reserve balance %s\n"+
 					"\tvesting pool reserve: %v\n"+
 					"\ttotal paying coin: %v\n",
-					vestingReserveAddr.String(), vestingReserve, totalPayingCoin)
+					vestingReserveAddr, vestingReserve, totalPayingCoin)
 				count++
 			}
 		}

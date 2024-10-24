@@ -169,11 +169,15 @@ func (s *KeeperTestSuite) TestFixedPriceAuction_AllocateSellingCoin() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
+	payingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetPayingReserveAddress())
+	s.Require().NoError(err)
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom), parseCoin("500_000_000denom1"))
-	s.Require().Equal(s.getBalance(auction.GetPayingReserveAddress(), auction.GetPayingCoinDenom()), parseCoin("250_000_000denom2"))
+	s.Require().Equal(s.getBalance(payingReserveAddress, auction.GetPayingCoinDenom()), parseCoin("250_000_000denom2"))
 
 	// The bidders must have the matched selling coin
 	s.Require().Equal(s.getBalance(s.addr(1), auction.GetSellingCoin().Denom), parseCoin("200_000_000denom1"))
@@ -329,9 +333,10 @@ func (s *KeeperTestSuite) TestFixedPriceAuction_CancelAuction() {
 	s.Require().Equal(types.AuctionStatusCancelled, a.GetStatus())
 
 	// The selling reserve balance must be zero
-	sellingReserveAddr := a.GetSellingReserveAddress()
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
 	sellingCoinDenom := a.GetSellingCoin().Denom
-	s.Require().True(s.getBalance(sellingReserveAddr, sellingCoinDenom).IsZero())
+	s.Require().True(s.getBalance(sellingReserveAddress, sellingCoinDenom).IsZero())
 }
 
 func (s *KeeperTestSuite) TestBatchAuction_AuctionStatus() {

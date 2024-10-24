@@ -52,17 +52,20 @@ func SimulateMsgCancelAuction(
 		accs = shuffleSimAccounts(r, accs)
 
 		// Only the auction's auctioneer can cancel
+		auctioneer, err := k.AddressCodec().StringToBytes(auction.GetAuctioneer())
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "invalid auctioneer"), nil, err
+		}
 		for _, acc := range accs {
-			if acc.Address.Equals(auction.GetAuctioneer()) {
+			if acc.Address.Equals(sdk.AccAddress(auctioneer)) {
 				simAccount = acc
 			}
 		}
 
 		account := ak.GetAccount(ctx, simAccount.Address)
 		spendable := bk.SpendableCoins(ctx, account.GetAddress())
-		auctioneer := account.GetAddress().String()
 
-		msg = types.NewMsgCancelAuction(auctioneer, auction.GetId())
+		msg = types.NewMsgCancelAuction(auction.GetAuctioneer(), auction.GetId())
 
 		txCtx := simulation.OperationInput{
 			R:               r,

@@ -22,7 +22,7 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 func (k msgServer) AddAllowedBidder(ctx context.Context, msg *types.MsgAddAllowedBidder) (*types.MsgAddAllowedBidderResponse, error) {
-	if _, err := k.addressCodec.StringToBytes(msg.AllowedBidder.Bidder); err != nil {
+	if _, err := k.addressCodec.StringToBytes(msg.Bidder); err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid authority address")
 	}
 
@@ -30,7 +30,11 @@ func (k msgServer) AddAllowedBidder(ctx context.Context, msg *types.MsgAddAllowe
 		return nil, sdkerrors.Wrap(errors.ErrInvalidRequest, "EnableAddAllowedBidder is disabled")
 	}
 
-	if err := k.Keeper.AddAllowedBidders(ctx, msg.AuctionId, []types.AllowedBidder{msg.AllowedBidder}); err != nil {
+	if err := k.Keeper.AddAllowedBidders(ctx, msg.AuctionId, []types.AllowedBidder{{
+		AuctionId:    msg.AuctionId,
+		Bidder:       msg.Bidder,
+		MaxBidAmount: msg.MaxBidAmount,
+	}}); err != nil {
 		return nil, err
 	}
 
@@ -50,6 +54,10 @@ func (k msgServer) CancelAuction(ctx context.Context, msg *types.MsgCancelAuctio
 }
 
 func (k msgServer) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatchAuction) (*types.MsgCreateBatchAuctionResponse, error) {
+	if err := msg.Validate(); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid message")
+	}
+
 	if _, err := k.addressCodec.StringToBytes(msg.Auctioneer); err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid authority address")
 	}
@@ -62,6 +70,10 @@ func (k msgServer) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateB
 }
 
 func (k msgServer) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreateFixedPriceAuction) (*types.MsgCreateFixedPriceAuctionResponse, error) {
+	if err := msg.Validate(); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid message")
+	}
+
 	if _, err := k.addressCodec.StringToBytes(msg.Auctioneer); err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid authority address")
 	}
@@ -74,6 +86,10 @@ func (k msgServer) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCr
 }
 
 func (k msgServer) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) (*types.MsgModifyBidResponse, error) {
+	if err := msg.Validate(); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid message")
+	}
+
 	if _, err := k.addressCodec.StringToBytes(msg.Bidder); err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid authority address")
 	}
@@ -86,6 +102,10 @@ func (k msgServer) ModifyBid(ctx context.Context, msg *types.MsgModifyBid) (*typ
 }
 
 func (k msgServer) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (*types.MsgPlaceBidResponse, error) {
+	if err := msg.Validate(); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid message")
+	}
+
 	if _, err := k.addressCodec.StringToBytes(msg.Bidder); err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid authority address")
 	}

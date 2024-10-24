@@ -108,7 +108,7 @@ message QueryAllAllowedBidderResponse {
 // method.
 message QueryGetAllowedBidderRequest {
   uint64 auction_id = 1;
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // QueryAllowedBidderResponse is the response type for the Query/AllowedBidder
@@ -132,7 +132,7 @@ message QueryGetBidResponse {
 // QueryBidsRequest is request type for the Query/Bids RPC method.
 message QueryAllBidRequest {
   uint64 auction_id = 1;
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string is_matched = 3;
   // pagination defines the pagination in the request
   cosmos.base.query.v1beta1.PageRequest pagination = 4;

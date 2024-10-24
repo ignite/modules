@@ -5,15 +5,10 @@ import (
 	"fmt"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // Validate checks the claimRecord is valid
 func (m ClaimRecord) Validate() error {
-	if _, err := sdk.AccAddressFromBech32(m.Address); err != nil {
-		return err
-	}
-
 	if !m.Claimable.IsPositive() {
 		return errors.New("claimable amount must be positive")
 	}

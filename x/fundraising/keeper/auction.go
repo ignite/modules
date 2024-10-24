@@ -72,11 +72,11 @@ func (k Keeper) AddAllowedBidders(ctx context.Context, auctionID uint64, allowed
 			return types.ErrInsufficientRemainingAmount
 		}
 
-		bidder, err := ab.GetBidder()
+		bidder, err := k.addressCodec.StringToBytes(ab.Bidder)
 		if err != nil {
-			return err
+			return sdkerrors.Wrap(err, "invalid address")
 		}
-		if err := k.AllowedBidder.Set(ctx, collections.Join(auctionID, bidder), ab); err != nil {
+		if err := k.AllowedBidder.Set(ctx, collections.Join(auctionID, sdk.AccAddress(bidder)), ab); err != nil {
 			return err
 		}
 	}
@@ -126,7 +126,10 @@ func (k Keeper) AllocateSellingCoin(ctx context.Context, auction types.AuctionI,
 		return err
 	}
 
-	sellingReserveAddr := auction.GetSellingReserveAddress()
+	sellingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetSellingReserveAddress())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
 	sellingCoinDenom := auction.GetSellingCoin().Denom
 
 	ioCoins := make(map[string]inOutCoins)
@@ -145,12 +148,12 @@ func (k Keeper) AllocateSellingCoin(ctx context.Context, auction types.AuctionI,
 			continue
 		}
 		allocateCoins := sdk.NewCoins(sdk.NewCoin(sellingCoinDenom, mInfo.AllocationMap[bidder]))
-		bidderAddr, err := sdk.AccAddressFromBech32(bidder)
+		bidderAddr, err := k.addressCodec.StringToBytes(bidder)
 		if err != nil {
-			return err
+			return sdkerrors.Wrap(err, "invalid address")
 		}
 
-		if _, ok := ioCoins[bidderAddr.String()]; !ok {
+		if _, ok := ioCoins[bidder]; !ok {
 			ioCoins[bidder] = inOutCoins{
 				bidder:  bidder,
 				outputs: []banktypes.Output{banktypes.NewOutput(bidderAddr, allocateCoins)},
@@ -186,11 +189,19 @@ func (k Keeper) ReleaseVestingPayingCoin(ctx context.Context, auction types.Auct
 	for i, vestingQueue := range vestingQueues {
 		blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
 		if vestingQueue.ShouldRelease(blockTime) {
-			vestingReserveAddr := auction.GetVestingReserveAddress()
-			auctioneerAddr := auction.GetAuctioneer()
+			vestingReserve, err := k.addressCodec.StringToBytes(auction.GetVestingReserveAddress())
+			if err != nil {
+				return sdkerrors.Wrap(err, "invalid address")
+			}
+
+			auctioneer, err := k.addressCodec.StringToBytes(auction.GetAuctioneer())
+			if err != nil {
+				return sdkerrors.Wrap(err, "invalid address")
+			}
+
 			payingCoins := sdk.NewCoins(vestingQueue.PayingCoin)
 
-			if err := k.bankKeeper.SendCoins(ctx, vestingReserveAddr, auctioneerAddr, payingCoins); err != nil {
+			if err := k.bankKeeper.SendCoins(ctx, vestingReserve, auctioneer, payingCoins); err != nil {
 				return sdkerrors.Wrap(err, "failed to release paying coin to the auctioneer")
 			}
 
@@ -219,12 +230,19 @@ func (k Keeper) ReleaseVestingPayingCoin(ctx context.Context, auction types.Auct
 
 // RefundRemainingSellingCoin refunds the remaining selling coin to the auctioneer.
 func (k Keeper) RefundRemainingSellingCoin(ctx context.Context, auction types.AuctionI) error {
-	sellingReserveAddr := auction.GetSellingReserveAddress()
+	sellingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetSellingReserveAddress())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
 	sellingCoinDenom := auction.GetSellingCoin().Denom
 	spendableCoins := k.bankKeeper.SpendableCoins(ctx, sellingReserveAddr)
 	releaseCoins := sdk.NewCoins(sdk.NewCoin(sellingCoinDenom, spendableCoins.AmountOf(sellingCoinDenom)))
+	auctioneer, err := k.addressCodec.StringToBytes(auction.GetAuctioneer())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
 
-	if err := k.bankKeeper.SendCoins(ctx, sellingReserveAddr, auction.GetAuctioneer(), releaseCoins); err != nil {
+	if err := k.bankKeeper.SendCoins(ctx, sellingReserveAddr, auctioneer, releaseCoins); err != nil {
 		return err
 	}
 	return nil
@@ -232,7 +250,10 @@ func (k Keeper) RefundRemainingSellingCoin(ctx context.Context, auction types.Au
 
 // RefundPayingCoin refunds paying coin to the corresponding bidders.
 func (k Keeper) RefundPayingCoin(ctx context.Context, auction types.AuctionI, mInfo MatchingInfo) error {
-	payingReserveAddr := auction.GetPayingReserveAddress()
+	payingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetPayingReserveAddress())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
 	payingCoinDenom := auction.GetPayingCoinDenom()
 
 	ioCoins := make(map[string]inOutCoins)
@@ -250,13 +271,13 @@ func (k Keeper) RefundPayingCoin(ctx context.Context, auction types.AuctionI, mI
 			continue
 		}
 
-		bidderAddr, err := sdk.AccAddressFromBech32(bidder)
+		bidderAddr, err := k.addressCodec.StringToBytes(bidder)
 		if err != nil {
-			return err
+			return sdkerrors.Wrap(err, "invalid address")
 		}
 		refundCoins := sdk.NewCoins(sdk.NewCoin(payingCoinDenom, mInfo.RefundMap[bidder]))
 
-		if _, ok := ioCoins[bidderAddr.String()]; !ok {
+		if _, ok := ioCoins[bidder]; !ok {
 			ioCoins[bidder] = inOutCoins{
 				bidder:  bidder,
 				outputs: []banktypes.Output{banktypes.NewOutput(bidderAddr, refundCoins)},
@@ -409,9 +430,9 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 		return nil, err
 	}
 
-	auctioneer, err := sdk.AccAddressFromBech32(msg.GetAuctioneer())
+	auctioneer, err := k.addressCodec.StringToBytes(msg.GetAuctioneer())
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrap(err, "invalid address")
 	}
 
 	if err := k.PayCreationFee(ctx, auctioneer); err != nil {
@@ -482,13 +503,13 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 		sdk.NewEvent(
 			types.EventTypeCreateFixedPriceAuction,
 			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(nextId, 10)),
-			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer().String()),
-			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress().String()),
-			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress().String()),
+			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer()),
+			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress()),
+			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress()),
 			sdk.NewAttribute(types.AttributeKeyStartPrice, auction.GetStartPrice().String()),
 			sdk.NewAttribute(types.AttributeKeySellingCoin, auction.GetSellingCoin().String()),
 			sdk.NewAttribute(types.AttributeKeyPayingCoinDenom, auction.GetPayingCoinDenom()),
-			sdk.NewAttribute(types.AttributeKeyVestingReserveAddress, auction.GetVestingReserveAddress().String()),
+			sdk.NewAttribute(types.AttributeKeyVestingReserveAddress, auction.GetVestingReserveAddress()),
 			sdk.NewAttribute(types.AttributeKeyRemainingSellingCoin, auction.RemainingSellingCoin.String()),
 			sdk.NewAttribute(types.AttributeKeyStartTime, auction.GetStartTime().String()),
 			sdk.NewAttribute(types.AttributeKeyEndTime, msg.EndTime.String()),
@@ -521,9 +542,9 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		return nil, err
 	}
 
-	auctioneer, err := sdk.AccAddressFromBech32(msg.GetAuctioneer())
+	auctioneer, err := k.addressCodec.StringToBytes(msg.GetAuctioneer())
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrap(err, "invalid address")
 	}
 
 	if err := k.PayCreationFee(ctx, auctioneer); err != nil {
@@ -607,13 +628,13 @@ func (k Keeper) CreateBatchAuction(ctx context.Context, msg *types.MsgCreateBatc
 		sdk.NewEvent(
 			types.EventTypeCreateBatchAuction,
 			sdk.NewAttribute(types.AttributeKeyAuctionID, strconv.FormatUint(nextId, 10)),
-			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer().String()),
-			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress().String()),
-			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress().String()),
+			sdk.NewAttribute(types.AttributeKeyAuctioneerAddress, auction.GetAuctioneer()),
+			sdk.NewAttribute(types.AttributeKeySellingReserveAddress, auction.GetSellingReserveAddress()),
+			sdk.NewAttribute(types.AttributeKeyPayingReserveAddress, auction.GetPayingReserveAddress()),
 			sdk.NewAttribute(types.AttributeKeyStartPrice, auction.GetStartPrice().String()),
 			sdk.NewAttribute(types.AttributeKeySellingCoin, auction.GetSellingCoin().String()),
 			sdk.NewAttribute(types.AttributeKeyPayingCoinDenom, auction.GetPayingCoinDenom()),
-			sdk.NewAttribute(types.AttributeKeyVestingReserveAddress, auction.GetVestingReserveAddress().String()),
+			sdk.NewAttribute(types.AttributeKeyVestingReserveAddress, auction.GetVestingReserveAddress()),
 			sdk.NewAttribute(types.AttributeKeyStartTime, auction.GetStartTime().String()),
 			sdk.NewAttribute(types.AttributeKeyEndTime, msg.EndTime.String()),
 			sdk.NewAttribute(types.AttributeKeyAuctionStatus, auction.GetStatus().String()),
@@ -634,7 +655,7 @@ func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) 
 		return err
 	}
 
-	if auction.GetAuctioneer().String() != msg.Auctioneer {
+	if auction.GetAuctioneer() != msg.Auctioneer {
 		return sdkerrors.Wrap(errors.ErrUnauthorized, "only the auctioneer can cancel the auction")
 	}
 
@@ -642,13 +663,20 @@ func (k Keeper) CancelAuction(ctx context.Context, msg *types.MsgCancelAuction) 
 		return sdkerrors.Wrap(types.ErrInvalidAuctionStatus, "only the stand by auction can be cancelled")
 	}
 
-	sellingReserveAddr := auction.GetSellingReserveAddress()
+	sellingReserveAddr, err := k.addressCodec.StringToBytes(auction.GetSellingReserveAddress())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
 	sellingCoinDenom := auction.GetSellingCoin().Denom
 	spendableCoins := k.bankKeeper.SpendableCoins(ctx, sellingReserveAddr)
 	releaseCoin := sdk.NewCoin(sellingCoinDenom, spendableCoins.AmountOf(sellingCoinDenom))
 
 	// Release the selling coin back to the auctioneer
-	if err := k.bankKeeper.SendCoins(ctx, sellingReserveAddr, auction.GetAuctioneer(), sdk.NewCoins(releaseCoin)); err != nil {
+	auctioneer, err := k.addressCodec.StringToBytes(msg.GetAuctioneer())
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid address")
+	}
+	if err := k.bankKeeper.SendCoins(ctx, sellingReserveAddr, auctioneer, sdk.NewCoins(releaseCoin)); err != nil {
 		return sdkerrors.Wrap(err, "failed to release the selling coin")
 	}
 

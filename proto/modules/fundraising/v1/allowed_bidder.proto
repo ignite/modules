@@ -17,7 +17,7 @@ message AllowedBidder {
   uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // max_bid_amount specifies the maximum bid amount that the bidder can bid
   string max_bid_amount = 3 [

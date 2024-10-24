@@ -70,7 +70,7 @@ message MsgCreateFixedPriceAuction {
   option (cosmos.msg.v1.signer) = "auctioneer";
 
   // auctioneer specifies the bech32-encoded address that creates the auction
-  string auctioneer = 1;
+  string auctioneer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // start_price specifies the starting price of the auction
   string start_price = 2 [
@@ -120,7 +120,7 @@ message MsgCreateBatchAuction {
   option (cosmos.msg.v1.signer) = "auctioneer";
 
   // auctioneer specifies the bech32-encoded address that creates the auction
-  string auctioneer = 1;
+  string auctioneer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // start_price specifies the starting price of the auction
   string start_price = 2 [
@@ -187,7 +187,7 @@ message MsgCancelAuction {
 
   // auctioneer specifies the bech32-encoded address that is in charge of the
   // auction
-  string auctioneer = 1;
+  string auctioneer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // auction_id specifies the auction id
   uint64 auction_id = 2;
@@ -205,7 +205,7 @@ message MsgPlaceBid {
   uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // type specifies the bid type; type 1 is fixed price, 2 is how-much-worth, 3
   // is how-many-coins
@@ -242,7 +242,7 @@ message MsgModifyBid {
   uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // bid_id specifies the bid id
   uint64 bid_id = 3;
@@ -272,14 +272,20 @@ message MsgModifyBidResponse {}
 // MsgAddAllowedBidder defines a SDK message for adding an allowed bidder to the
 // auction.
 message MsgAddAllowedBidder {
-  option (cosmos.msg.v1.signer) = "allowed_bidder";
+  option (cosmos.msg.v1.signer) = "bidder";
 
   // auction_id specifies the auction id
   uint64 auction_id = 1;
 
-  // allowed_bidder specifies the bidder who is allowed to bid and their maximum
-  // bid amount
-  AllowedBidder allowed_bidder = 2 [(gogoproto.nullable) = false];
+  // bidder specifies the bech32-encoded address that bids for the auction
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // max_bid_amount specifies the maximum bid amount that the bidder can bid
+  string max_bid_amount = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (cosmos_proto.scalar) = "cosmos.Int"
+  ];
 }
 
 // MsgAddAllowedBidderResponse defines the Msg/MsgAddAllowedBidderResponse response type.
