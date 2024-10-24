@@ -26,7 +26,7 @@ func (q queryServer) ListAuction(ctx context.Context, req *types.QueryAllAuction
 	if req.Status != "" && !(req.Status == types.AuctionStatusStandBy.String() || req.Status == types.AuctionStatusStarted.String() ||
 		req.Status == types.AuctionStatusVesting.String() || req.Status == types.AuctionStatusFinished.String() ||
 		req.Status == types.AuctionStatusCancelled.String()) {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid auction status %s", req.Status)
+		return nil, status.Errorf(codes.InvalidArgument, "invalid auction status field %s", req.Status)
 	}
 
 	auctions, pageRes, err := query.CollectionFilteredPaginate(

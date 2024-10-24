@@ -78,12 +78,12 @@ func (k Keeper) PlaceBid(ctx context.Context, msg *types.MsgPlaceBid) (types.Bid
 	}
 
 	if auction.GetStatus() != types.AuctionStatusStarted {
-		return types.Bid{}, types.ErrInvalidAuctionStatus
+		return types.Bid{}, sdkerrors.Wrap(types.ErrInvalidAuctionStatus, auction.GetStatus().String())
 	}
 
 	if auction.GetType() == types.AuctionTypeBatch {
 		if msg.Price.LT(auction.(*types.BatchAuction).MinBidPrice) {
-			return types.Bid{}, types.ErrInsufficientMinBidPrice
+			return types.Bid{}, sdkerrors.Wrap(types.ErrInsufficientMinBidPrice, msg.Price.String())
 		}
 	}
 

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -21,14 +20,18 @@ func (k Keeper) BeginBlocker(ctx context.Context) error {
 	for _, auction := range auctions {
 		switch auction.GetStatus() {
 		case types.AuctionStatusStandBy:
-			err = k.ExecuteStandByStatus(ctx, auction)
+			if err := k.ExecuteStandByStatus(ctx, auction); err != nil {
+				return err
+			}
 		case types.AuctionStatusStarted:
-			err = k.ExecuteStartedStatus(ctx, auction)
+			if err := k.ExecuteStartedStatus(ctx, auction); err != nil {
+				return err
+			}
 		case types.AuctionStatusVesting:
-			err = k.ExecuteVestingStatus(ctx, auction)
-		default:
-			err = fmt.Errorf("invalid auction status %s", auction.GetStatus())
+			if err := k.ExecuteVestingStatus(ctx, auction); err != nil {
+				return err
+			}
 		}
 	}
-	return err
+	return nil
 }
