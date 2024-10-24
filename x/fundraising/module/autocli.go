@@ -95,57 +95,6 @@ $ %s tx %s cancel 1 --from mykey
 					),
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}},
 				},
-				{
-					RpcMethod: "PlaceBid",
-					Use:       "place-bid [auction-id] [bid-type] [price] [coin]",
-					Short:     "Bid for the auction",
-					Long: strings.TrimSpace(
-						fmt.Sprintf(`Bid for the auction with what price and amount of coin you want to bid for. 
-
-Bid Type Options:
-1. fixed-price (fp or f)
-2. batch-worth (bw or w) 
-3. batch-many  (bm or m)
-
-Example:
-$ %s tx %s place-bid 1 fixed-price 0.55 100000000denom2 --from mykey 
-$ %s tx %s place-bid 1 batch-worth 0.55 100000000denom2 --from mykey 
-$ %s tx %s place-bid 1 batch-many 0.55 100000000denom1 --from mykey 
-$ %s tx %s place-bid 1 fp 0.55 100000000denom2 --from mykey 
-$ %s tx %s place-bid 1 bw 0.55 100000000denom2 --from mykey 
-$ %s tx %s place-bid 1 bm 0.55 100000000denom1 --from mykey 
-
-Note:
-In case of placing a bid for a fixed price auction, you must provide [price] argument with the same price of the auction. 
-In case of placing a bid for a batch auction, there are two bid type options; batch-worth and batch-many, which you can find more information
-in our technical spec docs. https://github.com/tendermint/fundraising/blob/main/x/fundraising/spec/01_concepts.md
-`,
-							version.AppName, types.ModuleName,
-							version.AppName, types.ModuleName,
-							version.AppName, types.ModuleName,
-							version.AppName, types.ModuleName,
-							version.AppName, types.ModuleName,
-							version.AppName, types.ModuleName,
-						),
-					),
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "bid_type"}, {ProtoField: "price"}, {ProtoField: "coin"}},
-				},
-				{
-					RpcMethod: "ModifyBid",
-					Use:       "modify-bid [auction-id] [bid-id] [price] [coin]",
-					Short:     "Modify the bid",
-					Long: strings.TrimSpace(
-						fmt.Sprintf(`Modify the bid with new price and coin.
-Either price or coin must be higher than the existing bid.
-
-Example:
-$ %s tx %s bid 1 1 1.0 100000000denom2 --from mykey
-`,
-							version.AppName, types.ModuleName,
-						),
-					),
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "bid_id"}, {ProtoField: "price"}, {ProtoField: "coin"}},
-				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},
 		},

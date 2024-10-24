@@ -72,7 +72,7 @@ Description of the parameters:
 				return err
 			}
 
-			auction, err := ParseFixedPriceAuctionRequest(args[0])
+			auction, err := parseFixedPriceAuctionRequest(args[0])
 			if err != nil {
 				return sdkerrors.Wrapf(errors.ErrInvalidRequest, "failed to parse %s file due to %v", args[0], err)
 			}
