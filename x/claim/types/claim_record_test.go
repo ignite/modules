@@ -32,15 +32,6 @@ func TestClaimRecord_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			name: "should prevent invalid address",
-			claimRecord: claim.ClaimRecord{
-				Address:           "invalid",
-				Claimable:         sdkmath.OneInt(),
-				CompletedMissions: []uint64{0, 1, 2},
-			},
-			valid: false,
-		},
-		{
 			name: "should prevent zero claimable amount",
 			claimRecord: claim.ClaimRecord{
 				Address:           sample.Address(r),

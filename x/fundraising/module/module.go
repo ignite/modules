@@ -19,11 +19,13 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
 
 	// this line is used by starport scaffolding # 1
 
 	modulev1 "github.com/ignite/modules/api/modules/fundraising/module/v1"
+	"github.com/ignite/modules/x/fundraising/client/cli"
 	"github.com/ignite/modules/x/fundraising/keeper"
 	"github.com/ignite/modules/x/fundraising/types"
 )
@@ -88,6 +90,12 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
+}
+
+// GetTxCmd returns the root Tx command for the module.
+// These commands enrich the AutoCLI tx commands.
+func (a AppModuleBasic) GetTxCmd() *cobra.Command {
+	return cli.GetTxCmd()
 }
 
 // ----------------------------------------------------------------------------

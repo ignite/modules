@@ -16,7 +16,7 @@ message Bid {
   uint64 auction_id = 1;
 
   // bidder specifies the bech32-encoded address that bids for the auction
-  string bidder = 2;
+  string bidder = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // bid_id specifies an index of a bid for the bidder
   uint64 bid_id = 3;

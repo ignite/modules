@@ -148,7 +148,7 @@ func (k Keeper) DistributeMintedCoin(ctx context.Context, mintedCoin sdk.Coin) e
 		// allocate developer rewards to developer addresses by weight
 		for _, w := range params.FundedAddresses {
 			fundedAddrCoins := sdk.NewCoins(k.GetProportion(ctx, fundedAddrsCoin, w.Weight))
-			devAddr, err := sdk.AccAddressFromBech32(w.Address)
+			devAddr, err := k.addressCodec.StringToBytes(w.Address)
 			if err != nil {
 				return errors.Critical(err.Error())
 			}

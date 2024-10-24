@@ -131,7 +131,7 @@ func (k Keeper) ClaimMission(
 	}
 
 	// send claimable to the user
-	claimer, err := sdk.AccAddressFromBech32(claimRecord.Address)
+	claimer, err := k.addressCodec.StringToBytes(claimRecord.Address)
 	if err != nil {
 		return claimed, errors.Criticalf("invalid claimer address %s", err.Error())
 	}

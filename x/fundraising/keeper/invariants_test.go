@@ -34,7 +34,8 @@ func (s *KeeperTestSuite) TestSellingPoolReserveAmountInvariant() {
 	// Although it is not possible for an exploiter to have the same token denom in reality,
 	// it is safe to test the case anyway
 	exploiterAddr := s.addr(1)
-	sellingReserveAddr := auction.GetSellingReserveAddress()
+	sellingReserveAddr, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
 	s.sendCoins(exploiterAddr, sellingReserveAddr, sdk.NewCoins(
 		sdk.NewInt64Coin("denom1", 500_000_000),
 		sdk.NewInt64Coin("denom2", 500_000_000),
@@ -77,7 +78,8 @@ func (s *KeeperTestSuite) TestPayingPoolReserveAmountInvariant() {
 	// Although it is not possible for an exploiter to have the same token denom in reality,
 	// it is safe to test the case anyway
 	exploiterAddr := s.addr(1)
-	payingReserveAddr := auction.GetPayingReserveAddress()
+	payingReserveAddr, err := s.keeper.AddressCodec().StringToBytes(auction.GetPayingReserveAddress())
+	s.Require().NoError(err)
 	s.sendCoins(exploiterAddr, payingReserveAddr, sdk.NewCoins(
 		sdk.NewInt64Coin("denom1", 500_000_000),
 		sdk.NewInt64Coin("denom2", 500_000_000),
@@ -143,7 +145,8 @@ func (s *KeeperTestSuite) TestVestingPoolReserveAmountInvariant() {
 	// Although it is not possible for an exploiter to have the same token denom in reality,
 	// it is safe to test the case anyway
 	exploiterAddr := s.addr(1)
-	vestingReserveAddr := auction.GetVestingReserveAddress()
+	vestingReserveAddr, err := s.keeper.AddressCodec().StringToBytes(auction.GetVestingReserveAddress())
+	s.Require().NoError(err)
 	s.sendCoins(exploiterAddr, vestingReserveAddr, sdk.NewCoins(
 		sdk.NewInt64Coin("denom1", 500_000_000),
 		sdk.NewInt64Coin("denom2", 500_000_000),

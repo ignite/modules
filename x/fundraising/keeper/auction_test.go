@@ -169,11 +169,15 @@ func (s *KeeperTestSuite) TestFixedPriceAuction_AllocateSellingCoin() {
 	s.Require().NoError(err)
 
 	// The selling reserve account balance must be zero
-	s.Require().True(s.getBalance(auction.GetSellingReserveAddress(), auction.SellingCoin.Denom).IsZero())
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
+	s.Require().True(s.getBalance(sellingReserveAddress, auction.SellingCoin.Denom).IsZero())
 
 	// The auctioneer must have sellingCoin.Amount - TotalMatchedAmount
+	payingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetPayingReserveAddress())
+	s.Require().NoError(err)
 	s.Require().Equal(s.getBalance(s.addr(0), auction.GetSellingCoin().Denom), parseCoin("500_000_000denom1"))
-	s.Require().Equal(s.getBalance(auction.GetPayingReserveAddress(), auction.GetPayingCoinDenom()), parseCoin("250_000_000denom2"))
+	s.Require().Equal(s.getBalance(payingReserveAddress, auction.GetPayingCoinDenom()), parseCoin("250_000_000denom2"))
 
 	// The bidders must have the matched selling coin
 	s.Require().Equal(s.getBalance(s.addr(1), auction.GetSellingCoin().Denom), parseCoin("200_000_000denom1"))
@@ -329,9 +333,10 @@ func (s *KeeperTestSuite) TestFixedPriceAuction_CancelAuction() {
 	s.Require().Equal(types.AuctionStatusCancelled, a.GetStatus())
 
 	// The selling reserve balance must be zero
-	sellingReserveAddr := a.GetSellingReserveAddress()
+	sellingReserveAddress, err := s.keeper.AddressCodec().StringToBytes(auction.GetSellingReserveAddress())
+	s.Require().NoError(err)
 	sellingCoinDenom := a.GetSellingCoin().Denom
-	s.Require().True(s.getBalance(sellingReserveAddr, sellingCoinDenom).IsZero())
+	s.Require().True(s.getBalance(sellingReserveAddress, sellingCoinDenom).IsZero())
 }
 
 func (s *KeeperTestSuite) TestBatchAuction_AuctionStatus() {
@@ -470,19 +475,21 @@ func (s *KeeperTestSuite) TestInvalidEndTime() {
 	params, err := s.keeper.Params.Get(s.ctx)
 	s.Require().NoError(err)
 
+	startTime := types.MustParseRFC3339("2022-03-01T00:00:00Z")
+	endTime := types.MustParseRFC3339("2022-01-01T00:00:00Z")
 	fixedPriceAuction := types.NewMsgCreateFixedPriceAuction(
 		s.addr(0).String(),
 		parseDec("0.5"),
 		parseCoin("500_000_000_000denom1"),
 		"denom2",
 		[]types.VestingSchedule{},
-		types.MustParseRFC3339("2022-03-01T00:00:00Z"),
-		types.MustParseRFC3339("2022-01-01T00:00:00Z"),
+		startTime,
+		endTime,
 	)
 	s.fundAddr(s.addr(0), params.AuctionCreationFee.Add(fixedPriceAuction.SellingCoin))
 
 	_, err = s.keeper.CreateFixedPriceAuction(s.ctx, fixedPriceAuction)
-	s.Require().EqualError(err, sdkerrors.Wrap(errors.ErrInvalidRequest, "end time must be set after the current time").Error())
+	s.Require().EqualError(err, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%d) must be set after the current time", endTime.Unix()).Error())
 
 	batchAuction := types.NewMsgCreateBatchAuction(
 		s.addr(1).String(),
@@ -499,7 +506,7 @@ func (s *KeeperTestSuite) TestInvalidEndTime() {
 	s.fundAddr(s.addr(1), params.AuctionCreationFee.Add(batchAuction.SellingCoin))
 
 	_, err = s.keeper.CreateBatchAuction(s.ctx, batchAuction)
-	s.Require().EqualError(err, sdkerrors.Wrap(errors.ErrInvalidRequest, "end time must be set after the current time").Error())
+	s.Require().EqualError(err, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%d) must be set after the current time", endTime.Unix()).Error())
 }
 
 func (s *KeeperTestSuite) TestAddAllowedBidders() {

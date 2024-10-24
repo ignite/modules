@@ -241,7 +241,9 @@ func (s *KeeperTestSuite) TestHooks() {
 	s.Require().True(fundraisingHooksReceiver.BeforeBidPlacedValid)
 
 	// Modify the bid
-	s.fundAddr(bid.GetBidder(), sdk.NewCoins(parseCoin("1_000_000denom4")))
+	bidder, err := s.keeper.AddressCodec().StringToBytes(bid.Bidder)
+	s.Require().NoError(err)
+	s.fundAddr(bidder, sdk.NewCoins(parseCoin("1_000_000denom4")))
 	err = s.keeper.ModifyBid(s.ctx, &types.MsgModifyBid{
 		AuctionId: bid.AuctionId,
 		BidId:     bid.BidId,

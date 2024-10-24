@@ -38,12 +38,12 @@ func (q queryServer) GetAllowedBidder(ctx context.Context, req *types.QueryGetAl
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	bidder, err := sdk.AccAddressFromBech32(req.Bidder)
+	bidder, err := q.k.addressCodec.StringToBytes(req.Bidder)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid bidder")
 	}
 
-	val, err := q.k.AllowedBidder.Get(ctx, collections.Join(req.AuctionId, bidder))
+	val, err := q.k.AllowedBidder.Get(ctx, collections.Join(req.AuctionId, sdk.AccAddress(bidder)))
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			return nil, status.Error(codes.NotFound, "not found")

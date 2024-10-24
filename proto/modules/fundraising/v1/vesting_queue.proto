@@ -15,7 +15,7 @@ message VestingQueue {
   uint64 auction_id = 1;
 
   // auctioneer specifies the bech32-encoded address that creates the auction
-  string auctioneer = 2;
+  string auctioneer = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // paying_coin specifies the paying amount of coin
   cosmos.base.v1beta1.Coin paying_coin = 3 [

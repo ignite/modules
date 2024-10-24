@@ -26,7 +26,7 @@ message BaseAuction {
   AuctionType type = 2;
 
   // auctioneer specifies the bech32-encoded address that creates the auction
-  string auctioneer = 3;
+  string auctioneer = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // selling_reserve_address specifies the bech32-encoded address that has all
   // the selling coin

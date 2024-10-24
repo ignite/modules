@@ -74,42 +74,30 @@ func (ba *BaseAuction) SetType(typ AuctionType) error {
 	return nil
 }
 
-func (ba BaseAuction) GetAuctioneer() sdk.AccAddress {
-	addr, err := sdk.AccAddressFromBech32(ba.Auctioneer)
-	if err != nil {
-		panic(err)
-	}
-	return addr
+func (ba BaseAuction) GetAuctioneer() string {
+	return ba.Auctioneer
 }
 
-func (ba *BaseAuction) SetAuctioneer(addr sdk.AccAddress) error {
-	ba.Auctioneer = addr.String()
+func (ba *BaseAuction) SetAuctioneer(addr string) error {
+	ba.Auctioneer = addr
 	return nil
 }
 
-func (ba BaseAuction) GetSellingReserveAddress() sdk.AccAddress {
-	addr, err := sdk.AccAddressFromBech32(ba.SellingReserveAddress)
-	if err != nil {
-		panic(err)
-	}
-	return addr
+func (ba BaseAuction) GetSellingReserveAddress() string {
+	return ba.SellingReserveAddress
 }
 
-func (ba *BaseAuction) SetSellingReserveAddress(addr sdk.AccAddress) error {
-	ba.SellingReserveAddress = addr.String()
+func (ba *BaseAuction) SetSellingReserveAddress(addr string) error {
+	ba.SellingReserveAddress = addr
 	return nil
 }
 
-func (ba BaseAuction) GetPayingReserveAddress() sdk.AccAddress {
-	addr, err := sdk.AccAddressFromBech32(ba.PayingReserveAddress)
-	if err != nil {
-		panic(err)
-	}
-	return addr
+func (ba BaseAuction) GetPayingReserveAddress() string {
+	return ba.PayingReserveAddress
 }
 
-func (ba *BaseAuction) SetPayingReserveAddress(addr sdk.AccAddress) error {
-	ba.PayingReserveAddress = addr.String()
+func (ba *BaseAuction) SetPayingReserveAddress(addr string) error {
+	ba.PayingReserveAddress = addr
 	return nil
 }
 
@@ -140,16 +128,12 @@ func (ba *BaseAuction) SetPayingCoinDenom(denom string) error {
 	return nil
 }
 
-func (ba BaseAuction) GetVestingReserveAddress() sdk.AccAddress {
-	addr, err := sdk.AccAddressFromBech32(ba.VestingReserveAddress)
-	if err != nil {
-		panic(err)
-	}
-	return addr
+func (ba BaseAuction) GetVestingReserveAddress() string {
+	return ba.VestingReserveAddress
 }
 
-func (ba *BaseAuction) SetVestingReserveAddress(addr sdk.AccAddress) error {
-	ba.VestingReserveAddress = addr.String()
+func (ba *BaseAuction) SetVestingReserveAddress(addr string) error {
+	ba.VestingReserveAddress = addr
 	return nil
 }
 
@@ -265,14 +249,14 @@ type AuctionI interface {
 	GetType() AuctionType
 	SetType(AuctionType) error
 
-	GetAuctioneer() sdk.AccAddress
-	SetAuctioneer(sdk.AccAddress) error
+	GetAuctioneer() string
+	SetAuctioneer(string) error
 
-	GetSellingReserveAddress() sdk.AccAddress
-	SetSellingReserveAddress(sdk.AccAddress) error
+	GetSellingReserveAddress() string
+	SetSellingReserveAddress(string) error
 
-	GetPayingReserveAddress() sdk.AccAddress
-	SetPayingReserveAddress(sdk.AccAddress) error
+	GetPayingReserveAddress() string
+	SetPayingReserveAddress(string) error
 
 	GetStartPrice() math.LegacyDec
 	SetStartPrice(math.LegacyDec) error
@@ -283,8 +267,8 @@ type AuctionI interface {
 	GetPayingCoinDenom() string
 	SetPayingCoinDenom(string) error
 
-	GetVestingReserveAddress() sdk.AccAddress
-	SetVestingReserveAddress(sdk.AccAddress) error
+	GetVestingReserveAddress() string
+	SetVestingReserveAddress(string) error
 
 	GetVestingSchedules() []VestingSchedule
 	SetVestingSchedules([]VestingSchedule) error

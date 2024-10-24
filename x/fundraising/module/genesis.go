@@ -44,11 +44,11 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 
 	// Set all the allowedBidder
 	for _, elem := range genState.AllowedBidderList {
-		bidder, err := sdk.AccAddressFromBech32(elem.Bidder)
+		bidder, err := k.AddressCodec().StringToBytes(elem.Bidder)
 		if err != nil {
 			return err
 		}
-		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionId, bidder), elem); err != nil {
+		if err := k.AllowedBidder.Set(ctx, collections.Join(elem.AuctionId, sdk.AccAddress(bidder)), elem); err != nil {
 			return err
 		}
 	}

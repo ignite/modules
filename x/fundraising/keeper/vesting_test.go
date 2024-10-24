@@ -34,12 +34,15 @@ func (s *KeeperTestSuite) TestApplyVestingSchedules_NoSchedule() {
 	s.Require().NoError(err)
 
 	// Vesting reserve must have zero balance
-	vestingReserveAddr := auction.GetVestingReserveAddress()
+	vestingReserveAddr, err := s.keeper.AddressCodec().StringToBytes(auction.GetVestingReserveAddress())
+	s.Require().NoError(err)
 	vestingReserveCoin := s.getBalance(vestingReserveAddr, auction.PayingCoinDenom)
 	s.Require().True(vestingReserveCoin.IsZero())
 
 	// Auctioneer must have all the paying coin amounts in exchange of the selling coin
-	auctioneerBalance := s.getBalance(auction.GetAuctioneer(), auction.PayingCoinDenom)
+	auctioneer, err := s.keeper.AddressCodec().StringToBytes(auction.GetAuctioneer())
+	s.Require().NoError(err)
+	auctioneerBalance := s.getBalance(auctioneer, auction.PayingCoinDenom)
 	s.Require().False(auctioneerBalance.IsZero())
 
 	// Status must be finished
@@ -84,7 +87,8 @@ func (s *KeeperTestSuite) TestApplyVestingSchedules_RemainingCoin() {
 	err := s.keeper.ApplyVestingSchedules(s.ctx, auction)
 	s.Require().NoError(err)
 
-	vestingReserveAddr := auction.GetVestingReserveAddress()
+	vestingReserveAddr, err := s.keeper.AddressCodec().StringToBytes(auction.GetVestingReserveAddress())
+	s.Require().NoError(err)
 	vestingReserveCoin := s.getBalance(vestingReserveAddr, auction.PayingCoinDenom)
 
 	vqs, err := s.keeper.GetVestingQueuesByAuctionID(s.ctx, auction.GetId())

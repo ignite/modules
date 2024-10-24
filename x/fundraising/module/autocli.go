@@ -1,14 +1,21 @@
 package fundraising
 
 import (
+	"fmt"
+	"strings"
+
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/version"
 
 	modulev1 "github.com/ignite/modules/api/modules/fundraising/v1"
 	"github.com/ignite/modules/x/fundraising/keeper"
+	"github.com/ignite/modules/x/fundraising/types"
 )
 
 // AutoCLIOptions implements the autocli.HasAutoCLIConfig interface.
 func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
+	bech32PrefixValAddr := sdk.GetConfig().GetBech32ValidatorAddrPrefix()
 	moduloOpts := &autocliv1.ModuleOptions{
 		Query: &autocliv1.ServiceCommandDescriptor{
 			Service: modulev1.Query_ServiceDesc.ServiceName,
@@ -74,34 +81,19 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Skip:      true, // skipped because authority gated
 				},
 				{
-					RpcMethod:      "CreateFixedPriceAuction",
-					Use:            "create-fixed-price-auction [start-price] [selling-coin] [paying-coin-denom] [vesting-schedules] [start-time] [end-time]",
-					Short:          "Send a CreateFixedPriceAuction tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "start_price"}, {ProtoField: "selling_coin"}, {ProtoField: "paying_coin_denom"}, {ProtoField: "vesting_schedules"}, {ProtoField: "start_time"}, {ProtoField: "end_time"}},
-				},
-				{
-					RpcMethod:      "CreateBatchAuction",
-					Use:            "create-batch-auction [start-price] [min-bid-price] [selling-coin] [paying-coin-denom] [vesting-schedules] [max-extended-round] [extended-round-rate] [start-time] [end-time]",
-					Short:          "Send a CreateBatchAuction tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "start_price"}, {ProtoField: "min_bid_price"}, {ProtoField: "selling_coin"}, {ProtoField: "paying_coin_denom"}, {ProtoField: "vesting_schedules"}, {ProtoField: "max_extended_round"}, {ProtoField: "extended_round_rate"}, {ProtoField: "start_time"}, {ProtoField: "end_time"}},
-				},
-				{
-					RpcMethod:      "CancelAuction",
-					Use:            "cancel-auction [auction-id]",
-					Short:          "Send a CancelAuction tx",
+					RpcMethod: "CancelAuction",
+					Use:       "cancel [auction-id]",
+					Short:     "Cancel the auction",
+					Long: strings.TrimSpace(
+						fmt.Sprintf(`Cancel the auction with the id. 
+		
+Example:
+$ %s tx %s cancel 1 --from mykey 
+`,
+							version.AppName, types.ModuleName,
+						),
+					),
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}},
-				},
-				{
-					RpcMethod:      "PlaceBid",
-					Use:            "place-bid [auction-id] [bid-type] [price] [coin]",
-					Short:          "Send a PlaceBid tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "bid_type"}, {ProtoField: "price"}, {ProtoField: "coin"}},
-				},
-				{
-					RpcMethod:      "ModifyBid",
-					Use:            "modify-bid [auction-id] [bid-id] [price] [coin]",
-					Short:          "Send a ModifyBid tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "bid_id"}, {ProtoField: "price"}, {ProtoField: "coin"}},
 				},
 				// this line is used by ignite scaffolding # autocli/tx
 			},
@@ -109,10 +101,20 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 	}
 	if keeper.EnableAddAllowedBidder {
 		moduloOpts.Tx.RpcCommandOptions = append(moduloOpts.Tx.RpcCommandOptions, &autocliv1.RpcCommandOptions{
-			RpcMethod:      "AddAllowedBidder",
-			Use:            "add-allowed-bidder [auction-id] [allowed-bidder]",
-			Short:          "Send a AddAllowedBidder tx",
-			PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "allowed_bidder"}},
+			RpcMethod: "AddAllowedBidder",
+			Use:       "add-allowed-bidder [auction-id] [bidder] [max-bid-amount]",
+			Short:     "(Testing) Add an allowed bidder for the auction",
+			Long: strings.TrimSpace(
+				fmt.Sprintf(`Add an allowed bidder for the auction.
+This message is available for testing purpose and it is only accessible when you build the binary with testing mode.
+		
+Example:
+$ %s tx %s add-allowed-bidder 1 %s1mzgucqnfr2l8cj5apvdpllhzt4zeuh2cshz5xu 10000000000 --from mykey 
+`,
+					version.AppName, types.ModuleName, bech32PrefixValAddr,
+				),
+			),
+			PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "auction_id"}, {ProtoField: "bidder"}, {ProtoField: "max_bid_amount"}},
 		})
 	}
 
