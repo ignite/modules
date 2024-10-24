@@ -108,12 +108,12 @@ Bid Type Options:
 3. batch-many  (bm or m)
 
 Example:
-$ %s tx %s bid 1 fixed-price 0.55 100000000denom2 --from mykey 
-$ %s tx %s bid 1 batch-worth 0.55 100000000denom2 --from mykey 
-$ %s tx %s bid 1 batch-many 0.55 100000000denom1 --from mykey 
-$ %s tx %s bid 1 fp 0.55 100000000denom2 --from mykey 
-$ %s tx %s bid 1 bw 0.55 100000000denom2 --from mykey 
-$ %s tx %s bid 1 bm 0.55 100000000denom1 --from mykey 
+$ %s tx %s place-bid 1 fixed-price 0.55 100000000denom2 --from mykey 
+$ %s tx %s place-bid 1 batch-worth 0.55 100000000denom2 --from mykey 
+$ %s tx %s place-bid 1 batch-many 0.55 100000000denom1 --from mykey 
+$ %s tx %s place-bid 1 fp 0.55 100000000denom2 --from mykey 
+$ %s tx %s place-bid 1 bw 0.55 100000000denom2 --from mykey 
+$ %s tx %s place-bid 1 bm 0.55 100000000denom1 --from mykey 
 
 Note:
 In case of placing a bid for a fixed price auction, you must provide [price] argument with the same price of the auction. 

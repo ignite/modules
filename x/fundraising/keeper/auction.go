@@ -418,7 +418,7 @@ func (k Keeper) CreateFixedPriceAuction(ctx context.Context, msg *types.MsgCreat
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	blockTime := sdkCtx.BlockTime()
 	if blockTime.After(msg.EndTime) { // EndTime < CurrentTime
-		return nil, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%s) must be set after the current time (%s)", msg.EndTime.Unix(), blockTime.Unix())
+		return nil, sdkerrors.Wrapf(errors.ErrInvalidRequest, "end time (%d) must be set after the current time (%d)", msg.EndTime.Unix(), blockTime.Unix())
 	}
 
 	if len(msg.VestingSchedules) > types.MaxNumVestingSchedules {
