@@ -50,9 +50,9 @@ func TestMissionQuerySingle(t *testing.T) {
 			response: &types.QueryGetMissionResponse{Mission: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "NotFound",
 			request: &types.QueryGetMissionRequest{MissionId: uint64(len(msgs))},
-			err:     sdkerrors.ErrKeyNotFound,
+			err:     sdkerrors.ErrNotFound,
 		},
 		{
 			desc: "InvalidRequest",

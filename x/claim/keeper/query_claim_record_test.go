@@ -55,7 +55,7 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 			response: &types.QueryGetClaimRecordResponse{ClaimRecord: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "NotFound",
 			request: &types.QueryGetClaimRecordRequest{
 				Address: strconv.Itoa(100000),
 			},

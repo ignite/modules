@@ -62,7 +62,7 @@ func TestAllowedBidderQuerySingle(t *testing.T) {
 			response: &types.QueryGetAllowedBidderResponse{AllowedBidder: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "NotFound",
 			request: &types.QueryGetAllowedBidderRequest{
 				AuctionId: 100000,
 				Bidder:    sample.Address(r),

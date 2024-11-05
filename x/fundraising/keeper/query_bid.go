@@ -41,7 +41,7 @@ func (q queryServer) GetBid(ctx context.Context, req *types.QueryGetBidRequest) 
 	bid, err := q.k.Bid.Get(ctx, collections.Join(req.AuctionId, req.BidId))
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
-			return nil, sdkerrors.ErrKeyNotFound
+			return nil, sdkerrors.ErrNotFound
 		}
 
 		return nil, status.Error(codes.Internal, "internal error")

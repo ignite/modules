@@ -41,7 +41,7 @@ func (q queryServer) GetMission(ctx context.Context, req *types.QueryGetMissionR
 	mission, err := q.k.Mission.Get(ctx, req.MissionId)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
-			return nil, sdkerrors.ErrKeyNotFound
+			return nil, sdkerrors.ErrNotFound
 		}
 
 		return nil, status.Error(codes.Internal, "internal error")

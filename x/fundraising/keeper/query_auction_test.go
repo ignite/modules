@@ -78,9 +78,9 @@ func TestAuctionQuerySingle(t *testing.T) {
 			response: &types.QueryGetAuctionResponse{Auction: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "NotFound",
 			request: &types.QueryGetAuctionRequest{AuctionId: uint64(len(msgs))},
-			err:     sdkerrors.ErrKeyNotFound,
+			err:     sdkerrors.ErrNotFound,
 		},
 		{
 			desc: "InvalidRequest",

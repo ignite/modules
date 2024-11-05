@@ -67,7 +67,7 @@ func (q queryServer) GetAuction(ctx context.Context, req *types.QueryGetAuctionR
 	auction, err := q.k.Auction.Get(ctx, req.AuctionId)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
-			return nil, sdkerrors.ErrKeyNotFound
+			return nil, sdkerrors.ErrNotFound
 		}
 
 		return nil, status.Error(codes.Internal, "internal error")
