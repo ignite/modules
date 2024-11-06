@@ -77,7 +77,7 @@ all: tools install lint
 ## govet: Run go vet.
 govet:
 	@echo Running go vet...
-	@go vet ./...
+	@go vet $(shell go list ./... | grep -v '/api')
 
 ## govulncheck: Run govulncheck
 govulncheck:

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -20,18 +21,18 @@ func (k Keeper) CompleteMission(
 ) (claimed math.Int, err error) {
 	// retrieve mission
 	if _, err := k.Mission.Get(ctx, missionID); err != nil {
-		return claimed, errors.Wrapf(types.ErrMissionNotFound, "mission %d not found: %s", missionID, err.Error())
+		return claimed, sdkerrors.Wrapf(types.ErrMissionNotFound, "mission %d not found: %s", missionID, err.Error())
 	}
 
 	// retrieve claim record of the user
 	claimRecord, err := k.ClaimRecord.Get(ctx, address)
 	if err != nil {
-		return claimed, errors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s: %s", address, err.Error())
+		return claimed, sdkerrors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s: %s", address, err.Error())
 	}
 
 	// check if the mission is already completed for the claim record
 	if claimRecord.IsMissionCompleted(missionID) {
-		return claimed, errors.Wrapf(
+		return claimed, sdkerrors.Wrapf(
 			types.ErrMissionCompleted,
 			"mission %d completed for address %s",
 			missionID,
@@ -76,18 +77,18 @@ func (k Keeper) ClaimMission(
 ) (claimed math.Int, err error) {
 	airdropSupply, err := k.AirdropSupply.Get(ctx)
 	if err != nil {
-		return claimed, errors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined: %s", err.Error())
+		return claimed, sdkerrors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined: %s", err.Error())
 	}
 
 	// retrieve mission
 	mission, err := k.Mission.Get(ctx, missionID)
 	if err != nil {
-		return claimed, errors.Wrapf(types.ErrMissionNotFound, "mission %d not found: %s", missionID, err.Error())
+		return claimed, sdkerrors.Wrapf(types.ErrMissionNotFound, "mission %d not found: %s", missionID, err.Error())
 	}
 
 	// check if the mission is not completed for the claim record
 	if !claimRecord.IsMissionCompleted(missionID) {
-		return claimed, errors.Wrapf(
+		return claimed, sdkerrors.Wrapf(
 			types.ErrMissionNotCompleted,
 			"mission %d is not completed for address %s",
 			missionID,
@@ -95,7 +96,7 @@ func (k Keeper) ClaimMission(
 		)
 	}
 	if claimRecord.IsMissionClaimed(missionID) {
-		return claimed, errors.Wrapf(
+		return claimed, sdkerrors.Wrapf(
 			types.ErrMissionAlreadyClaimed,
 			"mission %d is already claimed for address %s",
 			missionID,

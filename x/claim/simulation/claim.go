@@ -5,6 +5,7 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/collections"
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -12,7 +13,6 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/ignite/modules/pkg/errors"
 	"github.com/ignite/modules/testutil/simulation"
 	"github.com/ignite/modules/x/claim/keeper"
 	"github.com/ignite/modules/x/claim/types"
@@ -72,7 +72,7 @@ func SimulateMsgClaim(
 
 		// verify that there is claimable amount
 		airdropSupply, err := k.AirdropSupply.Get(ctx)
-		if err != nil && !errors.IsOf(err, collections.ErrNotFound) {
+		if err != nil && !sdkerrors.IsOf(err, collections.ErrNotFound) {
 			return simtypes.NoOpMsg(
 				types.ModuleName,
 				msg.Type(),

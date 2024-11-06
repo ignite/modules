@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"cosmossdk.io/collections"
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -37,10 +38,10 @@ func (k Keeper) InitializeAirdropSupply(ctx context.Context, airdropSupply sdk.C
 
 func (k Keeper) EndAirdrop(ctx context.Context) error {
 	airdropSupply, err := k.AirdropSupply.Get(ctx)
-	if err != nil && !errors.IsOf(err, collections.ErrNotFound) {
+	if err != nil && !sdkerrors.IsOf(err, collections.ErrNotFound) {
 		return err
 	}
-	if errors.IsOf(err, collections.ErrNotFound) || !airdropSupply.Supply.IsPositive() {
+	if sdkerrors.IsOf(err, collections.ErrNotFound) || !airdropSupply.Supply.IsPositive() {
 		return nil
 	}
 
