@@ -68,9 +68,9 @@ We welcome contributions from everyone. You can create a branch from `main` and 
 
 Ignite Modules is a free and open-source project maintained by [Ignite](https://ignite.com). Here's where you can find us. 
 
-- [@ignite_dev on Twitter](https://twitter.com/ignite_dev)
+- [@ignite_dev on Twitter](https://twitter.com/ignite)
 - [Ignite Blog](https://ignite.com/blog/)
-- [Ignite Discord](https://discord.com/invite/ignite)
+- [Ignite Discord](https://discord.com/invite/ignitecli)
 - [Ignite Docs](https://docs.ignite.com/)
 - [Ignite Jobs](https://ignite.com/careers)
 - [Cosmos SDK Docs](https://docs.cosmos.network)
